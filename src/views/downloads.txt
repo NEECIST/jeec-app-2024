@@ -1,0 +1,3 @@
+npm install --save @daypilot/daypilot-lite-vue
+npm install --save @daypilot/daypilot-lite-vue
+npm install --save daypilot-pro-vue

@@ -1,0 +1,102 @@
+<template>
+  <div class="rules-page">
+    <div style="margin-top: -5vh;">
+    <Buttons
+      @_click="click"
+      :names="{
+        Rules: button === 'Rules',
+        Prizes: button === 'Prizes',
+        Activities: button === 'Activities',
+      }"
+    />
+  </div>
+    <div v-if="!loading_event">
+      <GeneralRules v-if="button === 'Rules'" :event_info="event_info" />
+
+      <PrizeRules v-if="button === 'Prizes'" />
+
+      <ActivityRules
+        v-if="button === 'Activities'"
+        :activities="event_info.activity_types"
+      />
+    </div>
+    <div v-else class="loading">
+      <v-progress-circular
+        indeterminate
+        color="#27ade4"
+        :size="100"
+        :width="10"
+        class="loading-bar"
+      ></v-progress-circular>
+    </div>
+  </div>
+</template>
+
+<script>
+import Buttons from "@/components/Buttons.vue";
+import GeneralRules from "@/components/GeneralRules.vue";
+import PrizeRules from "@/components/PrizeRules.vue";
+import ActivityRules from "@/components/ActivityRules.vue";
+import UserService from "../services/user.service";
+
+export default {
+  name: "Rules",
+  components: {
+    Buttons,
+    GeneralRules,
+    PrizeRules,
+    ActivityRules,
+  },
+  data: function () {
+    return {
+      button: "Rules",
+      jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
+      event_info: [],
+      loading_event: true,
+    };
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+  },
+  methods: {
+    click(name) {
+      this.button = name;
+    },
+  },
+  created() {
+    if (!this.currentUser) {
+      this.$router.push("/");
+    }
+
+    UserService.getEventInfo().then(
+      (response) => {
+        this.event_info = response.data;
+        this.loading_event = false;
+      },
+      (error) => {
+        console.log(error);
+        this.loading_event = false;
+      }
+    );
+  },
+};
+</script>
+
+<style scoped>
+.rules-page {
+  background-color: #FFFCF8;
+  padding-bottom:20vh;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 35vh;
+}
+
+.rules-page {
+  overflow-y: auto;
+}
+
+</style>
