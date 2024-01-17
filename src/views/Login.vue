@@ -5,14 +5,15 @@
         <v-img alt="JEEC logo" src="../assets/jeec_colour_no_edition.svg" />
       </div>
       <div class="buttons-flex" v-if="!loading">
+        <div> 
+          V2.3
+        </div>
         <!-- <GoogleLogin :callback="callback"/> -->
         <!-- <button @click="work">botão</button> -->
         <GoogleLogin :callback="callback"/>
 
       </div>
-      <div> 
-        V2.2
-      </div>
+      
     </div>
     
   </div>
@@ -90,7 +91,7 @@ import authHeader from "../services/auth-header";
 
 import CryptoJS from 'vue-cryptojs';
 
-const callback = (response) => {
+ callback = (response) => {
   // This callback will be triggered when the user selects or login to
   // his Google account from the popup
   console.log("Handle the response", response)
