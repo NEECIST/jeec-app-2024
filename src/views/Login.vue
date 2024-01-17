@@ -5,11 +5,12 @@
         <v-img alt="JEEC logo" src="../assets/jeec_colour_no_edition.svg" />
       </div>
       <div>
-        V1.17
+        V2.1
       </div>
       <div class="buttons-flex" v-if="!loading">
         <!-- <GoogleLogin :callback="callback"/> -->
-        <button @click="work">botão</button>
+        <!-- <button @click="work">botão</button> -->
+        <GoogleLogin :callback="callback"/>
         
         <!-- <div
           @click.stop="login_student"
@@ -85,8 +86,14 @@ import User from "../models/user";
 // import * as parserJwt from '../assets/jwtparser.js';
 import axios from 'axios';
 import authHeader from "../services/auth-header";
-import CryptoJS from 'vue-cryptojs'
 
+import CryptoJS from 'vue-cryptojs';
+
+const callback = (response) => {
+  // This callback will be triggered when the user selects or login to
+  // his Google account from the popup
+  console.log("Handle the response", response)
+}
 // import UserService from "../services/user.service";
 
 // const callback = (response) => {
@@ -100,9 +107,10 @@ export default {
   components: {
     
   },
+  
   data(){
     return{
-      callback:function name() {},
+      // callback:function name() {},
       user: new User(),
       loading: this.$route.query.token ? true : false,
       token:'',
@@ -114,7 +122,9 @@ export default {
     // },
   },
 
+
   methods:{
+    
     bullshit() {
       console.log('entrou bullshit')
       if (this.token) {
@@ -141,14 +151,11 @@ export default {
           ).then(response => {
             if (response.data != ''){
               this.token = response.data;
-              console.log(this.token)
               this.bullshit()
-              console.log('merda boa')
-              console.log(this.$route.query.token)
 
             }else{
               window.location.replace(process.env.STUDENT_APP_URL)
-              console.log('merda má')
+
             }
             })
     },
