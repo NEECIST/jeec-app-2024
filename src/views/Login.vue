@@ -4,14 +4,20 @@
       <div class="loading-top">
         <v-img alt="JEEC logo" src="../assets/jeec_colour_no_edition.svg" />
       </div>
-      <div>
-        V2.1
-      </div>
       <div class="buttons-flex" v-if="!loading">
         <!-- <GoogleLogin :callback="callback"/> -->
         <!-- <button @click="work">botão</button> -->
         <GoogleLogin :callback="callback"/>
-        
+
+      </div>
+      <div> 
+        V2.2
+      </div>
+    </div>
+    
+  </div>
+  
+          
         <!-- <div
           @click.stop="login_student"
           class="button"
@@ -74,11 +80,6 @@
       <div class="loading-bottom">
         <img alt="IST logo" src="../assets/tecnico_grey.svg" />
       </div> -->
-      </div>
-    </div>
-    
-  </div>
-  
 </template>
 
 <script>
