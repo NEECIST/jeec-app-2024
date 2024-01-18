@@ -1,9 +1,9 @@
 <script setup>
+import { decodeCredential } from 'vue3-google-login'
 const callback = (response) => {
-  // This callback will be triggered when user click on the One Tap prompt
-  // This callback will be also triggered when user click on login button 
-  // and selects or login to his Google account from the popup
-  console.log("Handle the response", response)
+  // decodeCredential will retrive the JWT payload from the credential
+  const userData = decodeCredential(response.credential)
+  console.log("Handle the userData", userData)
 }
 </script>
 
