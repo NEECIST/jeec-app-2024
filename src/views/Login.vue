@@ -1,13 +1,23 @@
+<script setup>
+const callback = (response) => {
+  // This callback will be triggered when user click on the One Tap prompt
+  // This callback will be also triggered when user click on login button 
+  // and selects or login to his Google account from the popup
+  console.log("Handle the response", response)
+}
+</script>
+
 <template>
   <div class="login">
     <div class="loading">
       <div class="loading-top">
         <v-img alt="JEEC logo" src="../assets/jeec_colour_no_edition.svg" />
       </div>
+      <div> 
+        V2.3
+      </div>
       <div class="buttons-flex" v-if="!loading">
-        <div> 
-          V2.3
-        </div>
+
         <!-- <GoogleLogin :callback="callback"/> -->
         <!-- <button @click="work">botão</button> -->
         <GoogleLogin :callback="callback"/>
@@ -91,18 +101,8 @@ import authHeader from "../services/auth-header";
 
 import CryptoJS from 'vue-cryptojs';
 
- callback = (response) => {
-  // This callback will be triggered when the user selects or login to
-  // his Google account from the popup
-  console.log("Handle the response", response)
-}
+ 
 // import UserService from "../services/user.service";
-
-// const callback = (response) => {
-//   // This callback will be triggered when the user selects or login to
-//   // his Google account from the popup
-//   console.log("Handle the response", response)
-// }
 
 export default {
   name: "Login",
@@ -116,18 +116,22 @@ export default {
       user: new User(),
       loading: this.$route.query.token ? true : false,
       token:'',
+      
     }
   },
   computed: {
     // loggedIn() {
     //   return this.$store.state.auth.status.loggedIn;
     // },
+    
   },
 
 
   methods:{
     
+
     bullshit() {
+      
       console.log('entrou bullshit')
       if (this.token) {
         this.$store
@@ -148,6 +152,7 @@ export default {
       }
     },
     async work(){
+      
       axios.post(process.env.VUE_APP_JEEC_BRAIN_URL+"/student/redirecturigoogle",
             { headers: authHeader() }
           ).then(response => {
@@ -188,6 +193,7 @@ export default {
     },
   },
   created() {
+    
     console.log('entrou')
     console.log(this.$route.query.token)
     if (this.$route.query.token) {
