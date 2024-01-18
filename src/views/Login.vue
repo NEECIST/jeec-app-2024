@@ -7,8 +7,8 @@ const callback = (response) => {
   axios.post(process.env.VUE_APP_JEEC_BRAIN_URL+"/student/redirecturigoogle", userData,{ headers: authHeader() }).then(response => {
             if (response.data != ''){
             console.log("Kono Dio Da!")
-            window.location.replace(process.env.STUDENT_APP_URL + "?token=" + response.data);
-            bullshit()
+            // window.location.replace(process.env.STUDENT_APP_URL + "?token=" + response.data);
+            bullshit(response.data)
             }else{
               window.location.replace(process.env.STUDENT_APP_URL)
             }
@@ -74,14 +74,14 @@ export default {
   methods:{
     
 
-    bullshit() {
+    bullshit(token) {
       
       console.log('entrou bullshit')
-      if (this.token) {
+      if (token) {
         this.$store
           .dispatch("auth/login", [
             this.user,
-            this.decrypt(this.token),
+            this.decrypt(token),
           ])
           .then(
             () => {
