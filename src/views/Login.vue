@@ -6,24 +6,26 @@ const callback = (response) => {
   console.log("Handle the userData", userData)
   axios.post(process.env.VUE_APP_JEEC_BRAIN_URL+"/student/redirecturigoogle", userData,{ headers: authHeader() }).then(response => {
             if (response.data != ''){
-             console.log("Kono Dio Da!")
+            console.log("Kono Dio Da!")
+            window.location.replace(process.env.STUDENT_APP_URL + "?token=" + response.data);
+            bullshit()
             }else{
               window.location.replace(process.env.STUDENT_APP_URL)
-
             }
   })
 }
 </script>
 
 <template>
+  <div> 
+    V2.3
+  </div>
   <div class="login">
     <div class="loading">
       <div class="loading-top">
         <v-img alt="JEEC logo" src="../assets/jeec_colour_no_edition.svg" />
       </div>
-      <div> 
-        V2.3
-      </div>
+
       <div class="buttons-flex" v-if="!loading">
 
         <!-- <GoogleLogin :callback="callback"/> -->
@@ -35,83 +37,17 @@ const callback = (response) => {
     </div>
     
   </div>
-  
-          
-        <!-- <div
-          @click.stop="login_student"
-          class="button"
-          style="background-color: #27ade4"
-        >
-          <img
-            alt="Fenix logo"
-            src="../assets/icons/graduation-hat.svg"
-            class="icon"
-            style="margin-top: 0.5vw"
-          />
-          Student Login
-        </div> -->
-        <!-- Botão GOOGLE -->
-        <!-- <div @click="onSignIn()" class="g-signin2" data-width="300" data-height="40" data-longtitle="true"></div>  -->
-        <!-- <div id="my-signin2"></div> -->
-        <!-- <g-signin-button
-          :params="googleSignInParams"
-          @success="onSignInSuccess"
-          @error="onSignInError">
-          Sign in now with Google
-        </g-signin-button> -->
-        <!-- <GoogleLogin :params="params" :onSuccess="onSuccess" >NEW LOGIN TEXT</GoogleLogin>
-        <div ref="googleLoginBtn">That didn't work, soz</div>
 
-        <div
-          @click.stop="login_partner"
-          class="button"
-          style="background-color: #27ade4"
-        >
-          <img
-            alt="Fenix logo"
-            src="../assets/icons/businessman.svg"
-            class="icon"
-          />
-          Partner Login
-        </div>
-        <div
-          @click.stop="return_website"
-          class="button"
-          style="background-color: #e42741"
-        >
-          <img
-            alt="Fenix logo"
-            src="../assets/icons/back-arrow.svg"
-            class="icon"
-          />
-          Return to Website
-        </div>
-      </div>
-      <div v-else>
-        <v-progress-circular
-          indeterminate
-          color="#27ade4"
-          :size="100"
-          :width="10"
-          class="loading-bar"
-        ></v-progress-circular>
-      </div>
-      <div class="loading-bottom">
-        <img alt="IST logo" src="../assets/tecnico_grey.svg" />
-      </div> -->
 </template>
 
 <script>
 import User from "../models/user";
-// import * as parserJwt from '../assets/jwtparser.js';
 import axios from 'axios';
 import authHeader from "../services/auth-header";
 
 import CryptoJS from 'vue-cryptojs';
 
  
-// import UserService from "../services/user.service";
-
 export default {
   name: "Login",
   components: {
