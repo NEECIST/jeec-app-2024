@@ -4,7 +4,7 @@ const callback = (response) => {
   // decodeCredential will retrive the JWT payload from the credential
   const userData = decodeCredential(response.credential)
   console.log("Handle the userData", userData)
-  axios.post(process.env.VUE_APP_JEEC_BRAIN_URL+"/student/redirecturigoogle", { headers: authHeader() },{userData}).then(response => {
+  axios.post(process.env.VUE_APP_JEEC_BRAIN_URL+"/student/redirecturigoogle", userData,{ headers: authHeader() }).then(response => {
             if (response.data != ''){
              console.log("Kono Dio Da!")
             }else{
