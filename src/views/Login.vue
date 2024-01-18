@@ -8,12 +8,12 @@ const callback = (response) => {
             if (response.data != ''){
               console.log("Kono Dio Da!")
               // window.location.replace(process.env.STUDENT_APP_URL + "?token=" + response.data);
-              token = response.data
-              if (token) {
+              
+              if ( response.data) {
                   this.$store
                     .dispatch("auth/login", [
                       this.user,
-                      this.decrypt(token),
+                      this.decrypt( response.data),
                     ])
                     .then(
                       () => {
