@@ -4,6 +4,14 @@ const callback = (response) => {
   // decodeCredential will retrive the JWT payload from the credential
   const userData = decodeCredential(response.credential)
   console.log("Handle the userData", userData)
+  axios.post(process.env.VUE_APP_JEEC_BRAIN_URL+"/student/redirecturigoogle", { headers: authHeader() },{userData}).then(response => {
+            if (response.data != ''){
+             console.log("Kono Dio Da!")
+            }else{
+              window.location.replace(process.env.STUDENT_APP_URL)
+
+            }
+  })
 }
 </script>
 
@@ -153,18 +161,7 @@ export default {
     },
     async work(){
       
-      axios.post(process.env.VUE_APP_JEEC_BRAIN_URL+"/student/redirecturigoogle",
-            { headers: authHeader() }
-          ).then(response => {
-            if (response.data != ''){
-              this.token = response.data;
-              this.bullshit()
-
-            }else{
-              window.location.replace(process.env.STUDENT_APP_URL)
-
-            }
-            })
+      
     },
     decrypt(code) {
       var master_key = "12345678901234561234567890123456";
