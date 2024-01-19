@@ -16,6 +16,7 @@ const callback = (response) => {
               console.log("Kono Dio Da!")
               const data = response.data
               const store = useStore()
+              console.log(store)
               // window.location.replace(process.env.STUDENT_APP_URL + "?token=" + response.data);
               
               if ( response.data) {
@@ -126,27 +127,27 @@ export default {
       return output_plaintext;
     },
   },
-  created(data) {
+  created() {
     
-    console.log('entrou')
-    console.log(data)
-    if (data != null) {
-      this.$store
-        .dispatch("auth/login", [
-          this.user,
-          this.decrypt(this.$route.query.token),
-        ])
-        .then(
-          () => {
-            this.$router.push("/home");
-          },
-          () => {
-            this.$store.dispatch("auth/logout");
-          }
-        );
-    } else if (this.loggedIn) {
-      this.$router.push("/home");
-    }
+    console.log('v2.0')
+    // console.log(data)
+    // if (data != null) {
+    //   this.$store
+    //     .dispatch("auth/login", [
+    //       this.user,
+    //       this.decrypt(this.$route.query.token),
+    //     ])
+    //     .then(
+    //       () => {
+    //         this.$router.push("/home");
+    //       },
+    //       () => {
+    //         this.$store.dispatch("auth/logout");
+    //       }
+    //     );
+    // } else if (this.loggedIn) {
+    //   this.$router.push("/home");
+    // }
   },
   mounted() {
     console.log(this.$store);
