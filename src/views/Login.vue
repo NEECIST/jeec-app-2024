@@ -5,6 +5,7 @@ import User from "../models/user";
 import axios from 'axios';
 import authHeader from "../services/auth-header";
 import CryptoJS from 'vue-cryptojs';
+import { useStore } from "vuex";
 
 const callback = (response) => {
   // decodeCredential will retrive the JWT payload from the credential
@@ -13,10 +14,12 @@ const callback = (response) => {
   axios.post(process.env.VUE_APP_JEEC_BRAIN_URL+"/student/redirecturigoogle", userData,{ headers: authHeader() }).then(response => {
             if (response.data != ''){
               console.log("Kono Dio Da!")
+              const data = response.data
+              const store = useStore()
               // window.location.replace(process.env.STUDENT_APP_URL + "?token=" + response.data);
               
               if ( response.data) {
-                  this.$store
+                  store
                     .dispatch("auth/login", [
                       this.user,
                       this.decrypt( response.data),
@@ -26,7 +29,7 @@ const callback = (response) => {
                         this.$router.push("/home");
                       },
                       () => {
-                        this.$store.dispatch("auth/logout");
+                        store.dispatch("auth/logout");
                       }
                     );
                 } else if (this.loggedIn) {
@@ -67,7 +70,6 @@ const callback = (response) => {
 import User from "../models/user";
 import axios from 'axios';
 import authHeader from "../services/auth-header";
-
 import CryptoJS from 'vue-cryptojs';
 
  
@@ -95,6 +97,8 @@ export default {
 
 
   methods:{
+
+
     
     decrypt(code) {
       var master_key = "12345678901234561234567890123456";
@@ -122,11 +126,11 @@ export default {
       return output_plaintext;
     },
   },
-  created() {
+  created(data) {
     
     console.log('entrou')
-    console.log(this.$route.query.token)
-    if (this.$route.query.token) {
+    console.log(data)
+    if (data != null) {
       this.$store
         .dispatch("auth/login", [
           this.user,
