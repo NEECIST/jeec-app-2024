@@ -4,8 +4,8 @@ import { decodeCredential } from 'vue3-google-login'
 import User from "../models/user";
 import axios from 'axios';
 import authHeader from "../services/auth-header";
-
 import CryptoJS from 'vue-cryptojs';
+
 const callback = (response) => {
   // decodeCredential will retrive the JWT payload from the credential
   const userData = decodeCredential(response.credential)
@@ -143,6 +143,9 @@ export default {
     } else if (this.loggedIn) {
       this.$router.push("/home");
     }
+  },
+  mounted() {
+    console.log(this.$store);
   },
 
 };
