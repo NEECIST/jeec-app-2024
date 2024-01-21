@@ -1,22 +1,19 @@
 import { createApp } from 'vue'
-import App from './App.vue'
-import './registerServiceWorker'
+import App from './App.vue';
 import router from './router'
-import store from './store'
-import vue3GoogleLogin from 'vue3-google-login'
-import VueCryptojs from 'vue-cryptojs'
+import { createPinia, setMapStoreSuffix } from 'pinia';
 import vuetify from './plugins/vuetify'
-import { loadFonts } from './plugins/webfontloader'
-
-loadFonts()
+import Vue3GoogleLogin from 'vue3-google-login'
 
 const app = createApp(App)
 
-app.use(store)
+setMapStoreSuffix('');
+export const pinia = createPinia();
+
+app.use(pinia)
 app.use(router)
-app.use(vue3GoogleLogin, {
+app.use(Vue3GoogleLogin, {
     clientId: '286554998545-hsatr3tkmeskks4r3r4eb7vcfsbv25h7.apps.googleusercontent.com'
   })
 app.use(vuetify)
-app.use(VueCryptojs)
 app.mount('#app')

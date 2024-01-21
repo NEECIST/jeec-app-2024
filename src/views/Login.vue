@@ -1,5 +1,85 @@
-<script setup>
+<template>
+  <div>
+    V2.3
+  </div>
+  <div class="login">
+    <div class="loading">
+      <div class="loading-top">
+        <v-img alt="JEEC logo" src="@/assets/jeec_colour_no_edition.svg" />
+      </div>
 
+      <div class="buttons-flex" v-if="!loading">
+
+        <GoogleLogin :callback="callback" />
+
+      </div>
+
+    </div>
+
+  </div>
+</template>
+
+<script setup>
+import axios from 'axios';
+import { useUserStore } from '@/stores/UserStore';
+import { decodeCredential } from 'vue3-google-login'
+import CryptoJS from 'crypto-js';
+import { useRouter } from 'vue-router';
+
+const userStore = useUserStore();
+const router = useRouter();
+
+
+console.log(userStore.loggedIn)
+
+const callback = (response) => {
+  // decodeCredential will retrive the JWT payload from the credential
+  const userData = decodeCredential(response.credential)
+  console.log("googleData", userData)
+
+  axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle", userData)
+    .then((response) => {
+      const jwt = decrypt(response.data)
+
+      userStore.authUser(jwt)
+
+      if (userStore.user.name != "") {
+        router.push("/home");
+      } else {
+        window.location.reload();
+      }
+    })
+}
+
+function decrypt(code) {
+  const master_key = "12345678901234561234567890123456";
+  const rawData = atob(code);
+
+  let iv = rawData.substring(0, 16);
+  let crypttext = rawData.substring(16);
+
+  iv = CryptoJS.enc.Latin1.parse(iv);
+  crypttext = CryptoJS.enc.Latin1.parse(crypttext);
+
+  const key = CryptoJS.enc.Utf8.parse(master_key);
+
+  const plaintextArray = CryptoJS.AES.decrypt(
+    { ciphertext: crypttext },
+    key,
+    {
+      iv: iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    }
+  );
+
+  const output_plaintext = CryptoJS.enc.Latin1.stringify(plaintextArray);
+
+  return output_plaintext;
+};
+</script>
+
+<!-- <script setup>
 import { decodeCredential } from 'vue3-google-login'
 import User from "../models/user";
 import axios from 'axios';
@@ -11,61 +91,37 @@ const callback = (response) => {
   // decodeCredential will retrive the JWT payload from the credential
   const userData = decodeCredential(response.credential)
   console.log("Handle the userData", userData)
-  axios.post(process.env.VUE_APP_JEEC_BRAIN_URL+"/student/redirecturigoogle", userData,{ headers: authHeader() }).then(response => {
-            if (response.data != ''){
-              console.log("Kono Dio Da!")
-              const data = response.data
-              const store = useStore()
-              console.log(store)
-              // window.location.replace(process.env.STUDENT_APP_URL + "?token=" + response.data);
-              
-              if ( response.data) {
-                  store
-                    .dispatch("auth/login", [
-                      this.user,
-                      this.decrypt( response.data),
-                    ])
-                    .then(
-                      () => {
-                        this.$router.push("/home");
-                      },
-                      () => {
-                        store.dispatch("auth/logout");
-                      }
-                    );
-                } else if (this.loggedIn) {
-                  this.$router.push("/home");
-                }
-            }else{
-              window.location.replace(process.env.STUDENT_APP_URL)
+
+  axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle", userData, { headers: authHeader() }).then(response => {
+    if (response.data != '') {
+      console.log("Kono Dio Da!")
+      const store = useStore()
+      console.log(store)
+      // window.location.replace(process.env.STUDENT_APP_URL + "?token=" + response.data);
+
+      if (response.data) {
+        store
+          .dispatch("auth/login", [
+            this.user,
+            this.decrypt(response.data),
+          ])
+          .then(
+            () => {
+              this.$router.push("/home");
+            },
+            () => {
+              store.dispatch("auth/logout");
             }
+          );
+      } else if (this.loggedIn) {
+        this.$router.push("/home");
+      }
+    } else {
+      window.location.replace(process.env.STUDENT_APP_URL)
+    }
   })
 }
 </script>
-
-<template>
-  <div> 
-    V2.3
-  </div>
-  <div class="login">
-    <div class="loading">
-      <div class="loading-top">
-        <v-img alt="JEEC logo" src="../assets/jeec_colour_no_edition.svg" />
-      </div>
-
-      <div class="buttons-flex" v-if="!loading">
-
-        <!-- <GoogleLogin :callback="callback"/> -->
-        <!-- <button @click="work">botão</button> -->
-        <GoogleLogin :callback="callback"/>
-
-      </div>
-      
-    </div>
-    
-  </div>
-
-</template>
 
 <script>
 import User from "../models/user";
@@ -73,34 +129,30 @@ import axios from 'axios';
 import authHeader from "../services/auth-header";
 import CryptoJS from 'vue-cryptojs';
 
- 
+
 export default {
   name: "Login",
   components: {
-    
+
   },
-  
-  data(){
-    return{
+
+  data() {
+    return {
       // callback:function name() {},
       user: new User(),
       loading: this.$route.query.token ? true : false,
-      token:'',
-      
+      token: '',
+
     }
   },
   computed: {
     // loggedIn() {
     //   return this.$store.state.auth.status.loggedIn;
     // },
-    
   },
 
 
-  methods:{
-
-
-    
+  methods: {
     decrypt(code) {
       var master_key = "12345678901234561234567890123456";
       var rawData = atob(code.split("_").join("+"));
@@ -108,27 +160,27 @@ export default {
       var iv = rawData.substring(0, 16);
       var crypttext = rawData.substring(16);
 
-      crypttext = this.CryptoJS.enc.Latin1.parse(crypttext);
-      iv = this.CryptoJS.enc.Latin1.parse(iv);
-      var key = this.CryptoJS.enc.Utf8.parse(master_key);
+      crypttext = CryptoJS.enc.Latin1.parse(crypttext);
+      iv = CryptoJS.enc.Latin1.parse(iv);
+      var key = CryptoJS.enc.Utf8.parse(master_key);
 
-      var plaintextArray = this.CryptoJS.AES.decrypt(
+      var plaintextArray = CryptoJS.AES.decrypt(
         { ciphertext: crypttext },
         key,
         {
           iv: iv,
-          mode: this.CryptoJS.mode.CBC,
-          padding: this.CryptoJS.pad.Pkcs7,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7,
         }
       );
 
-      var output_plaintext = this.CryptoJS.enc.Latin1.stringify(plaintextArray);
+      var output_plaintext = CryptoJS.enc.Latin1.stringify(plaintextArray);
 
       return output_plaintext;
     },
   },
   created() {
-    
+
     console.log('v2.0')
     // console.log(data)
     // if (data != null) {
@@ -153,8 +205,9 @@ export default {
     console.log(this.$store);
   },
 
-};
-</script>
+}
+
+</script> -->
 
 <style scoped>
 .login {
@@ -254,6 +307,7 @@ export default {
     width: 24vh;
   }
 }
+
 #customBtn {
   display: inline-block;
   background: white;
@@ -264,13 +318,16 @@ export default {
   box-shadow: 1px 1px 1px grey;
   white-space: nowrap;
 }
+
 #customBtn:hover {
   cursor: pointer;
 }
+
 span.label {
   font-family: serif;
   font-weight: normal;
 }
+
 span.buttonText {
   display: inline-block;
   vertical-align: middle;
@@ -281,6 +338,7 @@ span.buttonText {
   /* Use the Roboto font that is loaded in the <head> */
   font-family: 'Roboto', sans-serif;
 }
+
 .g-signin-button {
   /* This is where you control how the button looks. Be creative! */
   display: inline-block;
