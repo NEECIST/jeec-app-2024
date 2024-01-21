@@ -8,7 +8,7 @@
         <v-img alt="JEEC logo" src="@/assets/jeec_colour_no_edition.svg" />
       </div>
 
-      <div class="buttons-flex" v-if="!loading">
+      <div class="buttons-flex">
 
         <GoogleLogin :callback="callback" />
 

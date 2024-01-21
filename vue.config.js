@@ -3,6 +3,28 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
 
+  css: {
+    loaderOptions: {
+      sass: {
+        data: `
+          @import "@/scss/_variables.scss";
+        `
+        // @import "@/scss/_mixins.scss"; 
+      }
+    }
+  },
+
+  pwa: {
+    iconPaths: {
+      faviconSVG: 'favicon.ico',
+      favicon32: 'img/icons/favicon-32x32.png',
+      favicon16: 'img/icons/favicon-16x16.png',
+      appleTouchIcon: 'img/icons/apple-touch-icon-152x152.png',
+      maskIcon: 'img/icons/safari-pinned-tab.svg',
+      msTileImage: 'img/icons/msapplication-icon-144x144.png'
+    }
+  },
+
   pluginOptions: {
     vuetify: {
 			// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
