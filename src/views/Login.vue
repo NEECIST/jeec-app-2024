@@ -50,7 +50,7 @@ const callback = (response) => {
         router.push("/home");
       } else {
         console.log('************************************************');
-        window.location.reload();
+        // window.location.reload();
       }
     })
 }

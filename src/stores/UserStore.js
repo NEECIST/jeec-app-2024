@@ -31,7 +31,6 @@ export const useUserStore = defineStore("UserStore", {
         .get(
           process.env.VUE_APP_JEEC_BRAIN_URL + "/student/current_student_24",
           {
-            timeout: 9999,
             headers: {Authorization: jwt}
           }
         )
