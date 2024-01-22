@@ -35,7 +35,8 @@ console.log(userStore.loggedIn)
 const callback = (response) => {
   // decodeCredential will retrive the JWT payload from the credential
   const userData = decodeCredential(response.credential)
-  console.log("googleData", userData)
+
+  console.log(userData)
 
   axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle", userData)
     .then((response) => {
@@ -43,9 +44,12 @@ const callback = (response) => {
 
       userStore.authUser(jwt)
 
+      console.log(userStore.user)
+
       if (userStore.user.name != "") {
         router.push("/home");
       } else {
+        console.log('************************************************');
         window.location.reload();
       }
     })
