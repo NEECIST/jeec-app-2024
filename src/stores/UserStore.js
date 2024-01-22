@@ -39,13 +39,13 @@ export const useUserStore = defineStore("UserStore", {
           const data = response.data
           this.user = data.current_student
         })
-        .catch(err => {
-          // If there was a problem, we want to
-          // dispatch the error condition
-          console.log('18890420')
-          console.log(err);
-          return err;
-        });
+        // .catch(err => {
+        //   // If there was a problem, we want to
+        //   // dispatch the error condition
+        //   console.log('18890420')
+        //   console.log(err);
+        //   return err;
+        // });
       
       console.log(this.user)
     }
