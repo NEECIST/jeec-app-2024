@@ -23,7 +23,9 @@ export const useUserStore = defineStore("UserStore", {
     isLoggedIn() {
       console.log(localStorage.getItem("loggedIn"))
       if(localStorage.getItem("loggedIn") == true) {
+        console.log('LOG DE MERDA')
         this.user = localStorage.getItem("user")
+        console.log(this.user.name)
 
         if (this.user.name != "") {
           window.location.replace('home');
