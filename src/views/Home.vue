@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    {{ userStore.user }}
+    {{ user.name }}
     <!-- <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">
@@ -113,9 +113,7 @@
 
 <script>
 import { useUserStore } from '@/stores/UserStore';
-
-const userStore = useUserStore();
-console.log(userStore.user)
+import { mapState } from 'pinia'
 
 // import UserService from "../services/user.service";
 // import axios from "axios";
@@ -124,6 +122,12 @@ console.log(userStore.user)
 export default {
   name: "Home",
   components: {
+  },
+  computed: {
+    ...mapState(useUserStore, ['user']),
+  },
+  mounted(){
+    console.log(user)
   },
 //   data: function () {
 //     return {

@@ -22,7 +22,6 @@ import axios from 'axios';
 import { useUserStore } from '@/stores/UserStore';
 import { decodeCredential } from 'vue3-google-login'
 import CryptoJS from 'crypto-js';
-import { useRouter } from 'vue-router';
 import { onMounted } from 'vue';
 
 const userStore = useUserStore();
