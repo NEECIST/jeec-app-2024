@@ -47,8 +47,8 @@ export const useUserStore = defineStore("UserStore", {
           console.log(response)
           const data = response.data
           this.user = data.current_student
-          localStorage.setItem("user", this.user)
-          console.log(localStorage.getItem("user"))
+          localStorage.setItem("name", this.user.name)
+          console.log(localStorage.getItem("name"))
           localStorage.setItem("loggedIn", true)
           console.log(localStorage.getItem("loggedIn"))
         })

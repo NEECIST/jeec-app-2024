@@ -1,7 +1,4 @@
 <template>
-  <div>
-    V2.3
-  </div>
   <div class="login">
     <div class="loading">
       <div class="loading-top">
