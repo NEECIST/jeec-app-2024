@@ -127,7 +127,7 @@ export default {
     ...mapState(useUserStore, ['user']),
   },
   mounted(){
-    console.log(user)
+    console.log(this.user)
   }
 //   data: function () {
 //     return {
