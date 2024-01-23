@@ -8,7 +8,7 @@ export const useUserStore = defineStore("UserStore", {
   state: () => {
     return {
       user: {
-        loggedIn: false,
+        loggedIn: 'false',
         name: "",
         username: "",
         email: "",
@@ -25,7 +25,7 @@ export const useUserStore = defineStore("UserStore", {
       this.loggedIn = localStorage.getItem("loggedIn")
       console.log(this.loggedIn)
       console.log(typeof this.loggedIn)
-      if(loggedIn == true) {
+      if(this.loggedIn == true) {
         console.log('LOG DE MERDA')
         this.user = localStorage.getItem("user")
         console.log(this.user.name)
@@ -54,7 +54,7 @@ export const useUserStore = defineStore("UserStore", {
           this.user = data.current_student
           localStorage.setItem("name", this.user.name)
           console.log(localStorage.getItem("name"))
-          localStorage.setItem("loggedIn", true)
+          localStorage.setItem("loggedIn", 'true')
           console.log(localStorage.getItem("loggedIn"))
         })
       
