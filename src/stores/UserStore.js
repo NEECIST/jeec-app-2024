@@ -26,6 +26,7 @@ export const useUserStore = defineStore("UserStore", {
       this.loggedIn = JSON.parse(buffer)
       if(this.loggedIn == true) {
         buffer = localStorage.getItem("user")
+        console.log(JSON.parse(buffer))
         this.user = JSON.parse(buffer)
 
         if (this.user.name != "") {
