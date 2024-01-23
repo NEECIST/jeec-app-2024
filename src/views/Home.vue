@@ -113,7 +113,7 @@
 
 <script>
 import { useUserStore } from '@/stores/UserStore';
-import { mapState } from 'pinia'
+import { mapState, mapActions } from 'pinia'
 
 // import UserService from "../services/user.service";
 // import axios from "axios";
@@ -121,13 +121,8 @@ import { mapState } from 'pinia'
 
 export default {
   name: "Home",
-  components: {
-  },
   computed: {
     ...mapState(useUserStore, ['user']),
-  },
-  mounted(){
-    console.log(this.user)
   }
 //   data: function () {
 //     return {

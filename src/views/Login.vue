@@ -26,9 +26,9 @@ import { onMounted } from 'vue';
 
 const userStore = useUserStore();
 
-onMounted(()=>{
-  userStore.isLoggedIn();
-})
+// onMounted(()=>{
+//   userStore.isLoggedIn();
+// })
 
 const callback = (response) => {
   // decodeCredential will retrive the JWT payload from the credential

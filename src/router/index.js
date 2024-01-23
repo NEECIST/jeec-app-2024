@@ -105,13 +105,21 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from) => {
-//   const userStore = useUserStore();
-//   userStore.isLoggedIn();
+router.beforeEach((to, from) => {
+  const userStore = useUserStore();
 
-//   if (!userStore.loggedIn) {
-//     router.push("/")
-//   }
-// })
+  if(userStore.loggedInState != true) {
+    userStore.isLoggedIn();
+    userStore.loggedInState = true;
+    
+    if (userStore.loggedIn != true) {
+      router.push("/")
+    }
+  }
+  
+  if (to.name == "login" && userStore.loggedIn == true) {
+    router.push("/home")
+  }
+})
 
 export default router

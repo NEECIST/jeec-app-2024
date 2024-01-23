@@ -5,6 +5,7 @@ export const useUserStore = defineStore("UserStore", {
   state: () => {
     return {
       loggedIn: false,
+      loggedInState: false,
       user: {
         name: "",
         username: "",
@@ -21,18 +22,10 @@ export const useUserStore = defineStore("UserStore", {
     isLoggedIn() {
       var buffer = localStorage.getItem("loggedIn")
       this.loggedIn = JSON.parse(buffer)
+      
       if(this.loggedIn == true) {
         buffer = localStorage.getItem("user")
-        console.log(JSON.parse(buffer))
-        this.user = JSON.parse(buffer)
-        console.log(this.user.name)
-
-        if (this.user.name != "") {
-          window.location.replace('home');
-        } else {
-          localStorage.setItem("loggedIn", false)
-          window.location.reload();
-        }
+        this.user = { ... JSON.parse(buffer) }
       }
     },
 
