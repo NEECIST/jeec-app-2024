@@ -115,6 +115,7 @@
 import { useUserStore } from '@/stores/UserStore';
 
 const userStore = useUserStore();
+console.log(userStore.user)
 
 // import UserService from "../services/user.service";
 // import axios from "axios";
