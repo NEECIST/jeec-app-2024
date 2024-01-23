@@ -24,7 +24,7 @@ export const useUserStore = defineStore("UserStore", {
       if(this.loggedIn == true) {
         buffer = localStorage.getItem("user")
         console.log(JSON.parse(buffer))
-        this.user.name = JSON.parse(buffer).name
+        this.user = JSON.parse(buffer)
         console.log(this.user.name)
 
         if (this.user.name != "") {

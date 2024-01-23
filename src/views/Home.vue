@@ -126,6 +126,9 @@ export default {
   computed: {
     ...mapState(useUserStore, ['user']),
   },
+  mounted(){
+    console.log(user)
+  }
 //   data: function () {
 //     return {
 //       cv_logo:require("../assets/cv_b-11 1.png"),
