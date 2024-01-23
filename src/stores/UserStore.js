@@ -28,6 +28,7 @@ export const useUserStore = defineStore("UserStore", {
         buffer = localStorage.getItem("user")
         console.log(JSON.parse(buffer))
         this.user = JSON.parse(buffer)
+        console.log(this.user)
 
         if (this.user.name != "") {
           window.location.replace('home');
