@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-    {{ user.name }}
+  <div>
+    {{ user }}
     <!-- <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">
