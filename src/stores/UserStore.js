@@ -1,5 +1,8 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 export const useUserStore = defineStore("UserStore", {
   state: () => {
@@ -47,7 +50,14 @@ export const useUserStore = defineStore("UserStore", {
         //   return err;
         // });
       
-      console.log(this.user)
+      if (this.user.name != "") {
+        router.push("/home");
+      } else {
+        console.log('************************************************');
+        // window.location.reload();
+      }
+
+        console.log(this.user)
     }
   },
 });

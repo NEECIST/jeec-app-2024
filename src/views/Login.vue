@@ -65,14 +65,12 @@ const callback = (response) => {
 
       userStore.authUser(jwt)
 
-      console.log(userStore.user)
-
-      if (userStore.user.name != "") {
-        router.push("/home");
-      } else {
-        console.log('************************************************');
-        // window.location.reload();
-      }
+      // if (userStore.user.name != "") {
+      //   router.push("/home");
+      // } else {
+      //   console.log('************************************************');
+      //   // window.location.reload();
+      // }
     })
 }
 
