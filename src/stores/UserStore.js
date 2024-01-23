@@ -23,9 +23,15 @@ export const useUserStore = defineStore("UserStore", {
   },
   actions: {
     isLoggedIn() {
-      if(localStorage.getItem("loggedIn") != null) {
-        return this.loggedIn = localStorage.getItem("loggedIn")
-      } else this.loggedIn = false
+      if(localStorage.getItem("loggedIn") == true) {
+        this.user = localStorage.getItem("user")
+      }
+      if (this.user.name != "") {
+        window.location.replace('home');
+      } else {
+        localStorage.setItem("loggedIn", false)
+        window.location.reload();
+      }
     },
 
     async authUser(jwt) {
@@ -41,20 +47,14 @@ export const useUserStore = defineStore("UserStore", {
           console.log(response)
           const data = response.data
           this.user = data.current_student
+          localStorage.setItem("user", this.user)
+          localStorage.setItem("loggedIn", true)
         })
-        // .catch(err => {
-        //   // If there was a problem, we want to
-        //   // dispatch the error condition
-        //   console.log('18890420')
-        //   console.log(err);
-        //   return err;
-        // });
       
       if (this.user.name != "") {
         window.location.replace('home');
       } else {
-        console.log('************************************************');
-        // window.location.reload();
+        window.location.reload();
       }
 
         console.log(this.user)

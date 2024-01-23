@@ -26,30 +26,14 @@ import { useUserStore } from '@/stores/UserStore';
 import { decodeCredential } from 'vue3-google-login'
 import CryptoJS from 'crypto-js';
 import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
 
 const userStore = useUserStore();
 const router = useRouter();
 
-function devLogin(){
-  axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle", userData)
-    .then((response) => {
-      const jwt = decrypt(response.data)
-
-      userStore.authUser(jwt)
-      userStore.authUser(jwt)
-
-      console.log(userStore.user)
-
-      if (userStore.user.name != "") {
-        router.push("/home");
-      } else {
-        console.log('************************************************');
-        // window.location.reload();
-      }
-    })
-
-}
-
+onMounted(()=>{
+  userStore.isLoggedIn();
+})
 
 console.log(userStore.loggedIn)
 
@@ -64,13 +48,6 @@ const callback = (response) => {
       const jwt = decrypt(response.data)
 
       userStore.authUser(jwt)
-
-      // if (userStore.user.name != "") {
-      //   router.push("/home");
-      // } else {
-      //   console.log('************************************************');
-      //   // window.location.reload();
-      // }
     })
 }
 
