@@ -8,8 +8,7 @@
       <div class="buttons-flex">
 
         <GoogleLogin :callback="callback" />
-        <div @click="devLogin()">BOTÃO</div>
-        <p>v2.0</p>
+        <p>v2.1</p>
 
       </div>
 

@@ -8,7 +8,7 @@ export const useUserStore = defineStore("UserStore", {
   state: () => {
     return {
       user: {
-        loggedIn: 'false',
+        loggedIn: false,
         name: "",
         username: "",
         email: "",
@@ -24,7 +24,7 @@ export const useUserStore = defineStore("UserStore", {
     isLoggedIn() {
       localStorage.clear()
       this.loggedIn = localStorage.getItem(JSON.parse("loggedIn"))
-      if(this.loggedIn == 'true') {
+      if(this.loggedIn == true) {
         this.user = localStorage.getItem(JSON.parse("user"))
         console.log(this.user.name)
 
@@ -60,7 +60,7 @@ export const useUserStore = defineStore("UserStore", {
         window.location.reload();
       }
 
-        console.log(this.user)
+      console.log(this.user)
     }
   },
 });
