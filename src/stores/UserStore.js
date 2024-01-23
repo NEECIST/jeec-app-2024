@@ -7,8 +7,6 @@ const router = useRouter();
 export const useUserStore = defineStore("UserStore", {
   state: () => {
     return {
-      isLoggedInReady: false,
-      loggedIn: false,
       user: {
         name: "",
         username: "",
@@ -23,6 +21,7 @@ export const useUserStore = defineStore("UserStore", {
   },
   actions: {
     isLoggedIn() {
+      console.log(localStorage.getItem("loggedIn"))
       if(localStorage.getItem("loggedIn") == true) {
         this.user = localStorage.getItem("user")
 
@@ -49,7 +48,9 @@ export const useUserStore = defineStore("UserStore", {
           const data = response.data
           this.user = data.current_student
           localStorage.setItem("user", this.user)
+          console.log(localStorage.getItem("user"))
           localStorage.setItem("loggedIn", true)
+          console.log(localStorage.getItem("loggedIn"))
         })
       
       if (this.user.name != "") {

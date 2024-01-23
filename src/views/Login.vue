@@ -12,6 +12,7 @@
 
         <GoogleLogin :callback="callback" />
         <div @click="devLogin()">BOTÃO</div>
+        <p>v2.0</p>
 
       </div>
 
@@ -34,8 +35,6 @@ const router = useRouter();
 onMounted(()=>{
   userStore.isLoggedIn();
 })
-
-console.log(userStore.loggedIn)
 
 const callback = (response) => {
   // decodeCredential will retrive the JWT payload from the credential
