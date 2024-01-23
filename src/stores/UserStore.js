@@ -51,7 +51,7 @@ export const useUserStore = defineStore("UserStore", {
         // });
       
       if (this.user.name != "") {
-        window.location.href(process.env.STUDENT_APP_URL + '/home');
+        window.location.replace('home');
       } else {
         console.log('************************************************');
         // window.location.reload();
