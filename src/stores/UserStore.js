@@ -25,7 +25,7 @@ export const useUserStore = defineStore("UserStore", {
       this.loggedIn = localStorage.getItem("loggedIn")
       console.log(this.loggedIn)
       console.log(typeof this.loggedIn)
-      if(this.loggedIn == true) {
+      if(this.loggedIn == 'true') {
         console.log('LOG DE MERDA')
         this.user = localStorage.getItem("user")
         console.log(this.user.name)
