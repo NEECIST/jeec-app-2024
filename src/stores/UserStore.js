@@ -51,7 +51,7 @@ export const useUserStore = defineStore("UserStore", {
         // });
       
       if (this.user.name != "") {
-        window.location.replace('app.jeec.ist/home');
+        window.location.replace('home');
       } else {
         console.log('************************************************');
         // window.location.reload();
