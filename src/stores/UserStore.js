@@ -25,12 +25,13 @@ export const useUserStore = defineStore("UserStore", {
     isLoggedIn() {
       if(localStorage.getItem("loggedIn") == true) {
         this.user = localStorage.getItem("user")
-      }
-      if (this.user.name != "") {
-        window.location.replace('home');
-      } else {
-        localStorage.setItem("loggedIn", false)
-        window.location.reload();
+
+        if (this.user.name != "") {
+          window.location.replace('home');
+        } else {
+          localStorage.setItem("loggedIn", false)
+          window.location.reload();
+        }
       }
     },
 
