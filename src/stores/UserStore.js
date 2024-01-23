@@ -22,12 +22,10 @@ export const useUserStore = defineStore("UserStore", {
   },
   actions: {
     isLoggedIn() {
-      this.loggedIn = localStorage.getItem("loggedIn")
-      console.log(this.loggedIn)
-      console.log(typeof this.loggedIn)
+      localStorage.clear()
+      this.loggedIn = localStorage.getItem(JSON.parse("loggedIn"))
       if(this.loggedIn == 'true') {
-        console.log('LOG DE MERDA')
-        this.user = localStorage.getItem("user")
+        this.user = localStorage.getItem(JSON.parse("user"))
         console.log(this.user.name)
 
         if (this.user.name != "") {
@@ -52,10 +50,8 @@ export const useUserStore = defineStore("UserStore", {
           console.log(response)
           const data = response.data
           this.user = data.current_student
-          localStorage.setItem("name", this.user.name)
-          console.log(localStorage.getItem("name"))
-          localStorage.setItem("loggedIn", 'true')
-          console.log(localStorage.getItem("loggedIn"))
+          localStorage.setItem("user", JSON.stringify(this.user))
+          localStorage.setItem("loggedIn", JSON.stringify(true))
         })
       
       if (this.user.name != "") {
