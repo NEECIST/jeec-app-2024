@@ -1,8 +1,5 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 
 export const useUserStore = defineStore("UserStore", {
   state: () => {
@@ -27,8 +24,8 @@ export const useUserStore = defineStore("UserStore", {
       if(this.loggedIn == true) {
         buffer = localStorage.getItem("user")
         console.log(JSON.parse(buffer))
-        this.user = JSON.parse(buffer)
-        console.log(this.user)
+        this.user.name = JSON.parse(buffer).name
+        console.log(this.user.name)
 
         if (this.user.name != "") {
           window.location.replace('home');
