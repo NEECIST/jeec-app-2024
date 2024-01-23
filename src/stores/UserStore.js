@@ -7,8 +7,8 @@ const router = useRouter();
 export const useUserStore = defineStore("UserStore", {
   state: () => {
     return {
+      loggedIn: false,
       user: {
-        loggedIn: false,
         name: "",
         username: "",
         email: "",
@@ -27,7 +27,6 @@ export const useUserStore = defineStore("UserStore", {
       if(this.loggedIn == true) {
         buffer = localStorage.getItem("user")
         this.user = JSON.parse(buffer)
-        console.log(this.user.name)
 
         if (this.user.name != "") {
           window.location.replace('home');

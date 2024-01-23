@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <div class="top">
+    {{ userStore.user }}
+    <!-- <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">
           <h1 >
@@ -106,191 +107,195 @@
           </div>
         </div>
         
-      </div>
+      </div> -->
   </div>
 </template>
 
 <script>
-import UserService from "../services/user.service";
-import axios from "axios";
-import authHeader from "../services/auth-header";
+import { useUserStore } from '@/stores/UserStore';
+
+const userStore = useUserStore();
+
+// import UserService from "../services/user.service";
+// import axios from "axios";
+// import authHeader from "../services/auth-header";
 
 export default {
   name: "Home",
   components: {
   },
-  data: function () {
-    return {
-      cv_logo:require("../assets/cv_b-11 1.png"),
-      jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
-      default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
-      squad: null,
-      levels: null,
-      today_reward: {image:null},
-      xpbar_width: "92vw",
-      height: 30,
-      loading_squad: true,
-      loading_level: true,
-      loading_reward: true,
-      has_cv: true,
-      squad_ranking:null,
-      xp_to_first:null,
-      next_activity:null,
-      quest:{error:'No quest'},
-    };
-  },
-  mounted(){
+//   data: function () {
+//     return {
+//       cv_logo:require("../assets/cv_b-11 1.png"),
+//       jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
+//       default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
+//       squad: null,
+//       levels: null,
+//       today_reward: {image:null},
+//       xpbar_width: "92vw",
+//       height: 30,
+//       loading_squad: true,
+//       loading_level: true,
+//       loading_reward: true,
+//       has_cv: true,
+//       squad_ranking:null,
+//       xp_to_first:null,
+//       next_activity:null,
+//       quest:{error:'No quest'},
+//     };
+//   },
+//   mounted(){
 
-  },
-  computed: {
-    _today_reward() {
-      return this.today_reward && this.today_reward.image
-        ? this.jeec_brain_url + this.today_reward.image
-        : this.default_image;
-    },
-    _reward_level() {
-      return this.reward_level
-        ? this.jeec_brain_url + this.reward_level.reward.image
-        : this.default_image;
-    },
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
-    nameArray() {
-      var names = this.$store.state.auth.user.name.split(" ");
+//   },
+//   computed: {
+//     _today_reward() {
+//       return this.today_reward && this.today_reward.image
+//         ? this.jeec_brain_url + this.today_reward.image
+//         : this.default_image;
+//     },
+//     _reward_level() {
+//       return this.reward_level
+//         ? this.jeec_brain_url + this.reward_level.reward.image
+//         : this.default_image;
+//     },
+//     currentUser() {
+//       return this.$store.state.auth.user;
+//     },
+//     nameArray() {
+//       var names = this.$store.state.auth.user.name.split(" ");
 
-      if (names.length > 1) return names;
-      else return [this.$store.state.auth.user.name, ""];
-    },
-    progress() {
-      var xp = this.$store.state.auth.user.total_points;
-      var start_points = this.$store.state.auth.user.level.data.start_points;
-      var end_points = this.$store.state.auth.user.level.data.end_points;
+//       if (names.length > 1) return names;
+//       else return [this.$store.state.auth.user.name, ""];
+//     },
+//     progress() {
+//       var xp = this.$store.state.auth.user.total_points;
+//       var start_points = this.$store.state.auth.user.level.data.start_points;
+//       var end_points = this.$store.state.auth.user.level.data.end_points;
 
-      return ((xp - start_points) / (end_points - start_points)) * 100;
-    },
-    reward_level() {
-      if (!this.levels) return null;
+//       return ((xp - start_points) / (end_points - start_points)) * 100;
+//     },
+//     reward_level() {
+//       if (!this.levels) return null;
 
-      for (var level of this.levels) {
-        if (level.value === this.$store.state.auth.user.level.data.value)
-          return level;
-      }
+//       for (var level of this.levels) {
+//         if (level.value === this.$store.state.auth.user.level.data.value)
+//           return level;
+//       }
 
-      return null;
-    },
-  },
-  methods: {
-    resize() {
+//       return null;
+//     },
+//   },
+//   methods: {
+//     resize() {
       
-      this.xpbar_width = "92vw";
+//       this.xpbar_width = "92vw";
       
-    },
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.resize);
-  },
-  async created() {
-    window.addEventListener("resize", this.resize);
-    this.resize();
+//     },
+//   },
+//   destroyed() {
+//     window.removeEventListener("resize", this.resize);
+//   },
+//   async created() {
+//     window.addEventListener("resize", this.resize);
+//     this.resize();
 
-    if (!this.currentUser) {
-      this.$router.push("/");
-    }
+//     if (!this.currentUser) {
+//       this.$router.push("/");
+//     }
 
-    axios.get(this.jeec_brain_url + "/student/cv", { headers: authHeader() }).then(response=>{
-      if(response.data=="No CV uploaded"){
-        this.has_cv=false;
-      }
-      else{
-        this.has_cv=true;
-      }
-    })
+//     axios.get(this.jeec_brain_url + "/student/cv", { headers: authHeader() }).then(response=>{
+//       if(response.data=="No CV uploaded"){
+//         this.has_cv=false;
+//       }
+//       else{
+//         this.has_cv=true;
+//       }
+//     })
       
-    UserService.getNextActivity().then(
-      (response) => {
+//     UserService.getNextActivity().then(
+//       (response) => {
     
-        this.next_activity = response.data.activity
-      },
-    );
-    let user_squad=null
-    await UserService.getUserSquad().then(
-      (response) => {
-        user_squad = response.data
-      },
-      (error)=>{
-        console.log(error)
-      }
-    );
-    let daily_squads_rank = null
-    UserService.getDailySquadsRanking().then(
-      (response) => {
+//         this.next_activity = response.data.activity
+//       },
+//     );
+//     let user_squad=null
+//     await UserService.getUserSquad().then(
+//       (response) => {
+//         user_squad = response.data
+//       },
+//       (error)=>{
+//         console.log(error)
+//       }
+//     );
+//     let daily_squads_rank = null
+//     UserService.getDailySquadsRanking().then(
+//       (response) => {
         
-        let top_daily_points=0
-        daily_squads_rank = response.data
-        if(daily_squads_rank.data.length>1){
+//         let top_daily_points=0
+//         daily_squads_rank = response.data
+//         if(daily_squads_rank.data.length>1){
           
-          top_daily_points = daily_squads_rank.data[0].daily_points
-        }
-        else{
+//           top_daily_points = daily_squads_rank.data[0].daily_points
+//         }
+//         else{
         
-          top_daily_points = daily_squads_rank.data.daily_points
-        }
-        this.xp_to_first = top_daily_points-user_squad.data.daily_points;
-        if(Array.isArray(daily_squads_rank.data)){
-          for(let i=1;i<=daily_squads_rank.data.length;i++){
-            if(daily_squads_rank.data[i-1].name == user_squad.data.name){
-              this.squad_ranking=i;
-            }
-          }
-        }
-        else{
-          this.squad_ranking=1
-        }
+//           top_daily_points = daily_squads_rank.data.daily_points
+//         }
+//         this.xp_to_first = top_daily_points-user_squad.data.daily_points;
+//         if(Array.isArray(daily_squads_rank.data)){
+//           for(let i=1;i<=daily_squads_rank.data.length;i++){
+//             if(daily_squads_rank.data[i-1].name == user_squad.data.name){
+//               this.squad_ranking=i;
+//             }
+//           }
+//         }
+//         else{
+//           this.squad_ranking=1
+//         }
         
-      },
-    );
+//       },
+//     );
 
-    UserService.getQuestProgress().then(
-      (response) => {
-        this.quest = response.data
-      },
-    );
+//     UserService.getQuestProgress().then(
+//       (response) => {
+//         this.quest = response.data
+//       },
+//     );
     
 
-    UserService.getUserSquad().then(
-      (response) => {
-        this.squad = response.data.data;
-        this.loading_squad = false;
-      },
-      (error) => {
-        console.log(error);
-        this.loading_squad = false;
-      }
-    );
+//     UserService.getUserSquad().then(
+//       (response) => {
+//         this.squad = response.data.data;
+//         this.loading_squad = false;
+//       },
+//       (error) => {
+//         console.log(error);
+//         this.loading_squad = false;
+//       }
+//     );
 
-    UserService.getLevels().then(
-      (response) => {
-        this.levels = response.data.data;
-        this.loading_level = false;
-      },
-      (error) => {
-        console.log(error);
-        this.loading_level = false;
-      }
-    );
+//     UserService.getLevels().then(
+//       (response) => {
+//         this.levels = response.data.data;
+//         this.loading_level = false;
+//       },
+//       (error) => {
+//         console.log(error);
+//         this.loading_level = false;
+//       }
+//     );
 
-    UserService.getTodaySquadReward().then(
-      (response) => {
-        this.today_reward = response.data;
-        this.loading_reward = false;
-      },
-      (error) => {
-        console.log(error);
-        this.loading_reward = false;
-      }
-    );
-  },
+//     UserService.getTodaySquadReward().then(
+//       (response) => {
+//         this.today_reward = response.data;
+//         this.loading_reward = false;
+//       },
+//       (error) => {
+//         console.log(error);
+//         this.loading_reward = false;
+//       }
+//     );
+//   },
 };
 </script>
 

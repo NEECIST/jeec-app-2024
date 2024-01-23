@@ -26,7 +26,6 @@ import { useRouter } from 'vue-router';
 import { onMounted } from 'vue';
 
 const userStore = useUserStore();
-const router = useRouter();
 
 onMounted(()=>{
   userStore.isLoggedIn();
