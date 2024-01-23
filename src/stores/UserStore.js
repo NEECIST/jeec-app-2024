@@ -25,9 +25,9 @@ export const useUserStore = defineStore("UserStore", {
       } else this.loggedIn = false
     },
 
-    authUser(jwt) {
+    async authUser(jwt) {
       console.log(jwt)
-      axios
+      await axios
         .get(
           process.env.VUE_APP_JEEC_BRAIN_URL + "/student/current_student_24",
           {

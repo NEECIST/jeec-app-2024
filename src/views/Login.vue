@@ -64,7 +64,6 @@ const callback = (response) => {
       const jwt = decrypt(response.data)
 
       userStore.authUser(jwt)
-      userStore.authUser(jwt)
 
       console.log(userStore.user)
 
