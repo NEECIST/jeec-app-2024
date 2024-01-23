@@ -51,7 +51,7 @@ export const useUserStore = defineStore("UserStore", {
         // });
       
       if (this.user.name != "") {
-        router.push("/home");
+        window.location.replace('app.jeec.ist/home');
       } else {
         console.log('************************************************');
         // window.location.reload();
