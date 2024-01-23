@@ -11,6 +11,7 @@
       <div class="buttons-flex">
 
         <GoogleLogin :callback="callback" />
+        <div @click="devLogin()">BOTÃO</div>
 
       </div>
 
@@ -29,6 +30,26 @@ import { useRouter } from 'vue-router';
 const userStore = useUserStore();
 const router = useRouter();
 
+function devLogin(){
+  axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle", userData)
+    .then((response) => {
+      const jwt = decrypt(response.data)
+
+      userStore.authUser(jwt)
+      userStore.authUser(jwt)
+
+      console.log(userStore.user)
+
+      if (userStore.user.name != "") {
+        router.push("/home");
+      } else {
+        console.log('************************************************');
+        // window.location.reload();
+      }
+    })
+
+}
+
 
 console.log(userStore.loggedIn)
 
@@ -42,6 +63,7 @@ const callback = (response) => {
     .then((response) => {
       const jwt = decrypt(response.data)
 
+      userStore.authUser(jwt)
       userStore.authUser(jwt)
 
       console.log(userStore.user)
