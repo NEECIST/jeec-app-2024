@@ -44,6 +44,7 @@ export const useUserStore = defineStore("UserStore", {
           this.user = data.current_student
           localStorage.setItem("user", JSON.stringify(this.user))
           localStorage.setItem("loggedIn", JSON.stringify(true))
+          localStorage.setItem("jwt", JSON.stringify(jwt))
         })
       
       if (this.user.name != "") {

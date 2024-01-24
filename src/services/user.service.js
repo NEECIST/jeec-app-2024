@@ -201,6 +201,7 @@ class UserService {
   }
 
   getStudentsRanking() {
+    console.log(authHeader());
     return axios.get(jeec_brain_url + "/student/students-ranking", {
       headers: authHeader()
     });

@@ -1,6 +1,18 @@
 <template>
+  <!-- <div class="rankings">
+
+    <div class="select">
+      <div class="solo">
+        SOLO
+      </div>
+      <div class="squad">
+        SQUAD
+      </div> 
+    </div>
+
+  </div> -->
   <div class="rankings">
-    <!-- <Buttons
+     <!-- <Buttons
       @_click="click"
       class="-buttons"
       :names="{
@@ -15,13 +27,15 @@
         personal: button === 'personal',
         squads: button === 'squads',
       }"
-    /> -->
+    />  -->
 
-    
+    <div>
+      {{ user.name }}
+    </div>
        <div class="btns">
        <button class="personal-btn unselected" :class="{selected: personal}" @click="Personal">Personal</button>
        <button class="squad-btn unselected" :class="{selected: squad}" @click="Squad">Squad</button>
-      </div>
+      </div> 
 
     <div style="height: 8vh"></div>
 
@@ -29,7 +43,7 @@
       <div v-show="personal">
       <div class="podium">
         <div class="stand" v-if="students.length>1">
-          <img :src="students[1].photo" class="podium-img second">                 <!--mudar index-->
+          <img :src="students[1].photo" class="podium-img second">              <!-- mudar o index -->   
           <p class="podium-text">{{names[1]}}</p>
           <div class="second pilar">
             <span>2</span><sup class="super">nd</sup>
@@ -51,7 +65,7 @@
         </div>
       </div>
 
-     <!-- replace for other_students -->
+
         <Rank
           v-for="(student, index) in other_students"
           v-show="personal"
@@ -67,7 +81,7 @@
         <div v-show="squad">
       <div class="podium">
         <div class="stand" v-if="squads.length>1">
-          <img :src="jeec_brain_url + squads[1].image" class="podium-img second">                 <!--mudar index-->
+          <img :src="jeec_brain_url + squads[1].image" class="podium-img second">        <!-- mudar o index -->          
           <p class="podium-text">{{squads[1].name}}</p>
           <div class="second pilar">
             <span>2</span><sup class="super">nd</sup>
@@ -86,7 +100,7 @@
           <div class="third pilar">
             <span>3</span><sup class="super">rd</sup>
           </div>
-        </div>
+        </div> 
       </div>
         <Rank
           v-for="(squad, index) in other_squads"
@@ -117,12 +131,17 @@
 <script>
 import Rank from "@/components/Rank.vue";
 import UserService from "../services/user.service";
-
+import { useUserStore } from '@/stores/UserStore';
+import { mapState } from 'pinia'
 export default {
   name: "Rankings",
   components: {
     Rank,
   },
+  computed: {
+      ...mapState(useUserStore, ['user']),
+  },
+
   data: function () {
     return {
       button: "personal",
@@ -139,11 +158,6 @@ export default {
       other_squads:[],
       names:[],
     };
-  },
-  computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
   },
   methods: {
     nameArray() {
@@ -188,9 +202,10 @@ export default {
     },
   },
   created() {
-    if (!this.currentUser) {
-      this.$router.push("/");
-    }
+    // console.log(this.currentUser);
+    // if (!this.currentUser) {
+    //   this.$router.push("/");
+    // }
 
     UserService.getStudentsRanking().then(
       (response) => {
@@ -236,13 +251,42 @@ export default {
         this.loading_daily = false;
       }
     );
+    console.log(this.students);
   },
+ 
+  
 };
 </script>
 
 <style scoped>
 
-.super{
+
+.rankings {
+  display: flex;
+  background-color: #1F1F1F;
+  justify-content: center;
+  align-content: center;
+  height: 900px;
+
+} 
+
+.select{
+  display: flex;
+  position: relative;
+  top: 102px;
+  height: 33px;
+  width: 384px;
+  justify-content: center;
+}
+
+.select{
+  position: relative;
+  justify-content: center;
+  align-content: center;
+}
+
+
+/* .super{
   font-size:30px;
   vertical-align: super;
 }
@@ -352,9 +396,7 @@ export default {
   border-top-right-radius: 14px;
   border-bottom-right-radius: 14px;
 }
-.rankings {
-  background-color: #FFFCF8;
-}
+
 
 .rank-wrapper {
   height: 82vh;
@@ -376,5 +418,5 @@ export default {
 .loading {
   text-align: center;
   margin-top: 35vh;
-}
+} */
 </style>
