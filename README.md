@@ -1,4 +1,4 @@
-# jeec-student
+# jeec-app-2024
 
 ## Project setup
 ```
