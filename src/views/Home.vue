@@ -113,11 +113,7 @@
 
 <script>
 import { useUserStore } from '@/stores/UserStore';
-import { mapState, mapActions } from 'pinia'
-
-// import UserService from "../services/user.service";
-// import axios from "axios";
-// import authHeader from "../services/auth-header";
+import { mapState } from 'pinia'
 
 export default {
   name: "Home",

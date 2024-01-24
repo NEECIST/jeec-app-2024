@@ -22,16 +22,10 @@ import axios from 'axios';
 import { useUserStore } from '@/stores/UserStore';
 import { decodeCredential } from 'vue3-google-login'
 import CryptoJS from 'crypto-js';
-import { onMounted } from 'vue';
 
 const userStore = useUserStore();
 
-// onMounted(()=>{
-//   userStore.isLoggedIn();
-// })
-
 const callback = (response) => {
-  // decodeCredential will retrive the JWT payload from the credential
   const userData = decodeCredential(response.credential)
 
   console.log(userData)

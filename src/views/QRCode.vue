@@ -1,45 +1,57 @@
 <template>
   <div class="qrcode">
-    <h1 style="text-align: center; margin-bottom: 2vh; margin-top:-20vh">Show this code everywhere!</h1>
-    <center>
-      <qrcode-vue :size="qrcode_size" :value="external_id"></qrcode-vue>
-    </center>
+    <h1 style="text-align: center; margin-bottom: 2vh; margin-top:-20vh; color: white;">Show this code everywhere!</h1>
+    <QRCodeVue3 
+      width="200" 
+      height="200" 
+      :value="this.user.student_external_id"
+      :image="qr_center_img"
+      :imageOptions="{imageSize: 0.7, margin: 8}"
+      :dotsOptions="{
+          type: 'extra-rounded',
+          gradient: {
+              type: 'linear',
+              rotation: 2,
+              colorStops: [
+                { offset: 0, color: '#4cc9f0' },
+                { offset: 1, color: '#7209b7' },
+              ],
+            },
+      }"
+      :backgroundOptions="{color: '#1f1f1f'}"
+      :cornersSquareOptions="{type: 'extra-rounded', color: '#6741c8'}"
+      :cornersDotOptions="{type: 'square', color: '#6741c8'}"
+    ></QRCodeVue3>
   </div>
 </template>
 
 <script>
-import QrcodeVue from "qrcode.vue";
-import axios from 'axios';
+import QRCodeVue3 from "qrcode-vue3";
+import { useUserStore } from '@/stores/UserStore';
+import { mapState } from 'pinia'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 export default {
   name: "QRCode",
   components: {
-    QrcodeVue,
+    QRCodeVue3,
   },
   data: function () {
     return {
-      qrcode_size: 200,
-      external_id: ''
+      qr_center_img:require("@/assets/jeec_mobile_white.svg"),
     };
   },
   methods: {
   },
   computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
+    ...mapState(useUserStore, ['user']),
   },
   mounted() {
-    if (!this.currentUser) {
-      this.$router.push("/");
-    }
-
-    axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/istid-externalid', 
-      {student_ist_id: this.currentUser.ist_id})
-         .then((response) => {
-          const data = response.data; // [{}, {}]
-          this.external_id = data.external_id;
-        });   
+    if (!this.user) {
+      router.push("/");
+    } 
   },
 };
 </script>
@@ -52,6 +64,7 @@ export default {
   align-items: center;
   width: 100vw;
   height: 90vh;
+  background-color: #1F1F1F;
 }
 
 .qrcode h1{

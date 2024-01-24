@@ -8,9 +8,8 @@ import Login from "../views/Login.vue";
 import Rankings from "../views/Rankings.vue";
 import Rewards from "../views/Prizes.vue";
 // import Company from "../views/Company.vue";
-// import Companies from "../views/Companies.vue";
 import Rules from "../views/Rules.vue";
-// import QRCode from "../views/QRCode.vue";
+import QRCode from "../views/QRCode.vue";
 // import qs from "qs";
 
 const routes = [
@@ -32,16 +31,11 @@ const routes = [
     name: "Home",
     component: Home
   },
-  // {
-  //   path: "/code",
-  //   name: "Code",
-  //   component: Code
-  // },
-  // {
-  //   path: "/qrcode",
-  //   name: "QRCode",
-  //   component: QRCode
-  // },
+  {
+    path: "/qrcode",
+    name: "QRCode",
+    component: QRCode
+  },
   {
     path: "/activities",
     name: "Activities",
