@@ -1,6 +1,7 @@
 <template>
   <div>
     {{ user.name }}
+    {{ user }}
     <!-- <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">

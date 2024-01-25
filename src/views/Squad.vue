@@ -200,6 +200,8 @@ import Invite from "@/components/Invite.vue";
 import UserService from "../services/user.service";
 import SquadCreation from "@/components/SquadCreation.vue";
 import Member from "@/components/Member.vue";
+import { useUserStore } from '@/stores/UserStore';
+import { mapState } from 'pinia';
 
 export default {
   name: "Squad",
@@ -320,7 +322,7 @@ export default {
 
       return (
         (name.indexOf(searchText) > -1 || ist_id.indexOf(searchText) > -1) &&
-        this.currentUser.ist_id !== item.ist_id &&
+        this.user.name !== item.ist_id &&
         this.squadmates.length + this.squad.members.data.length <= 4
       );
     },
@@ -480,14 +482,12 @@ export default {
     },
   },
   computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
+    ...mapState(useUserStore, ['user']),
   },
   async created() {
-    if (!this.currentUser) {
+    if (!this.user) {
       this.$router.push("/");
-    }
+    } 
 
     UserService.getUserSquad().then(
       (response) => {
@@ -504,6 +504,7 @@ export default {
         this.loading_squad = false;
       },
       (error) => {
+        console.log('olaaaaa');
         console.log(error);
         this.loading_squad = false;
       }
@@ -526,31 +527,31 @@ export default {
     
 
 
-    if(this.length > 1) {
-        await UserService.getDailySquadsRanking().then(
-          (response) => {
-            let daily_squads = response.data.data;
-            if (!Array.isArray(this.daily_squads)) this.daily_squads = [this.daily_squads];
-            this.loading_daily = false;
-            this.daily_max_points = daily_squads[0].daily_points
-            this.weekly_max_points = daily_squads[0].total_points
-            this.squads_aux = daily_squads[0]
-          },
-          (error) => {
-            console.log(error);
-            this.loading_daily = false;
-          }
-        );
-        if (this.weekly_max_points == this.squad.total_points) {
-          this.champion_week = true
-        }
-        if (this.daily_max_points == this.squad.daily_points) {
-          this.champion_daily = true
-        }
-    } else if (this.length == 1) {
-      this.champion_week = true
-      this.champion_daily = true
-    } 
+    // if(this.length > 1) {
+    //     await UserService.getDailySquadsRanking().then(
+    //       (response) => {
+    //         let daily_squads = response.data.data;
+    //         if (!Array.isArray(this.daily_squads)) this.daily_squads = [this.daily_squads];
+    //         this.loading_daily = false;
+    //         this.daily_max_points = daily_squads[0].daily_points
+    //         this.weekly_max_points = daily_squads[0].total_points
+    //         this.squads_aux = daily_squads[0]
+    //       },
+    //       (error) => {
+    //         console.log(error);
+    //         this.loading_daily = false;
+    //       }
+    //     );
+    //     if (this.weekly_max_points == this.squad.total_points) {
+    //       this.champion_week = true
+    //     }
+    //     if (this.daily_max_points == this.squad.daily_points) {
+    //       this.champion_daily = true
+    //     }
+    // } else if (this.length == 1) {
+    //   this.champion_week = true
+    //   this.champion_daily = true
+    // } 
     
   },
   watch: {
