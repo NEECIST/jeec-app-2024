@@ -117,7 +117,7 @@ export const useUserStore = defineStore("UserStore", {
         .then((response) => {
           console.log(response)
           const data = response.data
-          this.prizes = data.current_student
+          this.prizes = data.prizes
           localStorage.setItem("prizes", JSON.stringify(this.prizes))
           localStorage.setItem("loggedIn", JSON.stringify(true))
           localStorage.setItem("jwt", JSON.stringify(jwt))
