@@ -117,8 +117,8 @@
 </template>
 
 <script>
-import { useUserStore } from '@/stores/UserStore';
 import { useNewActivityStore } from '@/stores/NewActivityStore';
+import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
 
 export default {
