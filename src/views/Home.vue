@@ -122,7 +122,7 @@ import { mapState } from 'pinia'
 export default {
   name: "Home",
   computed: {
-    ...mapState(useUserStore, ['user']),
+    ...mapState(useUserStore, ['user', 'next_activity']),
   },
   // data: function () {
   //   return {
