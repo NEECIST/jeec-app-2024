@@ -37,31 +37,31 @@
       </p>
     </div>
 
-    <!-- <div class="middle">
+    <div class="middle">
       <div class="mid-component">
         <h1>TODAY'S PRIZE</h1>
         
         <div>
           <p>SOLO</p>
-          <div
+          <!-- <div
             class="reward-img"
             :style="'background-image:' + 'url(' + _today_reward + ')'"
-          ></div>
+          ></div> -->
+          <div class="reward-img">{{prizes.img_solo_daily_prize}}</div>
 
           <div v-if="solo_ranking!=null">
-            <p v-if="solo_ranking==1">
+            <p v-if="prizes.solo_ranking==1">
               1st place
             </p>
-            <p v-else-if="solo_ranking==2">
+            <p v-else-if="prizes.solo_ranking==2">
               2nd place
             </p>
-            <p v-else-if="solo_ranking==3">
+            <p v-else-if="prizes.solo_ranking==3">
               3rd place
             </p>
             <p v-else>
-              {{solo_ranking}}th place
+              {{prizes.solo_ranking}}th place
             </p>
-            <p v-if="xp_to_first_solo!=0"> {{ xp_to_first_solo }} points to reach first!</p>
           </div>
           <p v-else>
             You are not a player!
@@ -70,25 +70,26 @@
 
         <div>
           <p>SQUAD</p>
-          <div
+          <!-- <div
             class="reward-img"
             :style="'background-image:' + 'url(' + _today_reward + ')'"
-          ></div>
+          ></div> -->
+          <div class="reward-img">{{prizes.img_squad_daily_prize}}</div>
 
-          <div v-if="squad_ranking!=null">
-            <p v-if="squad_ranking==1">
+
+          <div v-if="prizes.squad_ranking!=null">
+            <p v-if="prizes.squad_ranking==1">
               1st place
             </p>
-            <p v-else-if="squad_ranking==2">
+            <p v-else-if="prizes.squad_ranking==2">
               2nd place
             </p>
-            <p v-else-if="squad_ranking==3">
+            <p v-else-if="prizes.squad_ranking==3">
               3rd place
             </p>
             <p v-else>
-              {{squad_ranking}}th place
+              {{prizes.squad_ranking}}th place
             </p>
-            <p v-if="xp_to_first!=0"> {{ xp_to_first }} points to reach first!</p>
           </div>
           <p v-else>
             You haven't joined a squad yet!
@@ -97,7 +98,7 @@
         
         
       </div>
-    </div> -->
+    </div>
 
     <div class="bottom">
         <div v-if="user.uploaded_cv == false || user.uploaded_cv == null" class="cv-text">
@@ -117,19 +118,21 @@
 </template>
 
 <script>
-import { useNewActivityStore } from '@/stores/NewActivityStore';
 import { useUserStore } from '@/stores/UserStore';
+import { useNewActivityStore } from '@/stores/NewActivityStore';
+import { usePrizesStore } from '@/stores/PrizesStore';
 import { mapState } from 'pinia'
 
 export default {
   name: "Home",
   computed: {
-    ...mapState(useNewActivityStore, ['next_activity']),
     ...mapState(useUserStore, ['user']),
+    ...mapState(useNewActivityStore, ['next_activity']),
+    ...mapState(usePrizesStore, ['prizes']),
   },
-  // data: function () {
-  //   return {
-  //     cv_logo:require("../assets/cv_b-11 1.png"),
+  data: function () {
+    return {
+      cv_logo:require("../assets/cv_b-11 1.png"),
   //     // jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
   //     // default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
   //     // squad: null,
@@ -145,8 +148,8 @@ export default {
   //     // xp_to_first:null,
   //     // next_activity:null,
   //     // quest:{error:'No quest'},
-  //   };
-  // },
+    };
+  },
   // mounted(){
 
   // },

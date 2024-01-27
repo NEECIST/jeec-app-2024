@@ -11,7 +11,7 @@ export const useNewActivityStore = defineStore("NewActivityStore", {
         start_time: "",
         end_time: "",
         activity_type: "",
-        images: ""
+        images: null
       }
     };
   },

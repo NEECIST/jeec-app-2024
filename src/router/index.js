@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/UserStore';
 import { useNewActivityStore } from '@/stores/NewActivityStore';
+import { usePrizesStore } from '@/stores/PrizesStore';
 import Home from "../views/Home.vue";
 import Activities from "../views/Activities.vue";
 import Profile from "../views/Profile.vue";
@@ -119,6 +120,23 @@ router.beforeEach((to, from) => {
 
 router.beforeEach((to, from) => {
   const userStore = useNewActivityStore();
+
+  if(userStore.loggedInState != true) {
+    userStore.isLoggedIn();
+    userStore.loggedInState = true;
+    
+    if (userStore.loggedIn != true) {
+      router.push("/")
+    }
+  }
+  
+  if (to.name == "login" && userStore.loggedIn == true) {
+    router.push("/home")
+  }
+})
+
+router.beforeEach((to, from) => {
+  const userStore = usePrizesStore();
 
   if(userStore.loggedInState != true) {
     userStore.isLoggedIn();
