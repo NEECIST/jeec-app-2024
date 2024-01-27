@@ -2,8 +2,9 @@
   <div>
     {{ user.name }}
     {{ user }}
+    {{ next_activity }}
     <div class="top">
-      {{ next_activity }}
+      
       <div v-if="next_activity!=null" class="main-title">
         <h1>
             UP NEXT
