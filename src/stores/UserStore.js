@@ -55,22 +55,22 @@ export const useUserStore = defineStore("UserStore", {
           localStorage.setItem("loggedIn", JSON.stringify(true))
           localStorage.setItem("jwt", JSON.stringify(jwt))
         })
-        
-      await axios
-      .get(
-        process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
-        {
-          headers: {Authorization: jwt}
-        }
-      )
-      .then((response) => {
-        console.log(response)
-        const data = response.data
-        this.next_activity = data.activity
-        localStorage.setItem("next_activity", JSON.stringify(this.user))
-        // localStorage.setItem("loggedIn", JSON.stringify(true))
-        // localStorage.setItem("jwt", JSON.stringify(jwt))
-      })
+
+      // await axios
+      // .get(
+      //   process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
+      //   {
+      //     headers: {Authorization: jwt}
+      //   }
+      // )
+      // .then((response) => {
+      //   console.log(response)
+      //   const data = response.data
+      //   this.next_activity = data.activity
+      //   localStorage.setItem("next_activity", JSON.stringify(this.user))
+      //   // localStorage.setItem("loggedIn", JSON.stringify(true))
+      //   // localStorage.setItem("jwt", JSON.stringify(jwt))
+      // })
 
       if (this.user.name != "") {
         window.location.replace('home');
