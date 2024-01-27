@@ -18,6 +18,13 @@ export const useUserStore = defineStore("UserStore", {
         updated_cv: "",
         approved_cv: "",
       },
+      next_activity : {
+        name: "",
+        start_time: "",
+        end_time: "",
+        activity_type: "",
+        images: ""
+      }
     };
   },
   actions: {
@@ -55,7 +62,24 @@ export const useUserStore = defineStore("UserStore", {
         window.location.reload();
       }
 
+      await axios
+        .get(
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
+          {
+            headers: {Authorization: jwt}
+          }
+        )
+        .then((response) => {
+          console.log(response)
+          const data = response.data
+          this.next_activity = data.activity
+          localStorage.setItem("next_activity", JSON.stringify(this.user))
+          // localStorage.setItem("loggedIn", JSON.stringify(true))
+          // localStorage.setItem("jwt", JSON.stringify(jwt))
+        })
+
       console.log(this.user)
+      console.log(this.next_activity)
     }
   },
 });

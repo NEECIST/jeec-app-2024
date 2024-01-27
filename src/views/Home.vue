@@ -122,26 +122,26 @@ import { mapState } from 'pinia'
 export default {
   name: "Home",
   computed: {
-    ...mapState(useUserStore, ['user']),
+    ...mapState(useUserStore, ['user', 'next_activity']),
   },
   data: function () {
     return {
-      cv_logo:require("../assets/cv_b-11 1.png"),
-      jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
-      default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
-      squad: null,
-      levels: null,
-      today_reward: {image:null},
-      xpbar_width: "92vw",
-      height: 30,
-      loading_squad: true,
-      loading_level: true,
-      loading_reward: true,
-      has_cv: true,
-      squad_ranking:null,
-      xp_to_first:null,
-      next_activity:null,
-      quest:{error:'No quest'},
+      // cv_logo:require("../assets/cv_b-11 1.png"),
+      // jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
+      // default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
+      // squad: null,
+      // levels: null,
+      // today_reward: {image:null},
+      // xpbar_width: "92vw",
+      // height: 30,
+      // loading_squad: true,
+      // loading_level: true,
+      // loading_reward: true,
+      // has_cv: true,
+      // squad_ranking:null,
+      // xp_to_first:null,
+      // next_activity:null,
+      // quest:{error:'No quest'},
     };
   },
   mounted(){
@@ -186,29 +186,29 @@ export default {
     // },
   },
   methods: {
-    resize() {
+    // resize() {
       
-      this.xpbar_width = "92vw";
+    //   this.xpbar_width = "92vw";
       
-    },
+    // },
   },
-  destroyed() {
-    window.removeEventListener("resize", this.resize);
-  },
+  // destroyed() {
+  //   window.removeEventListener("resize", this.resize);
+  // },
   async created() {
-    window.addEventListener("resize", this.resize);
-    this.resize();
+    // window.addEventListener("resize", this.resize);
+    // this.resize();
 
     // if (!this.currentUser) {
     //   this.$router.push("/");
     // }
       
-    UserService.getNextActivity().then(
-      (response) => {
+    // UserService.getNextActivity().then(
+    //   (response) => {
     
-        this.next_activity = response.data.activity
-      },
-    );
+    //     this.next_activity = response.data.activity
+    //   },
+    // );
     // let user_squad=null
     // await UserService.getUserSquad().then(
     //   (response) => {
