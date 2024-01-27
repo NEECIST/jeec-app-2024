@@ -118,38 +118,38 @@ router.beforeEach((to, from) => {
   }
 })
 
-router.beforeEach((to, from) => {
-  const userStore = useNewActivityStore();
+// router.beforeEach((to, from) => {
+//   const userStore = useNewActivityStore();
 
-  if(userStore.loggedInState != true) {
-    userStore.isLoggedIn();
-    userStore.loggedInState = true;
+//   if(userStore.loggedInState != true) {
+//     userStore.isLoggedIn();
+//     userStore.loggedInState = true;
     
-    if (userStore.loggedIn != true) {
-      router.push("/")
-    }
-  }
+//     if (userStore.loggedIn != true) {
+//       router.push("/")
+//     }
+//   }
   
-  if (to.name == "login" && userStore.loggedIn == true) {
-    router.push("/home")
-  }
-})
+//   if (to.name == "login" && userStore.loggedIn == true) {
+//     router.push("/home")
+//   }
+// })
 
-router.beforeEach((to, from) => {
-  const userStore = usePrizesStore();
+// router.beforeEach((to, from) => {
+//   const userStore = usePrizesStore();
 
-  if(userStore.loggedInState != true) {
-    userStore.isLoggedIn();
-    userStore.loggedInState = true;
+//   if(userStore.loggedInState != true) {
+//     userStore.isLoggedIn();
+//     userStore.loggedInState = true;
     
-    if (userStore.loggedIn != true) {
-      router.push("/")
-    }
-  }
+//     if (userStore.loggedIn != true) {
+//       router.push("/")
+//     }
+//   }
   
-  if (to.name == "login" && userStore.loggedIn == true) {
-    router.push("/home")
-  }
-})
+//   if (to.name == "login" && userStore.loggedIn == true) {
+//     router.push("/home")
+//   }
+// })
 
 export default router
