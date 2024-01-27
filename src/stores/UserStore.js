@@ -51,11 +51,11 @@ export const useUserStore = defineStore("UserStore", {
         })
 
 
-      if (this.user.name != "") {
-        window.location.replace('home');
-      } else {
-        window.location.reload();
-      }
+      // if (this.user.name != "") {
+      //   window.location.replace('home');
+      // } else {
+      //   window.location.reload();
+      // }
 
       
 

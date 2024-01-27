@@ -45,11 +45,11 @@ export const useNewActivityStore = defineStore("NewActivityStore", {
         localStorage.setItem("jwt", JSON.stringify(jwt))
       })
 
-      if (this.user.name != "") {
-        window.location.replace('home');
-      } else {
-        window.location.reload();
-      }
+      // if (this.user.name != "") {
+      //   window.location.replace('home');
+      // } else {
+      //   window.location.reload();
+      // }
 
       
 
