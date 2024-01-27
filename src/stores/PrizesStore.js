@@ -29,7 +29,7 @@ export const usePrizesStore = defineStore("PrizesStore", {
       console.log(jwt)
       await axios
         .get(
-          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/current_student_24",
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
           {
             headers: {Authorization: jwt}
           }
@@ -52,7 +52,7 @@ export const usePrizesStore = defineStore("PrizesStore", {
 
       
 
-      console.log(this.userprizes)
+      console.log(this.prizes)
     }
   },
 });

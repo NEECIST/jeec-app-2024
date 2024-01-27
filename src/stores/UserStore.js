@@ -18,6 +18,7 @@ export const useUserStore = defineStore("UserStore", {
         uploaded_cv: "",
         approved_cv: "",
       },
+      
     };
   },
   actions: {
