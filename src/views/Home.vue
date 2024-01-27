@@ -128,8 +128,8 @@ export default {
   name: "Home",
   computed: {
     ...mapState(useUserStore, ['user']),
-    ...mapState(useNewActivityStore, ['next_activity']),
-    ...mapState(usePrizesStore, ['prizes']),
+    ...mapState(useUserStore, ['next_activity']),
+    ...mapState(useUserStore, ['prizes']),
   },
   data: function () {
     return {
