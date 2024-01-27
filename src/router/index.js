@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/UserStore';
+import { useNewActivityStore } from '@/stores/NewActivityStore';
 import Home from "../views/Home.vue";
 import Activities from "../views/Activities.vue";
 import Profile from "../views/Profile.vue";
@@ -101,6 +102,23 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   const userStore = useUserStore();
+
+  if(userStore.loggedInState != true) {
+    userStore.isLoggedIn();
+    userStore.loggedInState = true;
+    
+    if (userStore.loggedIn != true) {
+      router.push("/")
+    }
+  }
+  
+  if (to.name == "login" && userStore.loggedIn == true) {
+    router.push("/home")
+  }
+})
+
+router.beforeEach((to, from) => {
+  const userStore = useNewActivityStore();
 
   if(userStore.loggedInState != true) {
     userStore.isLoggedIn();

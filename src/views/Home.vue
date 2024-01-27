@@ -118,12 +118,14 @@
 
 <script>
 import { useUserStore } from '@/stores/UserStore';
+import { useNewActivityStore } from '@/stores/NewActivityStore';
 import { mapState } from 'pinia'
 
 export default {
   name: "Home",
   computed: {
-    ...mapState(useUserStore, ['user', 'next_activity']),
+    ...mapState(useUserStore, ['user', ]),
+    ...mapState(useNewActivityStore, ['next_activity']),
   },
   // data: function () {
   //   return {
