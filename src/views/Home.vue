@@ -2,7 +2,7 @@
   <div>
     {{ user.name }}
     {{ user }}
-    <div class="top">
+    <!-- <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">
         <h1>
@@ -34,7 +34,7 @@
       <p v-else class="no-more-activities">
         There are no more activities scheduled
       </p>
-    </div>
+    </div> -->
 
     <!-- <div class="middle">
       <div class="mid-component">
