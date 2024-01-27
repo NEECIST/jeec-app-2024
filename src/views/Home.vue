@@ -120,8 +120,8 @@
 
 <script>
 import { useUserStore } from '@/stores/UserStore';
-import { useNewActivityStore } from '@/stores/NewActivityStore';
-import { usePrizesStore } from '@/stores/PrizesStore';
+// import { useNewActivityStore } from '@/stores/NewActivityStore';
+// import { usePrizesStore } from '@/stores/PrizesStore';
 import { mapState } from 'pinia'
 
 export default {
