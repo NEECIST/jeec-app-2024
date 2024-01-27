@@ -58,9 +58,9 @@ export const useUserStore = defineStore("UserStore", {
           console.log(response)
           const data = response.data
           this.user = data.current_student
-          localStorage.setItem("user", JSON.stringify(this.user))
-          localStorage.setItem("loggedIn", JSON.stringify(true))
-          localStorage.setItem("jwt", JSON.stringify(jwt))
+          // localStorage.setItem("user", JSON.stringify(this.user))
+          // localStorage.setItem("loggedIn", JSON.stringify(true))
+          // localStorage.setItem("jwt", JSON.stringify(jwt))
         })
 
 
@@ -89,9 +89,9 @@ export const useUserStore = defineStore("UserStore", {
         console.log(response)
         const data = response.data
         this.next_activity = data.activity
-        localStorage.setItem("next_activity", JSON.stringify(this.next_activity))
-        localStorage.setItem("loggedIn", JSON.stringify(true))
-        localStorage.setItem("jwt", JSON.stringify(jwt))
+        // localStorage.setItem("next_activity", JSON.stringify(this.next_activity))
+        // localStorage.setItem("loggedIn", JSON.stringify(true))
+        // localStorage.setItem("jwt", JSON.stringify(jwt))
       })
 
       if (this.user.name != "") {
@@ -118,6 +118,8 @@ export const useUserStore = defineStore("UserStore", {
           console.log(response)
           const data = response.data
           this.prizes = data.prizes
+          localStorage.setItem("user", JSON.stringify(this.user))
+          localStorage.setItem("next_activity", JSON.stringify(this.next_activity))
           localStorage.setItem("prizes", JSON.stringify(this.prizes))
           localStorage.setItem("loggedIn", JSON.stringify(true))
           localStorage.setItem("jwt", JSON.stringify(jwt))
