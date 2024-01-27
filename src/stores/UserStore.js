@@ -19,11 +19,11 @@ export const useUserStore = defineStore("UserStore", {
         approved_cv: "",
       },
       next_activity : {
-        name: "",
-        start_time: "",
-        end_time: "",
-        activity_type: "",
-        images: ""
+        name: "Paradela",
+        start_time: "00:00",
+        end_time: "23:59",
+        activity_type: "teste",
+        images: ['/static/companies/images/jeec24/accenture.png']
       }
     };
   },
