@@ -15,6 +15,8 @@ export const useUserStore = defineStore("UserStore", {
         squad_id: "",
         daily_ponts: "",
         total_points:"",
+        uploaded_cv: "",
+        approved_cv: "",
       },
     };
   },
