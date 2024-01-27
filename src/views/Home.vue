@@ -36,16 +36,16 @@
       </p>
     </div>
 
-    <div class="middle">
+    <!-- <div class="middle">
       <div class="mid-component">
         <h1>TODAY'S PRIZE</h1>
         
         <div>
           <p>SOLO</p>
-          <!-- <div
+          <div
             class="reward-img"
             :style="'background-image:' + 'url(' + _today_reward + ')'"
-          ></div> -->
+          ></div>
 
           <div v-if="solo_ranking!=null">
             <p v-if="solo_ranking==1">
@@ -69,10 +69,10 @@
 
         <div>
           <p>SQUAD</p>
-          <!-- <div
+          <div
             class="reward-img"
             :style="'background-image:' + 'url(' + _today_reward + ')'"
-          ></div> -->
+          ></div>
 
           <div v-if="squad_ranking!=null">
             <p v-if="squad_ranking==1">
@@ -96,7 +96,7 @@
         
         
       </div>
-    </div>
+    </div> -->
 
     <div class="bottom">
         <div v-if="!updated_cv" class="cv-text">
@@ -209,67 +209,67 @@ export default {
         this.next_activity = response.data.activity
       },
     );
-    let user_squad=null
-    await UserService.getUserSquad().then(
-      (response) => {
-        user_squad = response.data
-      },
-      (error)=>{
-        console.log(error)
-      }
-    );
-    let daily_squads_rank = null
-    UserService.getDailySquadsRanking().then(
-      (response) => {
+    // let user_squad=null
+    // await UserService.getUserSquad().then(
+    //   (response) => {
+    //     user_squad = response.data
+    //   },
+    //   (error)=>{
+    //     console.log(error)
+    //   }
+    // );
+    // let daily_squads_rank = null
+    // UserService.getDailySquadsRanking().then(
+    //   (response) => {
         
-        let top_daily_points=0
-        daily_squads_rank = response.data
-        if(daily_squads_rank.data.length>1){
+    //     let top_daily_points=0
+    //     daily_squads_rank = response.data
+    //     if(daily_squads_rank.data.length>1){
           
-          top_daily_points = daily_squads_rank.data[0].daily_points
-        }
-        else{
+    //       top_daily_points = daily_squads_rank.data[0].daily_points
+    //     }
+    //     else{
         
-          top_daily_points = daily_squads_rank.data.daily_points
-        }
-        this.xp_to_first = top_daily_points-user_squad.data.daily_points;
-        if(Array.isArray(daily_squads_rank.data)){
-          for(let i=1;i<=daily_squads_rank.data.length;i++){
-            if(daily_squads_rank.data[i-1].name == user_squad.data.name){
-              this.squad_ranking=i;
-            }
-          }
-        }
-        else{
-          this.squad_ranking=1
-        }
+    //       top_daily_points = daily_squads_rank.data.daily_points
+    //     }
+    //     this.xp_to_first = top_daily_points-user_squad.data.daily_points;
+    //     if(Array.isArray(daily_squads_rank.data)){
+    //       for(let i=1;i<=daily_squads_rank.data.length;i++){
+    //         if(daily_squads_rank.data[i-1].name == user_squad.data.name){
+    //           this.squad_ranking=i;
+    //         }
+    //       }
+    //     }
+    //     else{
+    //       this.squad_ranking=1
+    //     }
         
-      },
-    );
+    //   },
+    // );
     
 
-    UserService.getUserSquad().then(
-      (response) => {
-        this.squad = response.data.data;
-        this.loading_squad = false;
-      },
-      (error) => {
-        console.log(error);
-        this.loading_squad = false;
-      }
-    );
+    // UserService.getUserSquad().then(
+    //   (response) => {
+    //     this.squad = response.data.data;
+    //     this.loading_squad = false;
+    //   },
+    //   (error) => {
+    //     console.log(error);
+    //     this.loading_squad = false;
+    //   }
+    // );
 
 
-    UserService.getTodaySquadReward().then(
-      (response) => {
-        this.today_reward = response.data;
-        this.loading_reward = false;
-      },
-      (error) => {
-        console.log(error);
-        this.loading_reward = false;
-      }
-    );
+    // UserService.getTodaySquadReward().then(
+    //   (response) => {
+    //     this.today_reward = response.data;
+    //     this.loading_reward = false;
+    //   },
+    //   (error) => {
+    //     console.log(error);
+    //     this.loading_reward = false;
+    //   }
+    // );
   },
 };
 </script>
