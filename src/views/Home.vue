@@ -98,19 +98,19 @@
       </div>
     </div> -->
 
-    <!-- <div class="bottom">
-        <div v-if="!user.uploaded_cv" class="cv-text">
+    <div class="bottom">
+        <div v-if="user.uploaded_cv == false || user.uploaded_cv == null" class="cv-text">
           <p> Still didn’t add your CV?
             Do it and pass by our check in to win a surprise reward  </p>
         </div>
-        <div v-if="user.uploaded_cv && !user.approved_cv" class="cv-text">
+        <div v-if="user.uploaded_cv == true && (user.approved_cv == false || user.approved_cv == null)" class="cv-text">
           <p> CV in validation process! </p>
         </div>
-        <div v-if="user.uploaded_cv && user.approved_cv" class="cv-text">
+        <div v-if="user.uploaded_cv == true && user.approved_cv == true" class="cv-text">
           <p> You already submited your CV! </p>
         </div>
       <img :src="cv_logo" class="cv-img">
-    </div> -->
+    </div>
 
   </div>
 </template>
