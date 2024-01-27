@@ -99,14 +99,14 @@
     </div> -->
 
     <div class="bottom">
-        <div v-if="!updated_cv" class="cv-text">
+        <div v-if="!uploaded_cv" class="cv-text">
           <p> Still didn’t add your CV?
             Do it and pass by our check in to win a surprise reward  </p>
         </div>
-        <div v-if="updated_cv && !approved_cv" class="cv-text">
+        <div v-if="uploaded_cv && !approved_cv" class="cv-text">
           <p> CV in validation process! </p>
         </div>
-        <div v-if="updated_cv && approved_cv" class="cv-text">
+        <div v-if="uploaded_cv && approved_cv" class="cv-text">
           <p> You already submited your CV! </p>
         </div>
       <img :src="cv_logo" class="cv-img">
