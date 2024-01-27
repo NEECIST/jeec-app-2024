@@ -38,6 +38,7 @@
     </div>
 
     <div class="middle">
+      {{ prizes }}
       <div class="mid-component">
         <h1>TODAY'S PRIZE</h1>
         
