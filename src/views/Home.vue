@@ -98,7 +98,7 @@
       </div>
     </div> -->
 
-    <div class="bottom">
+    <!-- <div class="bottom">
         <div v-if="!user.uploaded_cv" class="cv-text">
           <p> Still didn’t add your CV?
             Do it and pass by our check in to win a surprise reward  </p>
@@ -110,7 +110,7 @@
           <p> You already submited your CV! </p>
         </div>
       <img :src="cv_logo" class="cv-img">
-    </div>
+    </div> -->
 
   </div>
 </template>
@@ -122,7 +122,7 @@ import { mapState } from 'pinia'
 export default {
   name: "Home",
   computed: {
-    ...mapState(useUserStore, ['user', 'next_activity']),
+    ...mapState(useUserStore, ['user']),
   },
   data: function () {
     return {
