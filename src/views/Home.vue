@@ -3,6 +3,7 @@
     {{ user.name }}
     {{ user }}
     {{ next_activity }}
+    teste
     <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">
