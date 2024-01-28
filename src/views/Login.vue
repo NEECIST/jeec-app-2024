@@ -35,8 +35,6 @@ const callback = (response) => {
       const jwt = decrypt(response.data)
 
       userStore.authUser(jwt)
-      userStore.authUser2(jwt)
-      userStore.authUser3(jwt)
     })
 }
 

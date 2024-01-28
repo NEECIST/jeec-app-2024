@@ -2,7 +2,7 @@
   <div>
     {{ user.name }}
     {{ user }}
-    {{ next_activity }}
+    <!-- {{ next_activity }}
     <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">
@@ -44,10 +44,7 @@
         
         <div>
           <p>SOLO</p>
-          <!-- <div
-            class="reward-img"
-            :style="'background-image:' + 'url(' + _today_reward + ')'"
-          ></div> -->
+
           <div class="reward-img">{{prizes.img_solo_daily_prize}}</div>
 
           <div v-if="solo_ranking!=null">
@@ -71,10 +68,7 @@
 
         <div>
           <p>SQUAD</p>
-          <!-- <div
-            class="reward-img"
-            :style="'background-image:' + 'url(' + _today_reward + ')'"
-          ></div> -->
+
           <div class="reward-img">{{prizes.img_squad_daily_prize}}</div>
 
 
@@ -99,7 +93,7 @@
         
         
       </div>
-    </div>
+    </div> -->
 
     <div class="bottom">
         <div v-if="user.uploaded_cv == false || user.uploaded_cv == null" class="cv-text">
@@ -125,7 +119,7 @@ import { mapState } from 'pinia'
 export default {
   name: "Home",
   computed: {
-    ...mapState(useUserStore, ['user', 'next_activity', 'prizes']),
+    ...mapState(useUserStore, ['user']),
   },
   data: function () {
     return {
