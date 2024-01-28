@@ -121,8 +121,8 @@
 <script>
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
-import authHeader from "./auth-header";
-import axios from 'axios';
+// import authHeader from "./auth-header";
+// import axios from 'axios';
 
 
 export default {
@@ -164,31 +164,37 @@ export default {
     };
   },
   // mounted(){
-  //   axios
-  //     .get(
-  //       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
-  //       {
-  //         headers: authHeader()
-  //       }
-  //     )
-  //     .then((response) => {
-  //       console.log(response)
-  //       const data = response.data
-  //       this.next_activity = data.activity
-  //     })
+  //   // axios
+  //   //   .get(
+  //   //     process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
+  //   //     {
+  //   //       headers: authHeader()
+  //   //     }
+  //   //   )
+  //   //   .then((response) => {
+  //   //     console.log(response)
+  //   //     const data = response.data
+  //   //     this.next_activity = data.activity
+  //   //   })
     
-  //     axios
-  //       .get(
-  //         process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
-  //         {
-  //           headers: authHeader()
-  //         }
-  //       )
-  //       .then((response) => {
-  //         console.log(response)
-  //         const data = response.data
-  //         this.prizes = data.prizes
-  //       })
+  //   //   axios
+  //   //     .get(
+  //   //       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
+  //   //       {
+  //   //         headers: authHeader()
+  //   //       }
+  //   //     )
+  //   //     .then((response) => {
+  //   //       console.log(response)
+  //   //       const data = response.data
+  //   //       this.prizes = data.prizes
+  //   //     })
+  //   UserService.getNextActivity().then(
+  //       (response) => {
+      
+  //         this.next_activity = response.data.activity
+  //       },
+  //     );
   // },
   // computed: {
   //   // _today_reward() {
