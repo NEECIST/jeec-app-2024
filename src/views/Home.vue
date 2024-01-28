@@ -123,6 +123,9 @@ import { useUserStore } from '@/stores/UserStore';
 // import { useNewActivityStore } from '@/stores/NewActivityStore';
 // import { usePrizesStore } from '@/stores/PrizesStore';
 import { mapState } from 'pinia'
+import authHeader from "./auth-header";
+
+const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
 
 export default {
   name: "Home",
@@ -147,11 +150,48 @@ export default {
   //     // xp_to_first:null,
   //     // next_activity:null,
   //     // quest:{error:'No quest'},
+      prizes: {
+        img_solo_daily_prize: '',
+        img_squad_daily_prize: '',
+        solo_ranking: '',
+        squad_ranking: '',
+      },
+      next_activity : {
+        name: "",
+        start_time: "",
+        end_time: "",
+        activity_type: "",
+        images: null
+      },
     };
   },
-  // mounted(){
-
-  // },
+  mounted(){
+    axios
+      .get(
+        process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
+        {
+          headers: authHeader()
+        }
+      )
+      .then((response) => {
+        console.log(response)
+        const data = response.data
+        this.next_activity = data.activity
+      })
+    
+      axios
+        .get(
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
+          {
+            headers: authHeader()
+          }
+        )
+        .then((response) => {
+          console.log(response)
+          const data = response.data
+          this.prizes = data.prizes
+        })
+  },
   // computed: {
   //   // _today_reward() {
   //   //   return this.today_reward && this.today_reward.image
