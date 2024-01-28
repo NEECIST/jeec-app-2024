@@ -18,19 +18,7 @@ export const useUserStore = defineStore("UserStore", {
         uploaded_cv: "",
         approved_cv: "",
       },
-      // prizes: {
-      //   img_solo_daily_prize: '',
-      //   img_squad_daily_prize: '',
-      //   solo_ranking: '',
-      //   squad_ranking: '',
-      // },
-      // next_activity : {
-      //   name: "",
-      //   start_time: "",
-      //   end_time: "",
-      //   activity_type: "",
-      //   images: null
-      // },
+      
       
     };
   },
