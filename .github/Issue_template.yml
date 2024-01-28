@@ -40,11 +40,11 @@ body:
         - Microsoft Edge
         - Other
       required: true
-    - type: input
-      id: browser
-      attributes:
-        label: Other:
-        placeholder: Opera
-      validations:
-        required: false
-  
+  - type: input
+    id: browser
+    attributes:
+      label: Other:
+      placeholder: Opera
+    validations:
+      required: false
+
