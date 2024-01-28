@@ -120,18 +120,14 @@
 
 <script>
 import { useUserStore } from '@/stores/UserStore';
-// import { useNewActivityStore } from '@/stores/NewActivityStore';
-// import { usePrizesStore } from '@/stores/PrizesStore';
 import { mapState } from 'pinia';
 import authHeader from "./auth-header";
 import axios from 'axios';
 
-// const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
 
 export default {
   name: "Home",
   computed: {
-    // ...mapState(useUserStore, ['user', 'next_activity', 'prizes']),
     ...mapState(useUserStore, ['user']),
   },
   data: function () {
