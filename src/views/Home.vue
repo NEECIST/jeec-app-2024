@@ -122,10 +122,11 @@
 import { useUserStore } from '@/stores/UserStore';
 // import { useNewActivityStore } from '@/stores/NewActivityStore';
 // import { usePrizesStore } from '@/stores/PrizesStore';
-import { mapState } from 'pinia'
+import { mapState } from 'pinia';
 import authHeader from "./auth-header";
+import axios from 'axios';
 
-const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
+// const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
 
 export default {
   name: "Home",
