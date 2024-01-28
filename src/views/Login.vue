@@ -20,14 +20,10 @@
 <script setup>
 import axios from 'axios';
 import { useUserStore } from '@/stores/UserStore';
-// import { usePrizesStore } from '@/stores/PrizesStore';
-// import { useNewActivityStore } from '@/stores/NewActivityStore';
 import { decodeCredential } from 'vue3-google-login'
 import CryptoJS from 'crypto-js';
 
 const userStore = useUserStore();
-// const userStore2 = useNewActivityStore();
-// const userStore3 = usePrizesStore();
 
 const callback = (response) => {
   const userData = decodeCredential(response.credential)
@@ -41,8 +37,6 @@ const callback = (response) => {
       userStore.authUser(jwt)
       userStore.authUser2(jwt)
       userStore.authUser3(jwt)
-      // userStore2.authUser(jwt)
-      // userStore3.authUser(jwt)
     })
 }
 
