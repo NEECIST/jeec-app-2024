@@ -130,7 +130,8 @@ const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
 export default {
   name: "Home",
   computed: {
-    ...mapState(useUserStore, ['user', 'next_activity', 'prizes']),
+    // ...mapState(useUserStore, ['user', 'next_activity', 'prizes']),
+    ...mapState(useUserStore, ['user']),
   },
   data: function () {
     return {
