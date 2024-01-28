@@ -163,33 +163,33 @@ export default {
       },
     };
   },
-  mounted(){
-    axios
-      .get(
-        process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
-        {
-          headers: authHeader()
-        }
-      )
-      .then((response) => {
-        console.log(response)
-        const data = response.data
-        this.next_activity = data.activity
-      })
+  // mounted(){
+  //   axios
+  //     .get(
+  //       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
+  //       {
+  //         headers: authHeader()
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log(response)
+  //       const data = response.data
+  //       this.next_activity = data.activity
+  //     })
     
-      axios
-        .get(
-          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
-          {
-            headers: authHeader()
-          }
-        )
-        .then((response) => {
-          console.log(response)
-          const data = response.data
-          this.prizes = data.prizes
-        })
-  },
+  //     axios
+  //       .get(
+  //         process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
+  //         {
+  //           headers: authHeader()
+  //         }
+  //       )
+  //       .then((response) => {
+  //         console.log(response)
+  //         const data = response.data
+  //         this.prizes = data.prizes
+  //       })
+  // },
   // computed: {
   //   // _today_reward() {
   //   //   return this.today_reward && this.today_reward.image
