@@ -19,7 +19,7 @@ const header = ref(true);
 function onRouteChange() {
   pageName.value = route.name;
 
-  if (route.meta.header == false) {
+  if (route.meta.header != undefined && route.meta.header == false) {
     header.value = false;
   } else {
     header.value = true;
