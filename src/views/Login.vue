@@ -6,37 +6,37 @@
       </div>
 
       <div class="buttons-flex">
-
         <GoogleLogin :callback="callback" />
         <p>v2.1</p>
-
       </div>
-
     </div>
-
   </div>
 </template>
 
 <script setup>
-import axios from 'axios';
-import { useUserStore } from '@/stores/UserStore';
-import { decodeCredential } from 'vue3-google-login'
-import CryptoJS from 'crypto-js';
+import axios from "axios";
+import { useUserStore } from "@/stores/UserStore";
+import { decodeCredential } from "vue3-google-login";
+import CryptoJS from "crypto-js";
 
 const userStore = useUserStore();
 
 const callback = (response) => {
-  const userData = decodeCredential(response.credential)
+  const userData = decodeCredential(response.credential);
 
-  console.log(userData)
+  console.log(userData);
 
-  axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle", userData)
+  axios
+    .post(
+      process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle",
+      userData
+    )
     .then((response) => {
-      const jwt = decrypt(response.data)
+      const jwt = decrypt(response.data);
 
-      userStore.authUser(jwt)
-    })
-}
+      userStore.authUser(jwt);
+    });
+};
 
 function decrypt(code) {
   const master_key = "12345678901234561234567890123456";
@@ -50,27 +50,23 @@ function decrypt(code) {
 
   const key = CryptoJS.enc.Utf8.parse(master_key);
 
-  const plaintextArray = CryptoJS.AES.decrypt(
-    { ciphertext: crypttext },
-    key,
-    {
-      iv: iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
-    }
-  );
+  const plaintextArray = CryptoJS.AES.decrypt({ ciphertext: crypttext }, key, {
+    iv: iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7,
+  });
 
   const output_plaintext = CryptoJS.enc.Latin1.stringify(plaintextArray);
 
   return output_plaintext;
-};
+}
 </script>
 
 <!-- <script setup>
 import { decodeCredential } from 'vue3-google-login'
 import User from "../models/user";
 import axios from 'axios';
-import authHeader from "../services/auth-header";
+import authHeader from "@/services/auth-header";
 import CryptoJS from 'vue-cryptojs';
 import { useStore } from "vuex";
 
@@ -113,7 +109,7 @@ const callback = (response) => {
 <script>
 import User from "../models/user";
 import axios from 'axios';
-import authHeader from "../services/auth-header";
+import authHeader from "@/services/auth-header";
 import CryptoJS from 'vue-cryptojs';
 
 
@@ -323,7 +319,7 @@ span.buttonText {
   font-size: 14px;
   font-weight: bold;
   /* Use the Roboto font that is loaded in the <head> */
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .g-signin-button {

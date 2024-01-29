@@ -117,7 +117,7 @@
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
 import axios from "axios";
-import authHeader from "./auth-header";
+import authHeader from "@/services/auth-header";
 
 export default {
   name: "Home",
