@@ -1,11 +1,14 @@
 <template>
-  <div class="login">
-    <div class="loading">
-      <div class="loading-top">
-        <v-img alt="JEEC logo" src="@/assets/jeec_colour_no_edition.svg" />
-      </div>
+  <div class="wrapper">
+    <HiddenHeader></HiddenHeader>
+    <div class="welcome">
+      <h2>Welcome to</h2>
+      <img alt="JEEC" src="@/assets/jeec_logo_darkmode.svg" />
+    </div>
 
-      <div class="buttons-flex">
+    <div class="login">
+      <p>Login to our Webapp</p>
+      <div class="button_wrapper">
         <GoogleLogin :callback="callback" />
         <p>v2.1</p>
       </div>
@@ -14,6 +17,8 @@
 </template>
 
 <script setup>
+import HiddenHeader from "@/components/HiddenHeader.vue";
+
 import axios from "axios";
 import { useUserStore } from "@/stores/UserStore";
 import { decodeCredential } from "vue3-google-login";
@@ -61,6 +66,66 @@ function decrypt(code) {
   return output_plaintext;
 }
 </script>
+
+<style scoped>
+.wrapper {
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+.welcome {
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+}
+.welcome h2 {
+  font-family: 'Lexend Exa', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.welcome img {
+  display: block;
+  width: 100%;
+  object-fit: contain;
+  max-width: 300px;
+}
+.login {
+  margin: 0 auto;
+  margin-top: 100px;
+  width: 90%;
+  background-color: var(--color-background-sec);
+  border-radius: 20px;
+  height: 200px;
+  max-width: 300px;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.button_wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -30%;
+}
+.g-btn-wrapper {
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 500px) {
+  .login {
+    max-width: 500px;
+  }
+}
+
+</style>
+
 
 <!-- <script setup>
 import { decodeCredential } from 'vue3-google-login'
@@ -191,144 +256,3 @@ export default {
 }
 
 </script> -->
-
-<style scoped>
-.login {
-  height: 100vh;
-  width: 100vw;
-  transform: translateY(-10vh);
-}
-
-.loading {
-  background-color: #f1f1f1;
-  height: 100vh;
-  width: 100vw;
-  position: relative;
-}
-
-.loading-top {
-  width: 75vw;
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-
-.loading-bar {
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-
-.buttons-flex {
-  width: 100%;
-  padding: 10vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-
-.button {
-  height: 13vw;
-  display: flex;
-  align-items: center;
-  border-radius: 6vw;
-  padding: 5vw;
-  margin: 2vw;
-  color: #ffffff;
-  font-size: 4.5vw;
-  font-weight: 650;
-  cursor: pointer;
-}
-
-.icon {
-  padding-right: 5vw;
-  height: 7vw;
-}
-
-.loading-bottom {
-  width: 32vw;
-  position: absolute;
-  top: 90%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-
-@media screen and (min-width: 550px) {
-  .loading-top {
-    width: 56vh;
-  }
-
-  .buttons-flex {
-    padding: 0vh;
-  }
-
-  .button {
-    height: 9.5vh;
-    border-radius: 6vh;
-    padding: 4vh;
-    margin: 2vh;
-    font-size: 3.4vh;
-  }
-
-  .icon {
-    padding-right: 5vh;
-    height: 5vh;
-  }
-
-  .loading-bottom {
-    width: 24vh;
-  }
-}
-
-#customBtn {
-  display: inline-block;
-  background: white;
-  color: #444;
-  width: 190px;
-  border-radius: 5px;
-  border: thin solid #888;
-  box-shadow: 1px 1px 1px grey;
-  white-space: nowrap;
-}
-
-#customBtn:hover {
-  cursor: pointer;
-}
-
-span.label {
-  font-family: serif;
-  font-weight: normal;
-}
-
-span.buttonText {
-  display: inline-block;
-  vertical-align: middle;
-  padding-left: 42px;
-  padding-right: 42px;
-  font-size: 14px;
-  font-weight: bold;
-  /* Use the Roboto font that is loaded in the <head> */
-  font-family: "Roboto", sans-serif;
-}
-
-.g-signin-button {
-  /* This is where you control how the button looks. Be creative! */
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 3px;
-  background-color: #3c82f7;
-  color: #fff;
-  box-shadow: 0 3px 0 #0f69ff;
-}
-</style>
