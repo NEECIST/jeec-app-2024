@@ -49,15 +49,19 @@
         
         <div>
           <p>SOLO</p>
-
-          <div class="reward-img">{{prizes.img_solo_daily_prize}}</div>
+            
+          <!-- <div class="reward-img">
+            <img :src="jeec_brain_url + prizes.img_solo_daily_prize" class="activity-img" >
+          </div> -->
 
         </div>
 
         <div>
           <p>SQUAD</p>
-
-          <div class="reward-img">{{prizes.img_squad_daily_prize}}</div>
+          {{ prizes.img_squad_daily_prize }}
+          <!-- <div class="reward-img">
+            <img :src="jeec_brain_url + prizes.img_squad_daily_prize" class="activity-img" > 
+          </div> -->
 
         </div>
         
@@ -76,7 +80,10 @@
         <div v-if="cv_info.uploaded_cv == true && cv_info.approved_cv == true" class="cv-text">
           <p> You already submited your CV! </p>
         </div>
-      <img :src="cv_logo" class="cv-img">
+      <router-link :to="{ name: 'Profile' }">
+        <img :src="cv_logo" class="cv-img">
+      </router-link>
+      
     </div>
 
   </div>
