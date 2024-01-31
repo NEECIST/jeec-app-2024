@@ -13,7 +13,7 @@ export const useUserStore = defineStore("UserStore", {
         picture: "",
         student_external_id: "",
         squad_id: "",
-        daily_ponts: "",
+        daily_points: "",
         total_points:"",
         uploaded_cv: "",
         approved_cv: "",

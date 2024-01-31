@@ -48,23 +48,6 @@
 
           <div class="reward-img">{{prizes.img_solo_daily_prize}}</div>
 
-          <div v-if="solo_ranking!=null">
-            <p v-if="prizes.solo_ranking==1">
-              1st place
-            </p>
-            <p v-else-if="prizes.solo_ranking==2">
-              2nd place
-            </p>
-            <p v-else-if="prizes.solo_ranking==3">
-              3rd place
-            </p>
-            <p v-else>
-              {{prizes.solo_ranking}}th place
-            </p>
-          </div>
-          <p v-else>
-            You are not a player!
-          </p>
         </div>
 
         <div>
@@ -72,24 +55,6 @@
 
           <div class="reward-img">{{prizes.img_squad_daily_prize}}</div>
 
-
-          <div v-if="prizes.squad_ranking!=null">
-            <p v-if="prizes.squad_ranking==1">
-              1st place
-            </p>
-            <p v-else-if="prizes.squad_ranking==2">
-              2nd place
-            </p>
-            <p v-else-if="prizes.squad_ranking==3">
-              3rd place
-            </p>
-            <p v-else>
-              {{prizes.squad_ranking}}th place
-            </p>
-          </div>
-          <p v-else>
-            You haven't joined a squad yet!
-          </p>
         </div>
         
         
@@ -97,14 +62,14 @@
     </div>
 
     <div class="bottom">
-        <div v-if="user.uploaded_cv == false || user.uploaded_cv == null" class="cv-text">
+        <div v-if="cv_info.uploaded_cv == false || cv_info.uploaded_cv == null" class="cv-text">
           <p> Still didn’t add your CV?
             Do it and pass by our check in to win a surprise reward  </p>
         </div>
-        <div v-if="user.uploaded_cv == true && (user.approved_cv == false || user.approved_cv == null)" class="cv-text">
+        <div v-if="cv_info.uploaded_cv == true && (cv_info.approved_cv == false || cv_info.approved_cv == null)" class="cv-text">
           <p> CV in validation process! </p>
         </div>
-        <div v-if="user.uploaded_cv == true && user.approved_cv == true" class="cv-text">
+        <div v-if="cv_info.uploaded_cv == true && cv_info.approved_cv == true" class="cv-text">
           <p> You already submited your CV! </p>
         </div>
       <img :src="cv_logo" class="cv-img">
@@ -127,7 +92,7 @@ export default {
   data: function () {
     return {
       cv_logo:require("../assets/cv_b-11 1.png"),
-  //     // jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
+      jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
   //     // default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
   //     // squad: null,
   //     // levels: null,
@@ -155,9 +120,26 @@ export default {
         activity_type: "",
         images: null
       },
+      cv_info : {
+        uploaded_cv: "",
+        approved_cv: "",
+      },
     };
   },
   mounted(){
+    axios
+      .get(
+        process.env.VUE_APP_JEEC_BRAIN_URL + "/student/cv_info",
+        {
+          headers: authHeader()
+        }
+      )
+      .then((response) => {
+        console.log(response)
+        const data = response.data
+        this.cv_info = data.cv_info
+      })
+
     axios
       .get(
         process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
