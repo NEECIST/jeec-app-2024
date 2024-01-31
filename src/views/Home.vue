@@ -1,13 +1,13 @@
 <template>
   <div>
-    User:
+    <!-- User:
     {{ user }}
     next_activity:
     {{ next_activity }}
     prizes
     {{ prizes }}
     cv_info
-    {{ cv_info }}
+    {{ cv_info }} -->
     <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">
@@ -43,7 +43,7 @@
     </div>
 
     <div class="middle">
-      {{ prizes }}
+      <!-- {{ prizes }} -->
       <div class="mid-component">
         <h1>TODAY'S PRIZE</h1>
         
@@ -58,10 +58,10 @@
 
         <div>
           <p>SQUAD</p>
-          {{ prizes.img_squad_daily_prize }}
-          <!-- <div class="reward-img">
+          <!-- {{ prizes.img_squad_daily_prize }} -->
+          <div class="reward-img">
             <img :src="jeec_brain_url + prizes.img_squad_daily_prize" class="activity-img" > 
-          </div> -->
+          </div>
 
         </div>
         
