@@ -19,15 +19,15 @@
         <div class="top-container">
           <div class="top-text">
             <p>
+              {{ next_activity.activity_type }}
+            </p>
+            <p>
               {{ next_activity.name }}
             </p>
             <p>
               {{ next_activity.start_time }} - {{ next_activity.end_time }}
             </p>
             <br>
-            <p>
-              {{ next_activity.activity_type }}
-            </p>
           </div>
           <div class="image-container">
             <div v-for="image in next_activity.images" :key="image" >
