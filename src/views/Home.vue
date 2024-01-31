@@ -44,7 +44,7 @@
 
     <div class="middle">
       <!-- {{ prizes }} -->
-      <div class="mid-component">
+      <div v-if="prizes.img_solo_daily_prize != null || prizes.img_squad_daily_prize != null" class="mid-component">
         <h1>TODAY'S PRIZE</h1>
         
         <div>
@@ -66,6 +66,9 @@
         </div>
         
         
+      </div>
+      <div v-else>
+        NO PRIZES TODAY
       </div>
     </div>
 
