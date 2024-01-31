@@ -1,9 +1,13 @@
 <template>
   <div>
-    {{ user.name }}
+    User:
     {{ user }}
+    next_activity:
     {{ next_activity }}
-    teste
+    prizes
+    {{ prizes }}
+    cv_info
+    {{ cv_info }}
     <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">
