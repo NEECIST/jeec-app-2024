@@ -50,9 +50,9 @@
         <div>
           <p>SOLO</p>
             
-          <!-- <div class="reward-img">
+          <div class="reward-img">
             <img :src="jeec_brain_url + prizes.img_solo_daily_prize" class="activity-img" >
-          </div> -->
+          </div>
 
         </div>
 
