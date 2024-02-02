@@ -1,20 +1,21 @@
 <template>
   <TheHeader v-if="header" :title="pageName"></TheHeader>
   <main>
-    <router-view/>
+    <router-view />
   </main>
 </template>
 
 <script setup>
 import TheHeader from './components/TheHeader.vue';
 
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const routePath = computed(() => route.fullPath);
 
 const pageName = ref("");
-const header = ref(true);
+const header = ref(false);
 
 function onRouteChange() {
   pageName.value = route.name;
@@ -26,8 +27,7 @@ function onRouteChange() {
   }
 };
 
-onRouteChange();
-watch(() => route.fullPath, onRouteChange);
+watch(() => routePath, onRouteChange);
 </script>
 
 <style scoped>
