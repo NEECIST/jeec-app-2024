@@ -10,14 +10,14 @@
       <p class="level">level {{ member.level }}</p>
     </div>
     <img
-      v-if="is_kickable && !loading_kick"
+      v-if="can_kick && !loading_kick"
       @click.stop="kick"
       src="../assets/icons/recycle-icon.svg"
       alt="kick"
       class="kick"
     />
     <v-progress-circular
-      v-else-if="is_kickable && loading_kick"
+      v-else-if="can_kick && loading_kick"
       indeterminate
       color="#27ade4"
       :size="60"
@@ -29,6 +29,8 @@
 
 <script>
 import UserService from "../services/user.service";
+import { useUserStore } from '@/stores/UserStore';
+import { mapState } from 'pinia';
 
 export default {
   name: "Member",
@@ -42,10 +44,7 @@ export default {
     };
   },
   computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
-
+    ...mapState(useUserStore, ['user']),
     nameArray() {
       var names = this.member.name.split(" ");
 
@@ -53,12 +52,11 @@ export default {
       else return [this.member.name, ""];
     },
 
-    is_kickable() {
-      var user = this.$store.state.auth.user;
+    can_kick () {
       return (
-        user.ist_id === this.captain_ist_id &&
-        this.member.ist_id !== user.ist_id &&
-        this.$route.name === "Squad"
+        this.user.username === this.captain_ist_id &&
+        this.member.external_id !== this.user.student_external_id
+        // this.$route.name === "Squad"
       );
     },
   },

@@ -250,14 +250,9 @@ export default {
     create_squad(squad) {
       this.squad = squad;
     },
-    delete_squad(student) {
-      this.$store.dispatch("auth/userUpdate", student);
-      this.squad = null;
-    },
     async accept_invite(invite_id) {
       await UserService.acceptInvitation(invite_id).then(
         (response) => {
-          this.$store.dispatch("auth/userUpdate", response.data.data);
 
           UserService.getSquadInvitationsReceived().then(
             (response) => {
