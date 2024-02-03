@@ -124,10 +124,10 @@ class UserService {
     );
   }
 
-  kickMember(ist_id) {
+  kickMember(username) {
     return axios.post(
       jeec_brain_url + "/student/kick-member",
-      { ist_id: ist_id },
+      { username: username },
       { headers: authHeader() }
     );
   }

@@ -2,7 +2,7 @@
   <div class="squad">
     <!-- <Buttons
       @_click="click"
-      :names="{
+      :usernames="{
         'my squad': button === 'my squad',
         invites: button === 'invites',
       }"
@@ -12,11 +12,14 @@
     <div
       v-if="!loading_squad"
     >
+
+    <p> {{this.students}} </p>
       <SquadCreation
         v-if="squad === null"
         @create="create_squad"
         @notification="notification"
       />
+
       <div v-else class="squad-info">
       
       <img
@@ -26,7 +29,7 @@
         />
       <div class="squad-texts">
         <p class="squad-text">
-         {{ squad.name }}
+         {{ squad.username }}
         </p>
         <p class="squad-motto">
           {{ squad.cry }}
@@ -116,9 +119,8 @@
           :items="students"
           outlined
           chips
-          label="Name or istID"
-          item-text="name"
-          item-value="ist_id"
+          label="username"
+          item-text="username"
           multiple
           :filter="filterStudents"
           :search-input.sync="search"
@@ -127,7 +129,7 @@
           <template v-slot:selection="data">
             <v-chip
               v-bind="data.attrs"
-              :input-value="data.name"
+              :input-value="data.username"
               close
               @click="remove(data.item)"
               @click:close="remove(data.item)"
@@ -135,7 +137,7 @@
               <v-avatar left>
                 <v-img :src="data.item.photo"></v-img>
               </v-avatar>
-              {{ data.item.name }}
+              {{ data.item.username }}
             </v-chip>
           </template>
           <template v-slot:item="data">
@@ -147,9 +149,9 @@
                 <img :src="data.item.photo" />
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                <v-list-item-title v-html="data.item.username"></v-list-item-title>
                 <v-list-item-subtitle
-                  v-html="data.item.ist_id"
+                  v-html="data.item.username"
                 ></v-list-item-subtitle>
               </v-list-item-content>
             </template>
@@ -164,7 +166,7 @@
         <div v-if="squad!=null">
           <Member
             v-for="member in squad.members.data"
-            :key="member.ist_id"
+            :key="member.username"
             :member="member"
             :captain_ist_id="squad.captain_ist_id"
             @kick="kick_member"
@@ -176,7 +178,7 @@
         @accept="accept_invite"
         @reject="reject_invite"
         v-for="invite in invites"
-        :key="invite.sender_name"
+        :key="invite.sender_username"
         :invite="invite"
       />
     </div>
@@ -204,7 +206,7 @@ import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
 
 export default {
-  name: "Squad",
+  username: "Squad",
   components: {
     Invite,
     SquadCreation,
@@ -239,9 +241,9 @@ export default {
     };
   },
   methods: {
-    click(name) {
-      if (name !== this.button) {
-        this.button = name;
+    click(username) {
+      if (username !== this.button) {
+        this.button = username;
       }
     },
     notification(message, type) {
@@ -307,17 +309,16 @@ export default {
       this.search = "";
     },
     remove(item) {
-      const index = this.squadmates.indexOf(item.ist_id);
+      const index = this.squadmates.indexOf(item.username);
       if (index >= 0) this.squadmates.splice(index, 1);
     },
     filterStudents(item, queryText) {
-      const name = item.name.toLowerCase();
-      const ist_id = item.ist_id.toLowerCase();
+      const username = item.username.toLowerCase();
       const searchText = queryText.toLowerCase();
 
       return (
-        (name.indexOf(searchText) > -1 || ist_id.indexOf(searchText) > -1) &&
-        this.user.name !== item.ist_id &&
+        (username.indexOf(searchText) > -1) &&
+        this.user.username !== item.username &&
         this.squadmates.length + this.squad.members.data.length <= 4
       );
     },
@@ -490,7 +491,7 @@ export default {
         var squad = this.squad;
 
         squad.members.data.forEach(function (item, i) {
-          if (item.ist_id === squad.captain_ist_id) {
+          if (item.name === squad.captain_ist_id) {
             squad.members.data.splice(i, 1);
             squad.members.data.unshift(item);
           }
@@ -551,28 +552,30 @@ export default {
   },
   watch: {
     search(val) {
-      if (
-        val &&
-        ((val.length == 3 && val !== "ist") ||
-          (val.length == 4 && val.substring(0, 3) === "ist"))
-      ) {
-        UserService.getStudents(val).then(
-          (response) => {
-            var students = response.data.data;
-            if (!Array.isArray(students)) students = [students];
+      console.log("aquiii");
+      console.log(val);
+      let name = 'paalemao';
+      UserService.getStudents(name).then(
+        (response) => {
+          var students = response.data.data;
+          if (!Array.isArray(students)) students = [students];
+          
+          console.log(students[0].username);
+          var squad_members = this.squad.members.data.map((item) => item.username);
+          var invites_sent = this.invites_sent.map((item) => item.username);
 
-            var squad_members = this.squad.members.data.map((item) => item.ist_id);
-            var invites_sent = this.invites_sent.map((item) => item.ist_id);
+          console.log(squad_members);
+          console.log(invites_sent);
 
-            this.students = students.filter(
-              (item) => (!squad_members.includes(item.ist_id) && !invites_sent.includes(item.ist_id))
-            );
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      }
+          this.students = students.filter(
+            (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
+          );
+          console.log(this.students);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
 };

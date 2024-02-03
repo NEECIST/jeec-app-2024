@@ -1,19 +1,11 @@
 <template>
   <div class="profile">
     <div class="top" style="margin-top:50px">
-      <img alt="profile photo" :src="currentUser.photo" class="profile-img" />
+      <img alt="profile photo" :src="currentUser.picture" class="profile-img" />
       <div class="profile-info">
         <div class="name">
           <p>{{ nameArray[0] }} {{ nameArray[nameArray.length - 1] }}</p>
         </div>
-        <p class="level">Level {{ currentUser.level.data.value }}</p>
-        <Expbar
-          :xp="currentUser.total_points - currentUser.level.data.start_points"
-          :progress="progress"
-          :end_points="currentUser.level.data.end_points - currentUser.level.data.start_points"
-          :width="xpbar_width"
-          :height="height"
-        />
       </div>
     </div>
 
@@ -117,7 +109,7 @@
         ></v-progress-circular>
     </div>
 
-      <div class="your-code">
+      <!-- <div class="your-code">
       <p>Your referral code:</p>
         <input ref="referral" type="text" :value="referral_code" readonly style="color:#757575" />
         <v-btn
@@ -130,7 +122,7 @@
             >mdi-content-copy</v-icon
           ></v-btn
         >
-      </div>
+      </div> -->
       <br>
 
 
@@ -235,6 +227,8 @@
 <script>
 import Expbar from "@/components/Expbar.vue";
 import UserService from "../services/user.service";
+import { useUserStore } from '@/stores/UserStore';
+import { mapState } from 'pinia';
 
 export default {
   name: "Profile",
@@ -484,34 +478,33 @@ export default {
     },
   },
   computed: {
+    ...mapState(useUserStore, ['user']),
     currentUser() {
-      return this.$store.state.auth.user;
+      return this.user;
     },
     nameArray() {
-      var names = this.$store.state.auth.user.name.split(" ");
+      var names = this.user.name.split(" ");
 
       if (names.length > 1) return names;
-      else return [this.$store.state.auth.user.name, ""];
+      else return [this.user.name, ""];
     },
     progress() {
-      var xp = this.$store.state.auth.user.total_points;
-      var start_points = this.$store.state.auth.user.level.data.start_points;
-      var end_points = this.$store.state.auth.user.level.data.end_points;
+      var xp = this.user.total_points;
 
-      return ((xp - start_points) / (end_points - start_points)) * 100;
+      return xp;
     },
-    referral_code() {
-      var code = this.$store.state.auth.user.referral_code;
-      return (
-        code.substring(0, 4) +
-        "-" +
-        code.substring(4, 8) +
-        "-" +
-        code.substring(8, 12) +
-        "-" +
-        code.substring(12, 16)
-      );
-    },
+    // referral_code() {
+    //   var code = this.user.referral_code;
+    //   return (
+    //     code.substring(0, 4) +
+    //     "-" +
+    //     code.substring(4, 8) +
+    //     "-" +
+    //     code.substring(8, 12) +
+    //     "-" +
+    //     code.substring(12, 16)
+    //   );
+    // },
   },
   destroyed() {
     window.removeEventListener("resize", this.resize);
