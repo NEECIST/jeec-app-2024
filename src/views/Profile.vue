@@ -1,8 +1,7 @@
 <template>
   <div class="profile">
     <div class="top" style="margin-top:50px">
-      <p> {{this.user.username}}</p>
-      <img alt="profile photo" :src="this.student.picture" class="profile-img" />
+      <img alt="profile photo" :src="this.student.photo" class="profile-img" />
       <div class="profile-info">
         <div class="name">
           <p>{{ nameArray[0] }} {{ nameArray[nameArray.length - 1] }}</p>
@@ -65,9 +64,10 @@
           @change="add_cv_novo"
         />
       </div>
+      
       <div class="button">
         
-        <img src="../assets/linkedin.png" alt="linkedin" v-if="this.student.linkedin_url === null"
+        <img :src="link_img" alt="linkedin" v-if="this.student.linkedin_url === null"
           @click.stop="dialog = true"/>
         
         <div class="added-linkedin" v-else-if="!loading_linkedin" style="padding-top: 2vh;">
@@ -263,6 +263,7 @@ export default {
       loading_cv: false,
       loading_linkedin: false,
       cv_img:require("../assets/cv_2.png"),
+      link_img:require("../assets/linkedin.png"),
       code: "",
       prev_length: 0,
       points: 0,
