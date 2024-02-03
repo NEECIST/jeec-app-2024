@@ -88,6 +88,12 @@ class UserService {
     });
   }
 
+  getUserStudent(username) {
+    return axios.get(jeec_brain_url + "/student/studentUser", 
+    { headers: authHeader()}
+    );
+  }
+
   inviteSquad(members) {
     return axios.post(
       jeec_brain_url + "/student/invite-squad",

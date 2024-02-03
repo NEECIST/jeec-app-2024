@@ -1,16 +1,17 @@
 <template>
   <div class="profile">
     <div class="top" style="margin-top:50px">
-      <img alt="profile photo" :src="this.user.picture" class="profile-img" />
+      <p> {{this.user.username}}</p>
+      <img alt="profile photo" :src="this.student.picture" class="profile-img" />
       <div class="profile-info">
         <div class="name">
           <p>{{ nameArray[0] }} {{ nameArray[nameArray.length - 1] }}</p>
         </div>
         <p class="level">Level 0</p>
         <Expbar
-          :xp="this.user.total_points - 0"
+          :xp="this.student.total_points - 0"
           :progress="progress"
-          :end_points="this.user.total_points"
+          :end_points="this.student.total_points"
           :width="xpbar_width"
           :height="height"
         />
@@ -19,11 +20,11 @@
 
     <div class="middle">
       <div class="button">
-        <img :src="cv_img"  v-if="this.user.uploaded_cv === false"
+        <img :src="cv_img"  v-if="this.student.uploaded_cv === false"
         @click.stop="cv_click">
       
         <div class="added-cv" v-else-if="!loading_cv" style="padding-top: 2vh;">
-          <div v-if="this.user.approved_cv == false">
+          <div v-if="this.student.approved_cv == false">
             <p>WAIT FOR REVIEW</p>
           </div>
           <div v-else>
@@ -43,7 +44,7 @@
             style="display: none"
             ref="see_cv"
             :href="cv_url"
-            :download="this.user.username + '_cv.pdf'"
+            :download="this.student.username + '_cv.pdf'"
             >CV</a
           >
         </div>
@@ -66,7 +67,7 @@
       </div>
       <div class="button">
         
-        <img src="../assets/linkedin.png" alt="linkedin" v-if="this.user.linkedin_url === null"
+        <img src="../assets/linkedin.png" alt="linkedin" v-if="this.student.linkedin_url === null"
           @click.stop="dialog = true"/>
         
         <div class="added-linkedin" v-else-if="!loading_linkedin" style="padding-top: 2vh;">
@@ -120,7 +121,7 @@
         ></v-progress-circular>
     </div>
 
-      <div class="your-code">
+      <!-- <div class="your-code">
       <p>Your referral code:</p>
         <input ref="referral" type="text" :value="referral_code" readonly style="color:#757575" />
         <v-btn
@@ -133,7 +134,7 @@
             >mdi-content-copy</v-icon
           ></v-btn
         >
-      </div>
+      </div> -->
       <br>
 
 
@@ -150,7 +151,7 @@
           @click.stop="tag_click(tag)"
           class="interest-tag"
           :style="
-            this.user.tags.includes(tag) ? 'background-color:#D93046' : ''
+            this.student.tags.includes(tag) ? 'background-color:#D93046' : ''
           "
         >
           {{ tag }}
@@ -159,12 +160,12 @@
             color="white"
             style="margin-left: 2vw"
             >{{
-              this.user.tags.includes(tag) ? "mdi-check" : "mdi-plus"
+              this.student.tags.includes(tag) ? "mdi-check" : "mdi-plus"
             }}</v-icon
           >
 
           <v-icon v-else large color="white" style="margin-left: 1vw">{{
-            this.user.tags.includes(tag) ? "mdi-check" : "mdi-plus"
+            this.student.tags.includes(tag) ? "mdi-check" : "mdi-plus"
           }}</v-icon>
         </p>
       </div>
@@ -179,7 +180,7 @@
           @click.stop="company_click(company)"
           class="tag"
           :style="
-            this,.companies.includes(company)
+            this.student.companies.includes(company)
               ? 'background-color:#26A2D5'
               : ''
           "
@@ -190,12 +191,12 @@
             color="white"
             style="margin-left: 2vw"
             >{{
-              this.user.companies.includes(company) ? "mdi-check" : "mdi-plus"
+              this.student.companies.includes(company) ? "mdi-check" : "mdi-plus"
             }}</v-icon
           >
 
           <v-icon v-else large color="white" style="margin-left: 1vw">{{
-            this.user.companies.includes(company) ? "mdi-check" : "mdi-plus"
+            this.student.companies.includes(company) ? "mdi-check" : "mdi-plus"
           }}</v-icon>
         </p>
       </div>
@@ -221,7 +222,7 @@
               placeholder="https://www.linkedin.com/in/XXXXX/"
               pattern="^https?://((www|\w\w)\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\w|\d)+/?){3}))$"
               autofocus
-              :value="this.user.linkedin_url"
+              :value="this.student.linkedin_url"
               required
             />
             <br />
@@ -269,6 +270,7 @@ export default {
       error: "",
       loading_redeem: false,
       loading_squad: true,
+      student: {},
     };
   },
   methods: {
@@ -623,7 +625,21 @@ export default {
         this.loading_squad = false;
       }
     );
+
+    
   },
+  beforeMount() {
+    UserService.getUserStudent(this.user.username).then(
+      (response) => {
+        
+        console.log(response.data.data);
+        this.student = response.data.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 };
 </script>
 
