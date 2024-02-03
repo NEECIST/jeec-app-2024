@@ -1,22 +1,33 @@
 <template>
   <div class="profile">
     <div class="top" style="margin-top:50px">
-      <img alt="profile photo" :src="currentUser.picture" class="profile-img" />
+      <img alt="profile photo" :src="this.user.picture" class="profile-img" />
       <div class="profile-info">
         <div class="name">
           <p>{{ nameArray[0] }} {{ nameArray[nameArray.length - 1] }}</p>
         </div>
+        <p class="level">Level 0</p>
+        <Expbar
+          :xp="this.user.total_points - 0"
+          :progress="progress"
+          :end_points="this.user.total_points"
+          :width="xpbar_width"
+          :height="height"
+        />
       </div>
     </div>
 
     <div class="middle">
       <div class="button">
-        <img :src="cv_img"  v-if="currentUser.uploaded_cv === false"
+        <img :src="cv_img"  v-if="this.user.uploaded_cv === false"
         @click.stop="cv_click">
       
         <div class="added-cv" v-else-if="!loading_cv" style="padding-top: 2vh;">
-          <div>
-            <p>Added CV</p>
+          <div v-if="this.user.approved_cv == false">
+            <p>WAIT FOR REVIEW</p>
+          </div>
+          <div v-else>
+            <p>CV ACCEPTED</p>
             <v-icon large style="color: white">mdi-check</v-icon>
           </div>
           <p
@@ -32,7 +43,7 @@
             style="display: none"
             ref="see_cv"
             :href="cv_url"
-            :download="currentUser.ist_id + '_cv.pdf'"
+            :download="this.user.username + '_cv.pdf'"
             >CV</a
           >
         </div>
@@ -50,12 +61,12 @@
           type="file"
           accept="application/pdf"
           ref="cv"
-          @change="add_cv"
+          @change="add_cv_novo"
         />
       </div>
       <div class="button">
         
-        <img src="../assets/linkedin.png" alt="linkedin" v-if="currentUser.linkedin_url === null"
+        <img src="../assets/linkedin.png" alt="linkedin" v-if="this.user.linkedin_url === null"
           @click.stop="dialog = true"/>
         
         <div class="added-linkedin" v-else-if="!loading_linkedin" style="padding-top: 2vh;">
@@ -109,7 +120,7 @@
         ></v-progress-circular>
     </div>
 
-      <!-- <div class="your-code">
+      <div class="your-code">
       <p>Your referral code:</p>
         <input ref="referral" type="text" :value="referral_code" readonly style="color:#757575" />
         <v-btn
@@ -122,7 +133,7 @@
             >mdi-content-copy</v-icon
           ></v-btn
         >
-      </div> -->
+      </div>
       <br>
 
 
@@ -139,7 +150,7 @@
           @click.stop="tag_click(tag)"
           class="interest-tag"
           :style="
-            currentUser.tags.includes(tag) ? 'background-color:#D93046' : ''
+            this.user.tags.includes(tag) ? 'background-color:#D93046' : ''
           "
         >
           {{ tag }}
@@ -148,12 +159,12 @@
             color="white"
             style="margin-left: 2vw"
             >{{
-              currentUser.tags.includes(tag) ? "mdi-check" : "mdi-plus"
+              this.user.tags.includes(tag) ? "mdi-check" : "mdi-plus"
             }}</v-icon
           >
 
           <v-icon v-else large color="white" style="margin-left: 1vw">{{
-            currentUser.tags.includes(tag) ? "mdi-check" : "mdi-plus"
+            this.user.tags.includes(tag) ? "mdi-check" : "mdi-plus"
           }}</v-icon>
         </p>
       </div>
@@ -168,7 +179,7 @@
           @click.stop="company_click(company)"
           class="tag"
           :style="
-            currentUser.companies.includes(company)
+            this,.companies.includes(company)
               ? 'background-color:#26A2D5'
               : ''
           "
@@ -179,12 +190,12 @@
             color="white"
             style="margin-left: 2vw"
             >{{
-              currentUser.companies.includes(company) ? "mdi-check" : "mdi-plus"
+              this.user.companies.includes(company) ? "mdi-check" : "mdi-plus"
             }}</v-icon
           >
 
           <v-icon v-else large color="white" style="margin-left: 1vw">{{
-            currentUser.companies.includes(company) ? "mdi-check" : "mdi-plus"
+            this.user.companies.includes(company) ? "mdi-check" : "mdi-plus"
           }}</v-icon>
         </p>
       </div>
@@ -210,7 +221,7 @@
               placeholder="https://www.linkedin.com/in/XXXXX/"
               pattern="^https?://((www|\w\w)\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\w|\d)+/?){3}))$"
               autofocus
-              :value="currentUser.linkedin_url"
+              :value="this.user.linkedin_url"
               required
             />
             <br />
@@ -229,6 +240,7 @@ import Expbar from "@/components/Expbar.vue";
 import UserService from "../services/user.service";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
+
 
 export default {
   name: "Profile",
@@ -266,7 +278,7 @@ export default {
         UserService.redeemCode(this.code).then(
           (response) => {
             this.points =
-              response.data.data.total_points - this.currentUser.total_points;
+              response.data.data.total_points - this.user.total_points;
             this.$store.dispatch("auth/userUpdate", response.data.data);
 
             UserService.getUserSquad().then(
@@ -316,7 +328,7 @@ export default {
 
       UserService.addLinkedin(url).then(
         (response) => {
-          if (!this.currentUser.linkedin_url) {
+          if (!this.user.linkedin_url) {
             this.$emit(
               "notification",
               "Added LinkedIn +" + process.env.VUE_APP_REWARD_LINKEDIN + "pts",
@@ -344,24 +356,52 @@ export default {
       this.$refs.cv.click();
     },
     tag_click(tag) {
-      if (this.currentUser.tags.includes(tag)) {
+      if (this.user.tags.includes(tag)) {
         this.delete_tag(tag);
       } else {
         this.add_tag(tag);
       }
     },
     company_click(company) {
-      if (this.currentUser.companies.includes(company)) {
+      if (this.user.companies.includes(company)) {
         this.delete_company(company);
       } else {
         this.add_company(company);
       }
     },
+
+    add_cv_novo() {
+      this.loading_cv = true;
+      UserService.addCVNOVO(this.$refs.cv).then(
+        (response) => {
+          if (!this.user.uploaded_cv) {
+            this.$emit(
+              "notification",
+              "Added CV +" + process.env.VUE_APP_REWARD_CV + "pts",
+              "points"
+            );
+          } else {
+            this.$emit("notification", "CV uploaded successfully If approved you will receive a reward", "success");
+          }
+
+          this.$store.dispatch("auth/userUpdate", response.data.data);
+          this.loading_cv = false;
+        },
+        (error) => {
+          console.log(error);
+          this.$emit("notification", "Fail to upload CV", "error");
+          this.loading_cv = false;
+        }
+      );
+
+      this.$refs.cv.value = "";
+    },
+
     add_cv() {
       this.loading_cv = true;
       UserService.addCV(this.$refs.cv).then(
         (response) => {
-          if (!this.currentUser.uploaded_cv) {
+          if (!this.user.uploaded_cv) {
             this.$emit(
               "notification",
               "Added CV +" + process.env.VUE_APP_REWARD_CV + "pts",
@@ -384,7 +424,7 @@ export default {
       this.$refs.cv.value = "";
     },
     see_cv() {
-      if (this.currentUser.uploaded_cv) {
+      if (this.user.uploaded_cv) {
         UserService.getCV().then(
           (response) => {
             var raw = atob(response.data.data);
@@ -409,8 +449,8 @@ export default {
       }
     },
     add_tag(tag) {
-      let user_backup = JSON.parse(JSON.stringify(this.currentUser));
-      let user = JSON.parse(JSON.stringify(this.currentUser));
+      let user_backup = JSON.parse(JSON.stringify(this.user));
+      let user = JSON.parse(JSON.stringify(this.user));
 
       user.tags.push(tag);
       this.$store.dispatch("auth/userUpdate", user);
@@ -424,8 +464,8 @@ export default {
       );
     },
     add_company(company) {
-      let user_backup = JSON.parse(JSON.stringify(this.currentUser));
-      let user = JSON.parse(JSON.stringify(this.currentUser));
+      let user_backup = JSON.parse(JSON.stringify(this.user));
+      let user = JSON.parse(JSON.stringify(this.user));
 
       user.companies.push(company);
       this.$store.dispatch("auth/userUpdate", user);
@@ -439,8 +479,8 @@ export default {
       );
     },
     delete_tag(tag) {
-      let user_backup = JSON.parse(JSON.stringify(this.currentUser));
-      let user = JSON.parse(JSON.stringify(this.currentUser));
+      let user_backup = JSON.parse(JSON.stringify(this.user));
+      let user = JSON.parse(JSON.stringify(this.user));
 
       user.tags = user.tags.filter((_tag) => _tag !== tag);
       this.$store.dispatch("auth/userUpdate", user);
@@ -454,8 +494,8 @@ export default {
       );
     },
     delete_company(company) {
-      let user_backup = JSON.parse(JSON.stringify(this.currentUser));
-      let user = JSON.parse(JSON.stringify(this.currentUser));
+      let user_backup = JSON.parse(JSON.stringify(this.user));
+      let user = JSON.parse(JSON.stringify(this.user));
 
       user.companies = user.companies.filter(
         (_company) => _company !== company
@@ -479,9 +519,6 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, ['user']),
-    currentUser() {
-      return this.user;
-    },
     nameArray() {
       var names = this.user.name.split(" ");
 
@@ -490,21 +527,23 @@ export default {
     },
     progress() {
       var xp = this.user.total_points;
+      var start_points = 0;
+      var end_points = this.user.total_points;
 
-      return xp;
+      return ((xp - start_points) / (end_points - start_points)) * 100;
     },
-    // referral_code() {
-    //   var code = this.user.referral_code;
-    //   return (
-    //     code.substring(0, 4) +
-    //     "-" +
-    //     code.substring(4, 8) +
-    //     "-" +
-    //     code.substring(8, 12) +
-    //     "-" +
-    //     code.substring(12, 16)
-    //   );
-    // },
+    referral_code() {
+      var code = this.user.referral_code;
+      return (
+        code.substring(0, 4) +
+        "-" +
+        code.substring(4, 8) +
+        "-" +
+        code.substring(8, 12) +
+        "-" +
+        code.substring(12, 16)
+      );
+    },
   },
   destroyed() {
     window.removeEventListener("resize", this.resize);
@@ -512,7 +551,7 @@ export default {
   created() {
     window.addEventListener("resize", this.resize);
 
-    if (!this.currentUser) {
+    if (!this.user) {
       this.$router.push("/");
     }
 
@@ -570,7 +609,7 @@ export default {
     },
   },
   mounted() {
-    if (!this.currentUser) {
+    if (!this.user) {
       this.$router.push("/");
     }
 

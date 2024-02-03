@@ -32,6 +32,20 @@ class UserService {
     );
   }
 
+  addCVNOVO(cv) {
+    var formData = new FormData();
+    formData.append("cv", cv.files[0]);
+
+    return axios.post(jeec_brain_url + "/student/add-cv-novo", formData, {
+      headers: {
+        ...{
+          "Content-Type": "multipart/form-data"
+        },
+        ...authHeader()
+      }
+    });
+  }
+
   addCV(cv) {
     var formData = new FormData();
     formData.append("cv", cv.files[0]);
