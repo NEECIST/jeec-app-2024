@@ -13,7 +13,6 @@
       v-if="!loading_squad"
     >
 
-    <p> {{this.students}} </p>
       <SquadCreation
         v-if="squad === null"
         @create="create_squad"
@@ -36,6 +35,21 @@
         </p>
       </div>
       </div>
+
+      <!-- {{ this.students.length > 0 && this.students[0].username ? this.students[0].username : '' }}
+      <div v-if="this.students.length > 0">
+        <img :src="students[0].photo" alt="Student Photo" class="avatar" />
+      </div> -->
+      
+      <!-- <ul>
+        <li
+          v-for="student in students"
+          :key="student.username"
+          v-if="student">
+          <img :src="student.photo" alt="Student Photo" class="avatar" />
+          {{ student.username }}
+        </li>
+      </ul> -->
 
       
       <div v-if="squad!=null && !champion_week" class="squad-rank weekly">
@@ -111,7 +125,39 @@
       ></v-progress-circular>
     </center>
 
-    <v-dialog v-model="add_members_dialog" :width="width > 1100 ? '50vw' : ''">
+    <div v-if="add_members_dialog" class="dialog-overlay" @keydown.esc="closeDialog">
+      <div class="squad-dialog" :style="{ width: (width > 1100 ? '50vw' : '') }" ref="dialog">
+        <p class="dialog-title">Add Squadmates</p>
+        <input
+          v-model="search"
+          type="text"
+          placeholder="Search username..."
+          class="search-input"
+          @input="filterStudents"
+        />
+        <div class="chips-container">
+          <div v-for="(squadmate, index) in squadmates" :key="index" class="chip">
+            <!-- Add a conditional check for squadmate -->
+            <span v-if="squadmate">{{ squadmate }}</span>
+            <span class="close-icon" @click="remove(squadmate, $event)">×</span>
+          </div>
+        </div>
+        <div class="autocomplete">
+        <div v-if="Array.isArray(this.students) && this.students.length > 0">
+          <ul>
+            <li v-for="student in this.students" :key="student.username" @click="addSquadmate(student)">
+              <img :src="student.photo" alt="Student Photo" class="avatar" />
+              {{ student.username }}
+            </li>
+          </ul>
+        </div>
+        </div>
+        <center>
+          <button @click.stop="invite" class="invite">Invite</button>
+        </center>
+      </div>
+    </div>
+    <!-- <v-dialog v-model="add_members_dialog" :width="width > 1100 ? '50vw' : ''">
       <v-card class="squad-dialog">
         <p class="dialog-title">Add Squadmates</p>
         <v-autocomplete 
@@ -161,7 +207,7 @@
           <button @click.stop="invite" class="invite">Invite</button>
         </center>
       </v-card>
-    </v-dialog> 
+    </v-dialog>  -->
         </div>  
         <div v-if="squad!=null">
           <Member
@@ -241,6 +287,47 @@ export default {
     };
   },
   methods: {
+    filterStudents() {
+      console.log("aquiii");
+      console.log(this.search);
+      UserService.getStudents(this.search).then(
+        (response) => {
+          var students = response.data.data;
+          if (!Array.isArray(students)) students = [students];
+          
+          var squad_members = this.squad.members.data.map((item) => item.username);
+          var invites_sent = this.invites_sent.map((item) => item.username);
+
+          this.students = students.filter(
+            (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
+          );
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    closeDialog(event) {
+      if (event.key === 'Escape') {
+        this.add_members_dialog = false;
+      }
+    },
+    handleClickOutside(event) {
+      if (this.$refs.dialog && !this.$refs.dialog.contains(event.target)) {
+        this.add_members_dialog = false;
+      }
+    },
+    addSquadmate(student) {
+      if (student && student.username) {
+        const username = student.username;
+        if (this.squadmates.length < 4 && !this.squadmates.includes(username)) {
+          this.squadmates.push(username);
+          this.search = ''; // Clear the search input after adding a squadmate
+        }
+      } else {
+        console.error("Invalid student object:", student);
+      }
+    },
     click(username) {
       if (username !== this.button) {
         this.button = username;
@@ -308,20 +395,13 @@ export default {
 
       this.search = "";
     },
-    remove(item) {
-      const index = this.squadmates.indexOf(item.username);
+    remove(item, event) {
+      console.log('remover');
+      event.stopPropagation();
+      const index = this.squadmates.findIndex(squadmate => squadmate.username === item.username);
       if (index >= 0) this.squadmates.splice(index, 1);
     },
-    filterStudents(item, queryText) {
-      const username = item.username.toLowerCase();
-      const searchText = queryText.toLowerCase();
-
-      return (
-        (username.indexOf(searchText) > -1) &&
-        this.user.username !== item.username &&
-        this.squadmates.length + this.squad.members.data.length <= 4
-      );
-    },
+    
     async invite() {
       if (this.squadmates.length > 0) {
         this.loading_add = true;
@@ -329,6 +409,7 @@ export default {
 
         await UserService.inviteSquad(this.squadmates).then(
           (response) => {
+            console.log('convite enviado 1');
             this.squadmates = [];
             const data = response.data;
             this.members_with_squad = data.members_with_squad
@@ -550,27 +631,41 @@ export default {
     // } 
     
   },
+
+  mounted() {
+    document.addEventListener('click', this.handleClickOutside);
+  },
+
+  beforeMount() {
+    document.removeEventListener('click', this.handleClickOutside);
+    UserService.getStudents('').then(
+      (response) => {
+        var students = response.data.data;
+        this.students = [students];
+        console.log("students");
+        console.log(students);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  },
+
   watch: {
     search(val) {
       console.log("aquiii");
       console.log(val);
-      let name = 'paalemao';
-      UserService.getStudents(name).then(
+      UserService.getStudents(val).then(
         (response) => {
           var students = response.data.data;
           if (!Array.isArray(students)) students = [students];
           
-          console.log(students[0].username);
           var squad_members = this.squad.members.data.map((item) => item.username);
           var invites_sent = this.invites_sent.map((item) => item.username);
-
-          console.log(squad_members);
-          console.log(invites_sent);
 
           this.students = students.filter(
             (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
           );
-          console.log(this.students);
         },
         (error) => {
           console.log(error);
@@ -754,5 +849,86 @@ export default {
   transform: scale(1.2); /* this enlarges the text, giving it a "pop" effect */
   color: red; /* changes the text color */
 }
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.squad-dialog {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.chip {
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.close-icon {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.autocomplete ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.autocomplete li {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
 
 </style>

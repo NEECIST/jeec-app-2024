@@ -7,12 +7,12 @@
         {{ nameArray[0] }} <br v-if="$route.name === 'Home'" />
         {{ nameArray[nameArray.length - 1] }}
       </p>
-      <p class="level">level {{ member.level }}</p>
+      <p class="level">name: {{ member.name }}</p>
     </div>
     <img
-      v-if="can_kick && !loading_kick"
+      v-if="can_kick && !loading_kick && !member.is_captain"
       @click.stop="kick"
-      src="../assets/icons/recycle-icon.svg"
+      :src=kick_img
       alt="kick"
       class="kick"
     />
@@ -41,20 +41,21 @@ export default {
   data: function () {
     return {
       loading_kick: false,
+      kick_img: require("../assets/icons/recycle-icon.svg"),
     };
   },
   computed: {
     ...mapState(useUserStore, ['user']),
     nameArray() {
-      var names = this.member.name.split(" ");
+      var names = this.member.username.split(" ");
 
       if (names.length > 1) return names;
-      else return [this.member.name, ""];
+      else return [this.member.username, ""];
     },
 
     can_kick () {
       return (
-        this.user.name === this.captain_ist_id &&
+        this.user.username === this.captain_ist_id &&
         this.member.external_id !== this.user.student_external_id
         // this.$route.name === "Squad"
       );

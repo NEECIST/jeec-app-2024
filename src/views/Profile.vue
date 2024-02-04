@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <div class="redeem-code">
+    <!-- <div class="redeem-code">
       <p class="redeem-text">Redeem Code:</p>
    
       <input
@@ -119,7 +119,7 @@
           :width="6"
           class="loading-bar"
         ></v-progress-circular>
-    </div>
+    </div> -->
 
       <!-- <div class="your-code">
       <p>Your referral code:</p>
@@ -139,7 +139,7 @@
 
 
 
-    <div class="bottom" v-if="!loading_companies && !loading_tags">
+    <!-- <div class="bottom" v-if="!loading_companies && !loading_tags">
       <div class="bottom-container">
        <br>
       
@@ -210,7 +210,7 @@
         :width="10"
         class="loading-bar"
       ></v-progress-circular>
-    </div>
+    </div> -->
 
     <v-dialog v-model="dialog" :width="dialog_width">
       <v-card>
@@ -331,12 +331,13 @@ export default {
 
       UserService.addLinkedin(url).then(
         (response) => {
-          if (!this.user.linkedin_url) {
+          if (!this.student.linkedin_url) {
             this.$emit(
               "notification",
               "Added LinkedIn +" + process.env.VUE_APP_REWARD_LINKEDIN + "pts",
               "points"
             );
+            this.student.linkedin_url = url;
           } else {
             this.$emit(
               "notification",
@@ -344,8 +345,7 @@ export default {
               "success"
             );
           }
-
-          this.$store.dispatch("auth/userUpdate", response.data.data);
+          
           this.loading_linkedin = false;
         },
         (error) => {
@@ -377,17 +377,18 @@ export default {
       this.loading_cv = true;
       UserService.addCVNOVO(this.$refs.cv).then(
         (response) => {
-          if (!this.user.uploaded_cv) {
+          if (!this.student.uploaded_cv) {
             this.$emit(
               "notification",
               "Added CV +" + process.env.VUE_APP_REWARD_CV + "pts",
               "points"
             );
+            this.student.uploaded_cv = true;
           } else {
             this.$emit("notification", "CV uploaded successfully If approved you will receive a reward", "success");
           }
 
-          this.$store.dispatch("auth/userUpdate", response.data.data);
+          
           this.loading_cv = false;
         },
         (error) => {
@@ -404,7 +405,7 @@ export default {
       this.loading_cv = true;
       UserService.addCV(this.$refs.cv).then(
         (response) => {
-          if (!this.user.uploaded_cv) {
+          if (!this.student.uploaded_cv) {
             this.$emit(
               "notification",
               "Added CV +" + process.env.VUE_APP_REWARD_CV + "pts",
@@ -427,7 +428,7 @@ export default {
       this.$refs.cv.value = "";
     },
     see_cv() {
-      if (this.user.uploaded_cv) {
+      if (this.student.uploaded_cv) {
         UserService.getCV().then(
           (response) => {
             var raw = atob(response.data.data);
