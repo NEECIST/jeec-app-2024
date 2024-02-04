@@ -85,6 +85,8 @@
 import Buttons from "@/components/Buttons.vue";
 import Activity from "@/components/Activity.vue";
 import UserService from "../services/user.service";
+import { useUserStore } from '@/stores/UserStore';
+import { mapState } from 'pinia'
 
 export default {
   name: "Activities",
@@ -134,29 +136,36 @@ export default {
     },
   },
   computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
+    ...mapState(useUserStore, ['user'])
   },
   mounted() {
     // console.log('estou vivo')
-    if (!this.currentUser) {
+    if (!this.user) {
       this.$router.push("/");
     }
+
+    UserService.getEventInfo().then(
+      (response) => {
+        console.log(response.data)
+      }
+    );
 
     UserService.getEventDates().then(
       (response) => {
         this.event_dates = response.data;
+
+        this.getEventDates(
+          this.event_dates[0],
+          this.event_dates[this.event_dates.length - 1]
+        )
+        console.log(response.data)
       },
       (error) => {
         console.log(error);
       }
     );
 
-    this.getEventDates(
-      this.event_dates[0],
-      this.event_dates[this.event_dates.length - 1]
-    );
+    
 
     var now = new Date(
       new Date().getFullYear(),

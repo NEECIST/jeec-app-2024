@@ -259,6 +259,8 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/UserStore';
+import { mapState } from 'pinia'
 import LogService from "../services/log.service";
 import axios from 'axios';
 
@@ -283,9 +285,7 @@ export default {
     index:Number,
   },
   computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
+    ...mapState(useUserStore, ['user']),
     speakers_companies() {
       var speakers = this.activity.speakers.data.slice(0);
       var companies = [];
