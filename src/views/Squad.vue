@@ -297,7 +297,7 @@ export default {
           
           var squad_members = this.squad.members.data.map((item) => item.username);
           var invites_sent = this.invites_sent.map((item) => item.username);
-
+        
           this.students = students.filter(
             (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
           );
@@ -561,46 +561,6 @@ export default {
   computed: {
     ...mapState(useUserStore, ['user']),
   },
-  async created() {
-    if (!this.user) {
-      this.$router.push("/");
-    } 
-
-    UserService.getUserSquad().then(
-      (response) => {
-        this.squad = response.data.data;
-        var squad = this.squad;
-
-        squad.members.data.forEach(function (item, i) {
-          if (item.name === squad.captain_ist_id) {
-            squad.members.data.splice(i, 1);
-            squad.members.data.unshift(item);
-          }
-        });
-
-        this.loading_squad = false;
-      },
-      (error) => {
-        console.log('olaaaaa');
-        console.log(error);
-        this.loading_squad = false;
-      }
-    );
-
-    UserService.getSquadInvitationsReceived().then(
-      (response) => {
-        this.invites = response.data.data;
-        console.log(this.invites)
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-
-    await UserService.getSquadsLength().then((response) => {
-      const data = response.data; this.length = data.length; 
-      }
-    );
     
 
 
@@ -629,26 +589,76 @@ export default {
     //   this.champion_week = true
     //   this.champion_daily = true
     // } 
-    
-  },
 
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
   },
 
-  beforeMount() {
-    document.removeEventListener('click', this.handleClickOutside);
-    UserService.getStudents('').then(
+  async beforeMount() {
+    if (!this.user) {
+      this.$router.push("/");
+    } 
+
+    UserService.getUserSquad().then(
       (response) => {
-        var students = response.data.data;
-        this.students = [students];
-        console.log("students");
-        console.log(students);
+        this.squad = response.data.data;
+        var squad = this.squad;
+
+        squad.members.data.forEach(function (item, i) {
+          if (item.name === squad.captain_ist_id) {
+            squad.members.data.splice(i, 1);
+            squad.members.data.unshift(item);
+          }
+        });
+
+        this.loading_squad = false;
+      },
+      (error) => {
+        console.log('olaaaaa');
+        console.log(error);
+        this.loading_squad = false;
+      }
+    );
+    
+    UserService.getSquadInvitationsReceived().then(
+      (response) => {
+        this.invites = response.data.data;
+        console.log(this.invites)
       },
       (error) => {
         console.log(error);
       }
     );
+
+    await UserService.getSquadsLength().then((response) => {
+      const data = response.data; this.length = data.length; 
+      }
+    );
+    
+    
+    
+    if(this.squad != null) {
+      
+      UserService.getStudents('').then(
+        (response) => {
+          var students = response.data.data;
+          this.students = [students];
+
+          var squad_members = this.squad.members.data.map((item) => item.username);
+          var invites_sent = this.invites_sent.map((item) => item.username);
+
+          this.students = this.students.filter(
+            (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
+          );
+          console.log("students");
+          console.log(students);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+    
   },
 
   watch: {
