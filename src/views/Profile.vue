@@ -1,16 +1,16 @@
 <template>
   <div class="profile">
     <div class="top" style="margin-top:50px">
-      <img alt="profile photo" :src="currentUser.photo" class="profile-img" />
+      <img alt="profile photo" :src="this.student.photo" class="profile-img" />
       <div class="profile-info">
         <div class="name">
           <p>{{ nameArray[0] }} {{ nameArray[nameArray.length - 1] }}</p>
         </div>
-        <p class="level">Level {{ currentUser.level.data.value }}</p>
+        <p class="level">Level 0</p>
         <Expbar
-          :xp="currentUser.total_points - currentUser.level.data.start_points"
+          :xp="this.student.total_points - 0"
           :progress="progress"
-          :end_points="currentUser.level.data.end_points - currentUser.level.data.start_points"
+          :end_points="this.student.total_points"
           :width="xpbar_width"
           :height="height"
         />
@@ -19,12 +19,15 @@
 
     <div class="middle">
       <div class="button">
-        <img :src="cv_img"  v-if="currentUser.uploaded_cv === false"
+        <img :src="cv_img"  v-if="this.student.uploaded_cv === false"
         @click.stop="cv_click">
       
         <div class="added-cv" v-else-if="!loading_cv" style="padding-top: 2vh;">
-          <div>
-            <p>Added CV</p>
+          <div v-if="this.student.approved_cv == false">
+            <p>WAIT FOR REVIEW</p>
+          </div>
+          <div v-else>
+            <p>CV ACCEPTED</p>
             <v-icon large style="color: white">mdi-check</v-icon>
           </div>
           <p
@@ -40,7 +43,7 @@
             style="display: none"
             ref="see_cv"
             :href="cv_url"
-            :download="currentUser.ist_id + '_cv.pdf'"
+            :download="this.student.username + '_cv.pdf'"
             >CV</a
           >
         </div>
@@ -58,12 +61,13 @@
           type="file"
           accept="application/pdf"
           ref="cv"
-          @change="add_cv"
+          @change="add_cv_novo"
         />
       </div>
+      
       <div class="button">
         
-        <img src="../assets/linkedin.png" alt="linkedin" v-if="currentUser.linkedin_url === null"
+        <img :src="link_img" alt="linkedin" v-if="this.student.linkedin_url === null"
           @click.stop="dialog = true"/>
         
         <div class="added-linkedin" v-else-if="!loading_linkedin" style="padding-top: 2vh;">
@@ -87,7 +91,7 @@
       </div>
     </div>
 
-    <div class="redeem-code">
+    <!-- <div class="redeem-code">
       <p class="redeem-text">Redeem Code:</p>
    
       <input
@@ -115,9 +119,9 @@
           :width="6"
           class="loading-bar"
         ></v-progress-circular>
-    </div>
+    </div> -->
 
-      <div class="your-code">
+      <!-- <div class="your-code">
       <p>Your referral code:</p>
         <input ref="referral" type="text" :value="referral_code" readonly style="color:#757575" />
         <v-btn
@@ -130,12 +134,12 @@
             >mdi-content-copy</v-icon
           ></v-btn
         >
-      </div>
+      </div> -->
       <br>
 
 
 
-    <div class="bottom" v-if="!loading_companies && !loading_tags">
+    <!-- <div class="bottom" v-if="!loading_companies && !loading_tags">
       <div class="bottom-container">
        <br>
       
@@ -147,7 +151,7 @@
           @click.stop="tag_click(tag)"
           class="interest-tag"
           :style="
-            currentUser.tags.includes(tag) ? 'background-color:#D93046' : ''
+            this.student.tags.includes(tag) ? 'background-color:#D93046' : ''
           "
         >
           {{ tag }}
@@ -156,12 +160,12 @@
             color="white"
             style="margin-left: 2vw"
             >{{
-              currentUser.tags.includes(tag) ? "mdi-check" : "mdi-plus"
+              this.student.tags.includes(tag) ? "mdi-check" : "mdi-plus"
             }}</v-icon
           >
 
           <v-icon v-else large color="white" style="margin-left: 1vw">{{
-            currentUser.tags.includes(tag) ? "mdi-check" : "mdi-plus"
+            this.student.tags.includes(tag) ? "mdi-check" : "mdi-plus"
           }}</v-icon>
         </p>
       </div>
@@ -176,7 +180,7 @@
           @click.stop="company_click(company)"
           class="tag"
           :style="
-            currentUser.companies.includes(company)
+            this.student.companies.includes(company)
               ? 'background-color:#26A2D5'
               : ''
           "
@@ -187,12 +191,12 @@
             color="white"
             style="margin-left: 2vw"
             >{{
-              currentUser.companies.includes(company) ? "mdi-check" : "mdi-plus"
+              this.student.companies.includes(company) ? "mdi-check" : "mdi-plus"
             }}</v-icon
           >
 
           <v-icon v-else large color="white" style="margin-left: 1vw">{{
-            currentUser.companies.includes(company) ? "mdi-check" : "mdi-plus"
+            this.student.companies.includes(company) ? "mdi-check" : "mdi-plus"
           }}</v-icon>
         </p>
       </div>
@@ -206,7 +210,7 @@
         :width="10"
         class="loading-bar"
       ></v-progress-circular>
-    </div>
+    </div> -->
 
     <v-dialog v-model="dialog" :width="dialog_width">
       <v-card>
@@ -218,7 +222,7 @@
               placeholder="https://www.linkedin.com/in/XXXXX/"
               pattern="^https?://((www|\w\w)\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\w|\d)+/?){3}))$"
               autofocus
-              :value="currentUser.linkedin_url"
+              :value="this.student.linkedin_url"
               required
             />
             <br />
@@ -235,6 +239,9 @@
 <script>
 import Expbar from "@/components/Expbar.vue";
 import UserService from "../services/user.service";
+import { useUserStore } from '@/stores/UserStore';
+import { mapState } from 'pinia';
+
 
 export default {
   name: "Profile",
@@ -256,6 +263,7 @@ export default {
       loading_cv: false,
       loading_linkedin: false,
       cv_img:require("../assets/cv_2.png"),
+      link_img:require("../assets/linkedin.png"),
       code: "",
       prev_length: 0,
       points: 0,
@@ -263,6 +271,7 @@ export default {
       error: "",
       loading_redeem: false,
       loading_squad: true,
+      student: {},
     };
   },
   methods: {
@@ -272,7 +281,7 @@ export default {
         UserService.redeemCode(this.code).then(
           (response) => {
             this.points =
-              response.data.data.total_points - this.currentUser.total_points;
+              response.data.data.total_points - this.user.total_points;
             this.$store.dispatch("auth/userUpdate", response.data.data);
 
             UserService.getUserSquad().then(
@@ -322,12 +331,13 @@ export default {
 
       UserService.addLinkedin(url).then(
         (response) => {
-          if (!this.currentUser.linkedin_url) {
+          if (!this.student.linkedin_url) {
             this.$emit(
               "notification",
               "Added LinkedIn +" + process.env.VUE_APP_REWARD_LINKEDIN + "pts",
               "points"
             );
+            this.student.linkedin_url = url;
           } else {
             this.$emit(
               "notification",
@@ -335,8 +345,7 @@ export default {
               "success"
             );
           }
-
-          this.$store.dispatch("auth/userUpdate", response.data.data);
+          
           this.loading_linkedin = false;
         },
         (error) => {
@@ -350,24 +359,53 @@ export default {
       this.$refs.cv.click();
     },
     tag_click(tag) {
-      if (this.currentUser.tags.includes(tag)) {
+      if (this.user.tags.includes(tag)) {
         this.delete_tag(tag);
       } else {
         this.add_tag(tag);
       }
     },
     company_click(company) {
-      if (this.currentUser.companies.includes(company)) {
+      if (this.user.companies.includes(company)) {
         this.delete_company(company);
       } else {
         this.add_company(company);
       }
     },
+
+    add_cv_novo() {
+      this.loading_cv = true;
+      UserService.addCVNOVO(this.$refs.cv).then(
+        (response) => {
+          if (!this.student.uploaded_cv) {
+            this.$emit(
+              "notification",
+              "Added CV +" + process.env.VUE_APP_REWARD_CV + "pts",
+              "points"
+            );
+            this.student.uploaded_cv = true;
+          } else {
+            this.$emit("notification", "CV uploaded successfully If approved you will receive a reward", "success");
+          }
+
+          
+          this.loading_cv = false;
+        },
+        (error) => {
+          console.log(error);
+          this.$emit("notification", "Fail to upload CV", "error");
+          this.loading_cv = false;
+        }
+      );
+
+      this.$refs.cv.value = "";
+    },
+
     add_cv() {
       this.loading_cv = true;
       UserService.addCV(this.$refs.cv).then(
         (response) => {
-          if (!this.currentUser.uploaded_cv) {
+          if (!this.student.uploaded_cv) {
             this.$emit(
               "notification",
               "Added CV +" + process.env.VUE_APP_REWARD_CV + "pts",
@@ -390,7 +428,7 @@ export default {
       this.$refs.cv.value = "";
     },
     see_cv() {
-      if (this.currentUser.uploaded_cv) {
+      if (this.student.uploaded_cv) {
         UserService.getCV().then(
           (response) => {
             var raw = atob(response.data.data);
@@ -415,8 +453,8 @@ export default {
       }
     },
     add_tag(tag) {
-      let user_backup = JSON.parse(JSON.stringify(this.currentUser));
-      let user = JSON.parse(JSON.stringify(this.currentUser));
+      let user_backup = JSON.parse(JSON.stringify(this.user));
+      let user = JSON.parse(JSON.stringify(this.user));
 
       user.tags.push(tag);
       this.$store.dispatch("auth/userUpdate", user);
@@ -430,8 +468,8 @@ export default {
       );
     },
     add_company(company) {
-      let user_backup = JSON.parse(JSON.stringify(this.currentUser));
-      let user = JSON.parse(JSON.stringify(this.currentUser));
+      let user_backup = JSON.parse(JSON.stringify(this.user));
+      let user = JSON.parse(JSON.stringify(this.user));
 
       user.companies.push(company);
       this.$store.dispatch("auth/userUpdate", user);
@@ -445,8 +483,8 @@ export default {
       );
     },
     delete_tag(tag) {
-      let user_backup = JSON.parse(JSON.stringify(this.currentUser));
-      let user = JSON.parse(JSON.stringify(this.currentUser));
+      let user_backup = JSON.parse(JSON.stringify(this.user));
+      let user = JSON.parse(JSON.stringify(this.user));
 
       user.tags = user.tags.filter((_tag) => _tag !== tag);
       this.$store.dispatch("auth/userUpdate", user);
@@ -460,8 +498,8 @@ export default {
       );
     },
     delete_company(company) {
-      let user_backup = JSON.parse(JSON.stringify(this.currentUser));
-      let user = JSON.parse(JSON.stringify(this.currentUser));
+      let user_backup = JSON.parse(JSON.stringify(this.user));
+      let user = JSON.parse(JSON.stringify(this.user));
 
       user.companies = user.companies.filter(
         (_company) => _company !== company
@@ -484,24 +522,22 @@ export default {
     },
   },
   computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
+    ...mapState(useUserStore, ['user']),
     nameArray() {
-      var names = this.$store.state.auth.user.name.split(" ");
+      var names = this.user.name.split(" ");
 
       if (names.length > 1) return names;
-      else return [this.$store.state.auth.user.name, ""];
+      else return [this.user.name, ""];
     },
     progress() {
-      var xp = this.$store.state.auth.user.total_points;
-      var start_points = this.$store.state.auth.user.level.data.start_points;
-      var end_points = this.$store.state.auth.user.level.data.end_points;
+      var xp = this.user.total_points;
+      var start_points = 0;
+      var end_points = this.user.total_points;
 
       return ((xp - start_points) / (end_points - start_points)) * 100;
     },
     referral_code() {
-      var code = this.$store.state.auth.user.referral_code;
+      var code = this.user.referral_code;
       return (
         code.substring(0, 4) +
         "-" +
@@ -519,7 +555,7 @@ export default {
   created() {
     window.addEventListener("resize", this.resize);
 
-    if (!this.currentUser) {
+    if (!this.user) {
       this.$router.push("/");
     }
 
@@ -577,7 +613,7 @@ export default {
     },
   },
   mounted() {
-    if (!this.currentUser) {
+    if (!this.user) {
       this.$router.push("/");
     }
 
@@ -591,7 +627,21 @@ export default {
         this.loading_squad = false;
       }
     );
+
+    
   },
+  beforeMount() {
+    UserService.getUserStudent(this.user.username).then(
+      (response) => {
+        
+        console.log(response.data.data);
+        this.student = response.data.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 };
 </script>
 
