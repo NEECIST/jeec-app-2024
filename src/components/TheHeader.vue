@@ -1,19 +1,23 @@
 <template>
   <header>
-    <router-link to="/home">
+    <router-link to="/" :inert="stateStore.navOpen">
       <img src="@/assets/jeec_mobile_white.svg" alt="JEEC">
     </router-link>
     <h1>{{ title }}</h1>
     <NavHamburguer></NavHamburguer>
+    <NavDrawer></NavDrawer>
   </header>
 </template>
 
 <script setup>
-import NavHamburguer from './NavHamburguer.vue'
+import NavHamburguer from "./NavHamburguer.vue";
+import NavDrawer from "./NavDrawer.vue";
+
+import { useStateStore } from "@/stores/StateStore";
+const stateStore = useStateStore()
+
 import { defineProps } from 'vue';
-
 const props = defineProps(["title"]);
-
 </script>
 
 <style scoped>
@@ -27,6 +31,8 @@ header {
   align-items: center;
   padding: 0 1rem;
   margin-bottom: 15px;
+  z-index: 100;
+  position: relative;
 }
 
 header h1 {

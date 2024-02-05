@@ -15,7 +15,7 @@ const routes = [
   {
     path: "/home",
     name: "Home",
-    component: Home
+    component: Home,
   },
   {
     path: "/qrcode",
@@ -52,11 +52,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.STUDENT_APP_URL),
-  linkActiveClass: "active",
-    stringifyQuery: query => {
-      let result = qs.stringify(query, { format: "RFC1738" });
-      return result ? "?" + result : "";
-    },
+  linkExactActiveClass: 'active-link',
   routes
 })
 

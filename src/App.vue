@@ -1,6 +1,6 @@
 <template>
   <TheHeader v-if="header" :title="pageName"></TheHeader>
-  <main>
+  <main :inert="stateStore.navOpen">
     <router-view />
   </main>
 </template>
@@ -8,30 +8,41 @@
 <script setup>
 import TheHeader from './components/TheHeader.vue';
 
-import { ref, watch, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useStateStore } from '@/stores/StateStore';
+const stateStore = useStateStore();
+
+import { ref, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
-const routePath = computed(() => route.fullPath);
+const router = useRouter();
 
 const pageName = ref("");
-const header = ref(false);
+const header = ref(true);
 
 function onRouteChange() {
   pageName.value = route.name;
+  const showHeader = route.meta.header;
+  console.log(showHeader)
 
-  if (route.meta.header != undefined && route.meta.header == false) {
+  if (showHeader != undefined && showHeader == false) {
     header.value = false;
   } else {
     header.value = true;
   }
 };
 
-watch(() => routePath, onRouteChange);
+onMounted(async () => {
+  await router.isReady();
+  onRouteChange()
+  watch(() => route.fullPath, onRouteChange);
+});
 </script>
 
 <style scoped>
 main {
   padding: 0 2ch;
+  z-index: 1;
+  position: relative;
 }
 </style>

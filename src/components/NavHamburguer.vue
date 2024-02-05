@@ -1,31 +1,22 @@
 <template>
-  <button @click="toggleActive" v-on:event="handle" v-bind:class="{active: isActive}" class="nav__toggle">
+  <button @click="toggleNav" v-on:event="handle" v-bind:class="{ active: stateStore.navOpen }" class="nav__toggle"
+    :aria-expanded="stateStore.navOpen" aria-label="Open navigation drawer" aria-controls="nav-drawer">
     <span></span>
     <span></span>
     <span></span>
     <span></span>
   </button>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      isActive: false
-    }
-  },
-  methods: {
-    toggleActive() {
-      this.isActive = !this.isActive
-    },
-  },
-  mounted() {
-    this.$watch( () => this.$route.path, (to, from) => {
-      this.isActive = false
-    })
-  },
+<script setup>
+import { useStateStore } from '@/stores/StateStore';
+
+const stateStore = useStateStore();
+
+function toggleNav() {
+  stateStore.navOpen = !stateStore.navOpen
 }
 </script>
-<style>
+<style scoped>
 .nav__toggle {
   border: none;
   background: none;
@@ -36,6 +27,7 @@ export default {
   align-items: center;
   position: relative;
   display: inline;
+  z-index: 102;
 }
 
 .nav__toggle span {
@@ -50,47 +42,47 @@ export default {
   transition: all 0.5s, box-shadow 0s;
 }
 
-.nav__toggle.active span{
+.nav__toggle.active span {
   transition: all 0.5s, box-shadow 0s;
 }
 
-.nav__toggle span:nth-child(1){
+.nav__toggle span:nth-child(1) {
   top: 0;
   left: 0%;
 }
 
-.nav__toggle span:nth-child(2){
+.nav__toggle span:nth-child(2) {
   top: 10px;
 }
 
-.nav__toggle span:nth-child(3){
+.nav__toggle span:nth-child(3) {
   top: 10px;
   box-shadow: 0px 0px 0px #F72585;
 }
 
-.nav__toggle span:nth-child(4){
+.nav__toggle span:nth-child(4) {
   top: 20px;
   left: 0%;
 }
 
-.nav__toggle.active span:nth-child(1){
+.nav__toggle.active span:nth-child(1) {
   width: 0%;
   left: 50%;
   top: 10px
 }
 
-.nav__toggle.active span:nth-child(2){
+.nav__toggle.active span:nth-child(2) {
   rotate: 45deg;
   height: 4px;
 }
 
-.nav__toggle.active span:nth-child(3){
+.nav__toggle.active span:nth-child(3) {
   rotate: -45deg;
   box-shadow: 0px 0px 3px #F72585;
   height: 4px;
 }
 
-.nav__toggle.active span:nth-child(4){
+.nav__toggle.active span:nth-child(4) {
   width: 0%;
   left: 50%;
   top: 10px
