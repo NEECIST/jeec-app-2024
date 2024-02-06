@@ -89,7 +89,6 @@
               <a  class="carousel__item" style="cursor: pointer;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
 
                 <div class="weekday" >
-
                   <p style="pointer-events: none;">{{ weekday }}</p>
                 </div>
 
@@ -143,15 +142,12 @@
 import Buttons from "@/components/Buttons.vue";
 import Activity from "@/components/Activity.vue";
 import UserService from "../services/user.service";
-import {ref} from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
 import { Carousel, Pagination, Navigation, Slide } from 'vue3-carousel'
 
 import 'vue3-carousel/dist/carousel.css'
 
-const schedule_carousel = ref("schedule_carousel")
-console.log(schedule_carousel)
 export default {
   name: "Schedule",
   components: {
@@ -202,11 +198,14 @@ export default {
     getWeekday(date) {
       return date.split(", ")[1];
     },
+    // onClick weekday element event
     carouselSlideEvent(target) {
-      console.log("click");
-
+      // if clicked element is "next"
       if(target.classList.contains("carousel__slide--next")){
+        // go to next slide
         this.$refs.schedule_carousel.next()
+
+        // make active slide (soon to be prev slide) pointable
         const active_slide = document.querySelector(".carousel__slide--active");
         if (active_slide) {
           active_slide.style.pointerEvents = "all";
@@ -219,15 +218,19 @@ export default {
             new_active_slide.style.pointerEvents = "none";
           }
         }, 550);
-
+      // if clicked element is "prev"  
       } else if(target.classList.contains("carousel__slide--prev")){
+        // go to prev slide
         this.$refs.schedule_carousel.prev()
 
+
+        // make active slide (soon to be next slide) pointable
         const active_slide = document.querySelector(".carousel__slide--active");
         if (active_slide) {
           active_slide.style.pointerEvents = "all";
         }
-
+        
+        // update slide pointer events after transition
         setTimeout(() => {
           const new_active_slide = document.querySelector(".carousel__slide--active");
           if (new_active_slide) {
