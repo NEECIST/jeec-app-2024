@@ -50,7 +50,13 @@
 }
 
 /*  */
-
+.weekday{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
 .schedule{
   opacity: 0;
 }
@@ -78,17 +84,18 @@
 
     <div style="margin-top: 8vh" v-if="loading_activities">
         <div>
-          <Carousel :itemsToShow="2.5" :wrapAround="true" :transition="500">
+          <Carousel ref="schedule_carousel" :itemsToShow="2.5" :wrapAround="true" :transition="500">
             <Slide v-for="weekday in weekdays" :key="weekday" style="flex-direction: column;">
-              <div class="carousel__item">
+              <a  class="carousel__item" style="cursor: pointer;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
 
-                <div class="weekday">
-                  <p>{{ weekday }}</p>
+                <div class="weekday" >
+
+                  <p style="pointer-events: none;">{{ weekday }}</p>
                 </div>
 
                 
 
-              </div>
+              </a>
 
               <div class="carousel_item">
                 <div class="schedule">
@@ -106,10 +113,6 @@
                 
               </div>
             </Slide>
-            
-            <template #addons>
-              <navigation />
-            </template>
           </Carousel> 
           
         </div>
@@ -140,12 +143,15 @@
 import Buttons from "@/components/Buttons.vue";
 import Activity from "@/components/Activity.vue";
 import UserService from "../services/user.service";
+import {ref} from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
 import { Carousel, Pagination, Navigation, Slide } from 'vue3-carousel'
 
 import 'vue3-carousel/dist/carousel.css'
 
+const schedule_carousel = ref("schedule_carousel")
+console.log(schedule_carousel)
 export default {
   name: "Schedule",
   components: {
@@ -196,14 +202,53 @@ export default {
     getWeekday(date) {
       return date.split(", ")[1];
     },
+    carouselSlideEvent(target) {
+      console.log("click");
+
+      if(target.classList.contains("carousel__slide--next")){
+        this.$refs.schedule_carousel.next()
+        const active_slide = document.querySelector(".carousel__slide--active");
+        if (active_slide) {
+          active_slide.style.pointerEvents = "all";
+        }
+
+        // update slide pointer events after transition
+        setTimeout(() => {
+          const new_active_slide = document.querySelector(".carousel__slide--active");
+          if (new_active_slide) {
+            new_active_slide.style.pointerEvents = "none";
+          }
+        }, 550);
+
+      } else if(target.classList.contains("carousel__slide--prev")){
+        this.$refs.schedule_carousel.prev()
+
+        const active_slide = document.querySelector(".carousel__slide--active");
+        if (active_slide) {
+          active_slide.style.pointerEvents = "all";
+        }
+
+        setTimeout(() => {
+          const new_active_slide = document.querySelector(".carousel__slide--active");
+          if (new_active_slide) {
+            new_active_slide.style.pointerEvents = "none";
+          }
+        }, 550);
+      }
+    }
   },
   computed: {
     ...mapState(useUserStore, ['user'])
   },
   mounted() {
-    // console.log('estou vivo')
     if (!this.user) {
       this.$router.push("/");
+    }
+
+    // make active slide non pointer
+    const active_slide = document.querySelector(".carousel__slide--active");
+    if (active_slide) {
+      active_slide.style.pointerEvents = "none";
     }
 
     UserService.getActivities().then(
