@@ -346,7 +346,7 @@ export default {
   methods: {
     async isInSchedule() {
       await axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/is_activity_in_schedule_vue', 
-      {student_ist_id: this.currentUser.ist_id, activity_name: this.activity.name})
+      {student_ist_id: this.user.ist_id, activity_name: this.activity.name})
          .then((response) => {
           const data = response.data; // [{}, {}]
           this.inSchedule = data.inSchedule;
@@ -358,7 +358,7 @@ export default {
     },
     async click_add_to_schedule(activity) {
       axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/add_to_schedule_vue', 
-      {student_ist_id: this.currentUser.ist_id, activity_name: activity.name})
+      {student_ist_id: this.user.ist_id, activity_name: activity.name})
          .then((response) => {
           const data = response.data; // [{}, {}]
           this.error = data.error;
@@ -367,7 +367,7 @@ export default {
     },
     async click_delete_to_schedule(activity) {
       axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/delete_from_schedule_vue', 
-      {student_ist_id: this.currentUser.ist_id, activity_name: activity.name})
+      {student_ist_id: this.user.ist_id, activity_name: activity.name})
          .then((response) => {
           const data = response.data; // [{}, {}]
           this.error = data.error;
