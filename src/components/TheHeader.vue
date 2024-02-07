@@ -32,7 +32,7 @@ header {
   padding: 0 1rem;
   margin-bottom: 15px;
   z-index: 100;
-  position: relative;
+  position: fixed;
 }
 
 header h1 {

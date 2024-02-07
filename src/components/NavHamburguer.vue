@@ -1,5 +1,5 @@
 <template>
-  <button @click="toggleNav" v-on:event="handle" v-bind:class="{ active: stateStore.navOpen }" class="nav__toggle"
+  <button @click="toggleNav" v-on:event="handle" :class="{ active: stateStore.navOpen }" class="nav__toggle"
     :aria-expanded="stateStore.navOpen" aria-label="Open navigation drawer" aria-controls="nav-drawer">
     <span></span>
     <span></span>

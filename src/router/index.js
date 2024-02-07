@@ -10,6 +10,7 @@ const routes = [
     component: Login,
     meta: {
       header: false,
+      userPopup: false,
     }
   },
   {
@@ -31,6 +32,9 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: () => import("@/views/Profile.vue"),
+    meta: {
+      userPopup: false,
+    }
   },
   {
     path: "/squad",

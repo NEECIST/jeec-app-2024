@@ -1,5 +1,6 @@
 <template>
   <TheHeader v-if="header" :title="pageName"></TheHeader>
+  <TheUserInfo v-if="userPopup" :inert="stateStore.navOpen" variant="home"></TheUserInfo>
   <main :inert="stateStore.navOpen">
     <router-view />
   </main>
@@ -7,6 +8,7 @@
 
 <script setup>
 import TheHeader from './components/TheHeader.vue';
+import TheUserInfo from './components/UserCard/TheUserInfo.vue';
 
 import { useStateStore } from '@/stores/StateStore';
 const stateStore = useStateStore();
@@ -19,16 +21,21 @@ const router = useRouter();
 
 const pageName = ref("");
 const header = ref(true);
+const userPopup = ref(true);
 
 function onRouteChange() {
   pageName.value = route.name;
-  const showHeader = route.meta.header;
-  console.log(showHeader)
 
-  if (showHeader != undefined && showHeader == false) {
+  if (route.meta.header !== undefined && route.meta.header === false) {
     header.value = false;
   } else {
     header.value = true;
+  }
+
+  if (route.meta.userPopup !== undefined && route.meta.userPopup === false) {
+    userPopup.value = false;
+  } else {
+    userPopup.value = true;
   }
 };
 
@@ -42,6 +49,7 @@ onMounted(async () => {
 <style scoped>
 main {
   padding: 0 2ch;
+  padding-top: 90px;
   z-index: 1;
   position: relative;
 }

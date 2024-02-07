@@ -5,9 +5,9 @@
     :aria-hidden="!stateStore.navOpen"
     :inert="!stateStore.navOpen"
   >
-    <div class="nav-backdrop"></div>
+    <div class="nav-backdrop" @click="stateStore.navOpen = false"></div>
     <div id="nav-drawer">
-      <div class="placeholder-profile"></div>
+      <TheUserInfo variant="nav"></TheUserInfo>
       <nav>
         <ul>
           <li>
@@ -32,14 +32,18 @@
           </li>
         </ul>
         <div class="help-info">
-          <img src="@/assets/help-info.svg" aria-hidden="true">
-          <router-link to="/help">Help and Info</router-link>
+          <router-link to="/help">
+            <img src="@/assets/help-info.svg" aria-hidden="true">
+            Help and Info
+          </router-link>
         </div>
       </nav>
     </div>
   </div>
 </template>
 <script setup>
+import TheUserInfo from './UserCard/TheUserInfo.vue';
+
 import { useStateStore } from '@/stores/StateStore';
 const stateStore = useStateStore();
 
@@ -78,6 +82,7 @@ const stateStore = useStateStore();
     right: 0;
     top: 0;
     width: calc(100% - 30px);
+    max-width: 500px;
     height: 100%;
     background-color: var(--color-background-sec);
     display: flex;
@@ -151,11 +156,7 @@ const stateStore = useStateStore();
     position: absolute;
     background-color: var(--color-background-sec);
     bottom: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1ch;
+    right: 0; 
   }
   .help-info img {
     height: 3rem;
@@ -165,5 +166,9 @@ const stateStore = useStateStore();
     font-size: 1.6rem;
     text-decoration: none;
     font-family: 'Lexend Exa';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1ch;
   }
 </style>
