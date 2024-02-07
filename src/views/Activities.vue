@@ -1,4 +1,9 @@
 <style>
+.carousel{
+  height: 90vh;
+  overflow-y: hidden;
+}
+
 .carousel__item {
   min-height: 30px;
   width: 100%;
@@ -13,6 +18,19 @@
   align-items: center;
   flex-direction: column;
 
+  .schedule{
+    height: 70vh;
+  }
+}
+
+#line {
+  height: 64vh;
+  width: 2px;
+  position: fixed;
+  background-color: white;
+  margin-left: 4px;
+  margin-top: 1vh;
+  opacity: 0;
 }
 
 .carousel__slide {
@@ -21,6 +39,7 @@
   justify-content: start;
   display: flex;
   flex-direction: column;
+
 }
 .carousel__track{
   justify-content:safe center;
@@ -59,6 +78,7 @@
 }
 .schedule{
   opacity: 0;
+  
 }
 
 .carousel__slide--active {
@@ -66,11 +86,19 @@
   transform: rotateY(0) scale(1);
   transition: 0.5s;
   align-items: center;
+
   .schedule {
     transition: 0.5s;
     opacity: 1;
-    width: 90vw;
-    overflow: visible;
+    width: 85vw;
+    height: 65vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+  }
+
+  #line{
+    opacity: 1;
   }
 }
 
@@ -83,30 +111,22 @@
 
 
     <div style="margin-top: 8vh" v-if="loading_activities">
-        <div>
-          <Carousel ref="schedule_carousel" :itemsToShow="2.5" :wrapAround="true" :transition="500">
+        <div class="carousel">
+          <Carousel ref="schedule_carousel" :mouseDrag="false" :touchDrag="false" :itemsToShow="2.5" :wrapAround="true" :transition="500">
             <Slide v-for="weekday in weekdays" :key="weekday" style="flex-direction: column;">
-              <a  class="carousel__item" style="cursor: pointer;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
-
+              
+              <a  class="carousel__item" style="cursor: pointer; margin-bottom: 10px;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
                 <div class="weekday" >
                   <p style="pointer-events: none;">{{ weekday }}</p>
                 </div>
-
-                
-
               </a>
 
+              <!-- Weekday's Schedule -->
               <div class="carousel_item">
+                <div id="line"></div>
                 <div class="schedule">
                   <div v-for="event in activities" :key="event" class="event">
-                    <div v-if="getWeekday(event.day) == weekday">
-                      <p>{{ event.time }}</p>
-                      <br>
-                      <p>{{ event.type }}</p>
-                      <br>
-                      <p>{{ event.name }}</p>
-
-                    </div>
+                    <Event v-if="getWeekday(event.day) == weekday" color="blue" :event="event" link="/home"></Event>
                   </div>
                 </div>
                 
@@ -141,6 +161,7 @@
 <script>
 import Buttons from "@/components/Buttons.vue";
 import Activity from "@/components/Activity.vue";
+import Event from "@/components/Event.vue";
 import UserService from "../services/user.service";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
@@ -152,6 +173,7 @@ export default {
   name: "Schedule",
   components: {
     Activity,
+    Event,
     Buttons,
     Carousel,
     Pagination,
@@ -208,14 +230,14 @@ export default {
         // make active slide (soon to be prev slide) pointable
         const active_slide = document.querySelector(".carousel__slide--active");
         if (active_slide) {
-          active_slide.style.pointerEvents = "all";
+          active_slide.firstChild.style.pointerEvents = "all";
         }
 
         // update slide pointer events after transition
         setTimeout(() => {
           const new_active_slide = document.querySelector(".carousel__slide--active");
           if (new_active_slide) {
-            new_active_slide.style.pointerEvents = "none";
+            new_active_slide.firstChild.style.pointerEvents = "none";
           }
         }, 550);
       // if clicked element is "prev"  
@@ -227,14 +249,14 @@ export default {
         // make active slide (soon to be next slide) pointable
         const active_slide = document.querySelector(".carousel__slide--active");
         if (active_slide) {
-          active_slide.style.pointerEvents = "all";
+          active_slide.firstChild.style.pointerEvents = "all";
         }
         
         // update slide pointer events after transition
         setTimeout(() => {
           const new_active_slide = document.querySelector(".carousel__slide--active");
           if (new_active_slide) {
-            new_active_slide.style.pointerEvents = "none";
+            new_active_slide.firstChild.style.pointerEvents = "none";
           }
         }, 550);
       }
@@ -251,8 +273,18 @@ export default {
     // make active slide non pointer
     const active_slide = document.querySelector(".carousel__slide--active");
     if (active_slide) {
-      active_slide.style.pointerEvents = "none";
+      active_slide.firstChild.style.pointerEvents = "none";
     }
+
+    // make non loopable slides
+    const slide_clones = document.querySelectorAll(".carousel__slide--clone");
+    for (let i = 0; i < slide_clones.length; i++) {
+      if (slide_clones[i].innerText == "Friday" || slide_clones[i].innerText == "Monday") {
+        slide_clones[i].style.opacity = 0;
+        slide_clones[i].style.pointerEvents = "none";
+      }
+    }
+    
 
     UserService.getActivities().then(
       (response) => {
@@ -266,7 +298,7 @@ export default {
         this.event_dates = response.data;
         // turn into Date objects
         this.event_dates = this.event_dates.map((date) => new Date(date));
-        console.log(this.event_dates)
+        //console.log(this.event_dates)
 
       },
       (error) => {
@@ -290,7 +322,7 @@ export default {
         (response) => {
           this.activities = this.activities.concat(response.data.data);
           this.loading_activities = false;
-          console.log(this.activities)
+          //console.log(this.activities)
         },
         (error) => {
           console.log(error);
@@ -303,40 +335,12 @@ export default {
 </script>
 
 <style scoped>
+
 .activities {
   background-color: #e6e6e600;
   align-items: start;
+  overflow-x: visible;
 }
-
-.arrow-btn {
-  width: 0 !important;
-  height: 0 !important;
-}
-
-.arrow {
-  font-size: 10vh !important;
-  margin-top: 2.5vh;
-}
-
-.day-wrapper {
-  vertical-align: middle;
-  margin: 0;
-  height: 100%;
-}
-
-.activities-wrapper {
-  height: 82vh;
-  overflow-y: auto;
-}
-
-.day {
-  color: black;
-  align-self: center;
-  font-size: 9vw;
-  font-weight: 600;
-  margin: 0;
-}
-
 .no-activities-warning {
   margin-top: 16vh;
 }
