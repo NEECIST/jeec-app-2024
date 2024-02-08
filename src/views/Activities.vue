@@ -32,12 +32,12 @@
   align-items: center;
   flex-direction: column;
 
-  /* .schedule{
-    height: 70vh;
-  } */
+  .schedule{
+    position: relative;
+  }
 }
 
-#line {
+.line {
   height: 100%;
   width: 2px;
   position: fixed;
@@ -92,7 +92,11 @@
 }
 .schedule{
   opacity: 0;
-  
+
+}
+
+.carousel__slide{
+  height: 0;
 }
 
 .carousel__slide--active {
@@ -100,6 +104,7 @@
   transform: rotateY(0) scale(1);
   transition: 0.5s;
   align-items: center;
+  height: auto;
 
   .schedule {
     transition: 0.5s;
@@ -107,13 +112,19 @@
     width: 85vw;
     /* height: 65vh; */
     overflow-x: hidden;
-    overflow-y: scroll;
-
+    overflow: visible;
   }
 
-  #line{
+  .line{
     opacity: 1;
   }
+  
+  .spacer{
+    height: 100px;
+    flex-direction: column;
+    flex: 1;
+  }
+  
 }
 
 </style>
@@ -129,7 +140,7 @@
 
   <div class="activities invisible">
     <div style="margin-top: 4vh">
-        <div class="carousel">
+        <div class="carousel" style="margin-bottom: 110px;">
           <Carousel ref="schedule_carousel" :mouseDrag="false" :touchDrag="false" :itemsToShow="2.5" :wrapAround="true" :transition="500">
             <Slide v-for="weekday in weekdays" :key="weekday" style="flex-direction: column;">
               
@@ -141,15 +152,18 @@
 
               <!-- Weekday's Schedule -->
               <div class="carousel_item">
-                <div id="line"></div>
+                
                 <div class="schedule">
+                  <div class="line"></div>
                   <div v-for="event in activities" :key="event" class="event">
                     <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" link="/home"></Event>
                   </div>
-                </div>
+                </div> 
+                
                 
               </div>
             </Slide>
+            <div class="spacer"></div>
           </Carousel> 
           
         </div>
@@ -171,7 +185,7 @@ import Event from "@/components/Event.vue";
 import UserService from "../services/user.service";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
-import { Carousel, Pagination, Navigation, Slide } from 'vue3-carousel'
+import { Carousel,Slide } from 'vue3-carousel'
 import { HollowDotsSpinner } from 'epic-spinners'
 
 import 'vue3-carousel/dist/carousel.css'
@@ -182,8 +196,6 @@ export default {
     HollowDotsSpinner,
     Event,
     Carousel,
-    Pagination,
-    Navigation,
     Slide
   },
   data: function () {
@@ -269,12 +281,14 @@ export default {
       this.$router.push("/");
     }
 
-    console.log(this.user)
+    
+
 
     // make active slide non pointer
     const active_slide = document.querySelector(".carousel__slide--active");
     if (active_slide) {
       active_slide.firstChild.style.pointerEvents = "none";
+      
     }
 
     // workaround to make add-to-calendar icon pointable
@@ -303,6 +317,7 @@ export default {
       this.loading_activities = false;
       const activities = document.querySelector('.activities');
       const loading_spinner = document.querySelector('.loading-spinner');
+      const active_slide = document.querySelector(".carousel__slide--active");
 
       loading_spinner.classList.add('invisible');
       activities.classList.remove('invisible');

@@ -95,7 +95,7 @@ export default {
     };
   },
   mounted (){
-    console.log(this.event);
+    // console.log(this.event);
 
   }
 
@@ -106,14 +106,16 @@ export default {
 
 .event {
   width: 100%;
-  height: 130px;
-  margin-bottom: 5px;
+  height: 110px;
+  margin-top: 10px;
 }
 
 .hour-info {
   display: flex;
-  height: 15px;
+  height: 10px;
   align-items: center;
+  margin-bottom: 0px;
+  line-height: 0px;
 }
 
 .hour {
