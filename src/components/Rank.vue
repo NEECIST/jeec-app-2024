@@ -1,35 +1,100 @@
 <template>
-  
-  <div class="rank" @click.stop="dialog = true" :class="[{top: index==0},{bottom: index==total-1}]">
-    <p class="index" >{{ rank+3 }}#</p>
-    <img class="image" :src="img_src" alt="image" />
-    <div class="personal-info">
-      <p class="name">
-        {{ nameArray[0] }} {{ nameArray[nameArray.length - 1] }}
-      </p>
-      <p v-if="level != null && (level < 18)" class="level">level {{ level }}</p>
-      <p v-else-if="level == 18" class="level" style="color: #936928">JEEC Mastery Level I</p>
-      <p v-else-if="level == 19" class="level" style="color: #28272866">JEEC Mastery Level II</p>
-      <p v-else-if="level == 20" class="level" style="color: #EDD549">JEEC Mastery Level III</p>
-      <p v-else-if="level == 21" class="level" style="color: #62BD66">JEEC Mastery Level IV</p>
-      <p v-else-if="level == 22" class="level" style="color: #9FD5F4">JEEC Mastery Level V</p>
-      <p v-if="cry" class="cry">{{ cry }}</p>
-    </div>
-
-    <v-dialog v-model="dialog" v-if="members" :width="width > 1100 ? '40vw' : ''">
-      <v-card>
-        <div class="dialog-wrapper">
-          <div v-for="member in members" :key="member.ist_id" class="member">
-            <img :src="member.photo" class="member-photo" />
-            <p class="member-name">{{ memberName(member.name) }}</p>
-            <v-icon v-if="member.is_captain" style="color: yellow" class="star"
-              >mdi-star</v-icon
-            >
+  <div v-if="!loading_students && !loading_squads && !loading_daily">
+      <div v-show="personal">
+        <div class="podium">
+          <div class="stand_2" v-if="students.length>1">
+            <img :src="students[1].photo" class="podium-img second">               
+            <p class="podium-text">{{names[1]}}</p>
+            <div class="pilar_2">
+              <!-- <img :src="pilar_2" class="ranking_pilar"> -->
+              <span class="number_2">2</span><sup class="super_2">nd</sup>
+            </div>
+          </div>
+          <div class="stand_1">
+            <img :src="students[0].photo" class="podium-img first">
+            <p class="podium-text">{{names[0]}}</p>
+            <div class="pilar_1">
+              <!-- <img :src="pilar_1" class="ranking_pilar"> -->
+              <span class="number_1">1</span><sup class="super_1">st</sup>
+            </div>
+          </div>
+          <div class="stand_3" v-if="students.length>2">
+            <img :src="students[2].photo" class="podium-img third">
+            <p class="podium-text">{{names[2]}}</p>
+            <div class="pilar_3">
+              <!-- <img :src="pilar_3" class="ranking_pilar"> -->
+              <span class="number_3">3</span><sup class="super_3">rd</sup>
+            </div>
           </div>
         </div>
-      </v-card>
-    </v-dialog>
+        
+        <div v-if="!show" class="top_10">
+          <div class="box">
+            <div class="student_ranking_number">
+              <p>999th</p>
+            </div>
+          </div>
+
+          <div class="student_name">
+             <p>You</p> 
+          </div>
+
+          <div class="student_xp">
+            <p>{{ user.total_points }} xp</p>
+          </div>
+        </div>
+   
+        <!-- <Rank
+            v-for="(student, index) in other_students"
+            v-show="personal"
+            :key="student.ist_id"
+            :name="student.name"
+            :rank="rank(index, students)"
+            :img_src="student.photo"
+            :total = "other_students.length"
+            :index="index"
+          /> -->
+
+        <div v-if="show">
+          <div v-for="index in 7" :key="index">
+            <div class="top_10">
+              <div class="box">
+                <div class="student_ranking_number">
+                  <p>{{ index + 3 }}th</p>
+                </div>
+              </div>
+              
+
+              <div class="student_name">
+                <p>{{ names[index + 2] }}</p>
+                <!-- <p>FUlanoi</p> -->
+              </div>
+
+              <div class="student_xp">
+                <p>0 xp</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+          
+        <div class="dropdown">
+          <button @click="show = !show"><img :src="arrow" class="arrow"></button>
+        </div>
+
+      </div>
   </div>
+
+    <div v-else class="loading">
+      <v-progress-circular
+        indeterminate
+        color="#27ade4"
+        :size="100"
+        :width="10"
+        class="loading-bar"
+      ></v-progress-circular>
+  </div>
+
 </template>
 
 <script>
@@ -42,46 +107,15 @@ export default {
     };
   },
   props: {
-    rank: Number,
-    img_src: String,
-    name: String,
-    level: Number,
-    cry: String,
-    members: Array,
-    total: Number,
-    index:Number
+    students: Object,
+    names: Object,
+    
   },
   computed: {
-    color() {
-      if (this.rank == 1) return "#FFC02E";
-      else if (this.rank == 2) return "#BCBCBC";
-      else if (this.rank == 3) return "#DC8A26";
-      else return "black";
-    },
 
-    nameArray() {
-      var names = this.name.split(" ");
-
-      if (names.length > 1) return names;
-      else return [this.name, ""];
-    },
   },
   methods: {
-    memberName(name) {
-      var names = name.split(" ");
 
-      if (names.length > 1) return names[0] + " " + names[names.length - 1];
-      else return this.name, "";
-    },
-    resize() {
-      this.width = window.innerWidth;
-    },
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.resize);
-  },
-  created() {
-    window.addEventListener("resize", this.resize);
   },
 };
 </script>

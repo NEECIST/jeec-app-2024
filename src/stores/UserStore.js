@@ -13,9 +13,6 @@ export const useUserStore = defineStore("UserStore", {
         email: "",
         picture: "",
         student_external_id: "",
-        squad_id: "",
-        daily_points: "",
-        total_points:"",
       },
       milestones: {
         daily: [],
