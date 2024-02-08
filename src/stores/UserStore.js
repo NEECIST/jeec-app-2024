@@ -15,6 +15,7 @@ export const useUserStore = defineStore("UserStore", {
         student_external_id: "",
       },
       milestones: {
+        ready: false,
         daily: [],
         final: 3000,
       }
@@ -60,16 +61,15 @@ export const useUserStore = defineStore("UserStore", {
     async getMilestones() {
       await axios
         .get(
-          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/get_milestone",
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/get_milestones",
           {
             headers: authHeader()
           }
         )
         .then((response) => {
-          this.milestones.final = response.data.final_milestones;
+          this.milestones.final = response.data.final_milestone;
           this.milestones.daily = response.data.daily_milestones;
-
-          console.log(this.milestones)
+          this.milestones.ready = true
         })
     }
   },

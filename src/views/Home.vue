@@ -8,14 +8,9 @@
     {{ prizes }}
     cv_info
     {{ cv_info }} -->
-    <div class="top">
-      
-      <div v-if="next_activity!=null" class="main-title">
-        <h1>
-            UP NEXT
-        </h1>
-        <br>
-        <br>
+    <div class="card top radient-border-passthrough">      
+      <template v-if="next_activity!=null">
+        <h2>UP NEXT</h2>
         <div class="top-container">
           <div class="top-text">
             <p>
@@ -25,21 +20,21 @@
               {{ next_activity.name }}
             </p>
             <p>
-              {{ next_activity.start_time }} - {{ next_activity.end_time }}
+              {{ next_activity.start_time }} {{ next_activity.end_time }}
             </p>
-            <br>
           </div>
           <div class="image-container">
             <div v-for="image in next_activity.images" :key="image" >
               <img :src="jeec_brain_url + image" class="activity-img" :class="{size2:next_activity.images.length==2,size3:next_activity.images.length==3,size4:next_activity.images.length>3}">
             </div>
           </div>
-          
         </div>
-      </div>
-      <p v-else class="no-more-activities">
-        There are no more activities scheduled
-      </p>
+      </template>
+      <template v-else class="no-more-activities">
+        <div>
+          <p>There are no more activities scheduled</p>
+        </div>
+      </template>
     </div>
 
     <div class="middle">
@@ -95,8 +90,6 @@
 <script>
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
-import axios from "axios";
-import authHeader from "@/services/auth-header";
 
 export default {
   name: "Home",
@@ -107,20 +100,6 @@ export default {
     return {
       cv_logo:require("../assets/cv_b-11 1.png"),
       jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
-  //     // default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
-  //     // squad: null,
-  //     // levels: null,
-  //     // today_reward: {image:null},
-  //     // xpbar_width: "92vw",
-  //     // height: 30,
-  //     // loading_squad: true,
-  //     // loading_level: true,
-  //     // loading_reward: true,
-  //     // has_cv: true,
-  //     // squad_ranking:null,
-  //     // xp_to_first:null,
-  //     // next_activity:null,
-  //     // quest:{error:'No quest'},
       prizes: {
         img_solo_daily_prize: '',
         img_squad_daily_prize: '',
@@ -140,170 +119,45 @@ export default {
       },
     };
   },
-  mounted(){
-    axios
-      .get(
-        process.env.VUE_APP_JEEC_BRAIN_URL + "/student/cv_info",
-        {
-          headers: authHeader()
-        }
-      )
-      .then((response) => {
-        console.log(response)
-        const data = response.data
-        this.cv_info = data.cv_info
-      })
+  // mounted(){
+  //   axios
+  //     .get(
+  //       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/cv_info",
+  //       {
+  //         headers: authHeader()
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log(response)
+  //       const data = response.data
+  //       this.cv_info = data.cv_info
+  //     })
 
-    axios
-      .get(
-        process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
-        {
-          headers: authHeader()
-        }
-      )
-      .then((response) => {
-        console.log(response)
-        const data = response.data
-        this.next_activity = data.activity
-      })
+  //   axios
+  //     .get(
+  //       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
+  //       {
+  //         headers: authHeader()
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log(response)
+  //       const data = response.data
+  //       this.next_activity = data.activity
+  //     })
 
-      axios
-        .get(
-          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
-          {
-            headers: authHeader()
-          }
-        )
-        .then((response) => {
-          console.log(response)
-          const data = response.data
-          this.prizes = data.prizes
-        })
-
-  },
-  // computed: {
-  //   // _today_reward() {
-  //   //   return this.today_reward && this.today_reward.image
-  //   //     ? this.jeec_brain_url + this.today_reward.image
-  //   //     : this.default_image;
-  //   // },
-  //   // _reward_level() {
-  //   //   return this.reward_level
-  //   //     ? this.jeec_brain_url + this.reward_level.reward.image
-  //   //     : this.default_image;
-  //   // },
-  //   // currentUser() {
-  //   //   return this.$store.state.auth.user;
-  //   // },
-  //   // nameArray() {
-  //   //   var names = this.$store.state.auth.user.name.split(" ");
-
-  //   //   if (names.length > 1) return names;
-  //   //   else return [this.$store.state.auth.user.name, ""];
-  //   // },
-  //   // progress() {
-  //   //   var xp = this.$store.state.auth.user.total_points;
-  //   //   var start_points = this.$store.state.auth.user.level.data.start_points;
-  //   //   var end_points = this.$store.state.auth.user.level.data.end_points;
-
-  //   //   return ((xp - start_points) / (end_points - start_points)) * 100;
-  //   // },
-  //   // reward_level() {
-  //   //   if (!this.levels) return null;
-
-  //   //   for (var level of this.levels) {
-  //   //     if (level.value === this.$store.state.auth.user.level.data.value)
-  //   //       return level;
-  //   //   }
-
-  //   //   return null;
-  //   // },
-  // },
-  // methods: {
-  //   // resize() {
-      
-  //   //   this.xpbar_width = "92vw";
-      
-  //   // },
-  // },
-  // // destroyed() {
-  // //   window.removeEventListener("resize", this.resize);
-  // // },
-  // async created() {
-  //   // window.addEventListener("resize", this.resize);
-  //   // this.resize();
-
-  //   // if (!this.currentUser) {
-  //   //   this.$router.push("/");
-  //   // }
-      
-  //   // UserService.getNextActivity().then(
-  //   //   (response) => {
-    
-  //   //     this.next_activity = response.data.activity
-  //   //   },
-  //   // );
-  //   // let user_squad=null
-  //   // await UserService.getUserSquad().then(
-  //   //   (response) => {
-  //   //     user_squad = response.data
-  //   //   },
-  //   //   (error)=>{
-  //   //     console.log(error)
-  //   //   }
-  //   // );
-  //   // let daily_squads_rank = null
-  //   // UserService.getDailySquadsRanking().then(
-  //   //   (response) => {
-        
-  //   //     let top_daily_points=0
-  //   //     daily_squads_rank = response.data
-  //   //     if(daily_squads_rank.data.length>1){
-          
-  //   //       top_daily_points = daily_squads_rank.data[0].daily_points
-  //   //     }
-  //   //     else{
-        
-  //   //       top_daily_points = daily_squads_rank.data.daily_points
-  //   //     }
-  //   //     this.xp_to_first = top_daily_points-user_squad.data.daily_points;
-  //   //     if(Array.isArray(daily_squads_rank.data)){
-  //   //       for(let i=1;i<=daily_squads_rank.data.length;i++){
-  //   //         if(daily_squads_rank.data[i-1].name == user_squad.data.name){
-  //   //           this.squad_ranking=i;
-  //   //         }
-  //   //       }
-  //   //     }
-  //   //     else{
-  //   //       this.squad_ranking=1
-  //   //     }
-        
-  //   //   },
-  //   // );
-    
-
-  //   // UserService.getUserSquad().then(
-  //   //   (response) => {
-  //   //     this.squad = response.data.data;
-  //   //     this.loading_squad = false;
-  //   //   },
-  //   //   (error) => {
-  //   //     console.log(error);
-  //   //     this.loading_squad = false;
-  //   //   }
-  //   // );
-
-
-  //   // UserService.getTodaySquadReward().then(
-  //   //   (response) => {
-  //   //     this.today_reward = response.data;
-  //   //     this.loading_reward = false;
-  //   //   },
-  //   //   (error) => {
-  //   //     console.log(error);
-  //   //     this.loading_reward = false;
-  //   //   }
-  //   // );
+  //     axios
+  //       .get(
+  //         process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
+  //         {
+  //           headers: authHeader()
+  //         }
+  //       )
+  //       .then((response) => {
+  //         console.log(response)
+  //         const data = response.data
+  //         this.prizes = data.prizes
+  //       })
   // },
 };
 </script>
@@ -319,20 +173,20 @@ export default {
   padding-bottom:20vh;
 }
 
-.top{
-  position: relative;
-  margin-top: 1vh;
-  margin-bottom:8vh;
-  background-color: #1A9CD8;
-  padding-top: 1vh;
-  padding-bottom: 4vh;
-  padding-left: 4vw;
-  padding-right: 4vw;
-  width:80vw;
-  margin-left:10vw;
-  margin-right:10vw;
-  border-radius:35px;
-  align-items:center;
+.top {
+  --border-radius: 50px 0 0 20px;
+  --border-width: 2.5px;
+
+  width: 80%;
+  max-width: 800px;
+  padding: 1rem;
+
+  margin-top: 0.5rem;
+  margin-bottom:3rem;
+  margin: 0 auto;
+}
+.top::before {
+  content: "";
 }
 .middle {
   position: relative;
@@ -353,8 +207,9 @@ export default {
   align-items:start;
 }
 
+.main
+
 .main-title h1 {
-  font-family: Montserrat;
   font-weight:1000;
   font-size: 40px;
   line-height: 34px;

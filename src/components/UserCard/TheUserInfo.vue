@@ -25,6 +25,7 @@ import UserImage from './UserImage.vue';
 
 import { useUserStore } from '@/stores/UserStore';
 const userStore = useUserStore();
+userStore.getMilestones();
 
 import { defineProps } from 'vue';
 
@@ -85,7 +86,8 @@ const props = defineProps({
     padding-left: clamp(10px, 5vw, 70px);
   }
   .name-wrapper.nav > p{
-    font-family: "Lexend Peta";
+    font-family: "Lexend Exa";
+    font-weight: 500;
     font-size: 1.6rem;
     padding-bottom: 0.5rem;
   }
