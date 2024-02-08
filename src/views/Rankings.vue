@@ -24,30 +24,23 @@
       <div v-show="personal">
         <div class="podium">
           <div class="stand_2" v-if="students.length>1">
-            <div class="gradient"></div>
-            <div class="podium-img"></div>
-            <!-- <img :src="students[1].photo" class="podium-img second">                -->
-            <p class="podium-text">{{names[1]}}</p>
+            <img :src="ProcessImg(students[1].photo)" class="podium-img second">               
+            <p class="podium-text">{{students[1].name}}</p>
             <div class="pilar_2">
-              <!-- <img :src="pilar_2" class="ranking_pilar"> -->
               <span class="number_2">2</span><sup class="super_2">nd</sup>
             </div>
           </div>
-          <div class="stand_1">
-            <div class="podium-img"></div>
-            <!-- <img :src="this.students[0].photo" class="podium-img first"> -->
-            <p class="podium-text">{{names[0]}}</p>
+          <div class="stand_1" v-if="students.length>0">
+            <img :src="ProcessImg(students[0].photo)" class="podium-img first">
+            <p class="podium-text">{{students[0].name}}</p>
             <div class="pilar_1">
-              <!-- <img :src="pilar_1" class="ranking_pilar"> -->
               <span class="number_1">1</span><sup class="super_1">st</sup>
             </div>
           </div>
           <div class="stand_3" v-if="students.length>2">
-            <div class="podium-img"></div>
-            <!-- <img :src="this.students[2].photo" class="podium-img third"> -->
-            <p class="podium-text">{{names[2]}}</p>
+            <img :src="ProcessImg(students[2].photo)" class="podium-img third">
+            <p class="podium-text">{{students[2].name}}</p>
             <div class="pilar_3">
-              <!-- <img :src="pilar_3" class="ranking_pilar"> -->
               <span class="number_3">3</span><sup class="super_3">rd</sup>
             </div>
           </div>
@@ -56,7 +49,7 @@
         <div v-if="!show" class="top_10">
           <div class="box">
             <div class="student_ranking_number">
-              <p>{{ userdata.ranking }}th</p>
+              <p>{{ userdata.ranking_weekly }}th</p>
             </div>
           </div>
 
@@ -65,7 +58,7 @@
           </div>
 
           <div class="student_xp">
-            <p>{{ user.total_points }} xp</p>
+            <p>{{ userdata.total_points }} xp</p>
           </div>
         </div>
    
@@ -91,11 +84,11 @@
               
 
               <div class="student_name">
-                <p>{{ names[index + 2] }}</p>
+                <p>{{ students[index + 2].name }}</p>
               </div>
 
               <div class="student_xp">
-                <p>{{ students[index + 2].daily_points }} xp</p>
+                <p>{{ students[index + 2].total_points }} xp</p>
               </div>
             </div>
           </div>
@@ -199,16 +192,6 @@ export default {
   },
   methods: {
     nameArray() {
-      this.names=[]
-      for(let i=0;i<this.students.length;i++){
-        var names = this.students[i].name.split(" ");
-        if(names.length>1){
-          this.names.push(names[0]+' '+names[names.length-1])
-        }
-        else{
-          this.names.push(names[0])
-        }
-      }
       
     },
     Personal(){
@@ -219,25 +202,10 @@ export default {
       this.personal=false
       this.squad=true
     },
-    click(name) {
-      if (name !== this.button) {
-        this.button = name;
-      }
-    },
-    rank(index, items) {
-      if (index == 0) return 1;
-      else {
-        var aux = index;
-        while (
-          aux >= 0 &&
-          items[index].total_points == items[aux].total_points
-        ) {
-          aux--;
-        }
-
-        return aux + 2;
-      }
-    },
+    ProcessImg(image) {
+      let photo = "data:image/png;base64," + image;
+      return photo;
+    }
     
   },
   created() {
@@ -254,99 +222,20 @@ export default {
         this.students = this.rankingdata.individual_top10_weekly;
         console.log(this.students);
 
-        for(let i=0;i<this.students.length;i++){
-          if (this.students[i].username == this.user.username){
-            this.students[i].name = "you";
-          }
-        }
+        this.userdata = this.rankingdata.individual_ranking;
+
+        
+
+        // for(let i=0;i<this.students.length;i++){
+        //   if (this.students[i].username == this.user.username){
+        //     this.students[i].name = "you";
+        //   }
+        // }
       },
-      
-
-    )
+    );
 
 
-    // UserService.getStudentsRanking().then(
-    //   (response) => {
-    //     this.students = response.data.top10;
-    //     console.log(this.students);
-
-    //     this.userdata = response.data.individual;
-    //     console.log(this.userdata);
-
-    //     for(let i=0;i<this.students.length;i++){
-    //       if (this.students[i].ist_id == this.user.username){
-    //         this.students[i].name = "you";
-    //       }
-    //       // this.other_students.push(this.students[i])
-    //     }
-    //     if (!Array.isArray(this.students)) this.students = [this.students];
-    //     this.loading_students = false;
-    //     this.other_students = []
-    //     for(let i=3;i<this.students.length;i++){
-    //       this.other_students.push(this.students[i])
-    //     }
-    //     this.nameArray()
-    //     console.log(this.other_students)
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //     this.loading_students = false;
-    //   }
-    // );
-
-  //   UserService.getDailyStudentsRanking().then(
-  //     (response) => {
-  //       this.students = response.data.data;
-  //       console.log(this.students);
-  //       for(let i=0;i<this.students.length;i++){
-  //         if (this.students[i].ist_id == this.user.username){
-  //           this.students[i].name = "you";
-  //         }
-  //         // this.other_students.push(this.students[i])
-  //       }
-  //       if (!Array.isArray(this.students)) this.students = [this.students];
-  //       this.loading_students = false;
-  //       this.other_students = []
-  //       for(let i=3;i<this.students.length;i++){
-  //         this.other_students.push(this.students[i])
-  //       }
-  //       this.nameArray()
-  //       console.log(this.other_students)
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //       this.loading_students = false;
-  //     }
-  //   );
-
-  //   UserService.getSquadsRanking().then(
-  //     (response) => {
-  //       this.squads = response.data.data;
-  //       if (!Array.isArray(this.squads)) this.squads = [this.squads];
-  //       this.loading_squads = false;
-  //       this.other_squads = []
-  //       for(let i=3;i<this.squads.length;i++){
-  //         this.other_squads.push(this.squads[i])
-  //       }
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //       this.loading_squads = false;
-  //     }
-  //   );
-
-  //   UserService.getDailySquadsRanking().then(
-  //     (response) => {
-  //       this.daily_squads = response.data.data;
-  //       if (!Array.isArray(this.daily_squads)) this.daily_squads = [this.daily_squads];
-  //       this.loading_daily = false;
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //       this.loading_daily = false;
-  //     }
-  //   );
-  //   console.log(this.students);
+    
   },
 
 };
@@ -361,31 +250,6 @@ export default {
   --grad_1: #605ED0;
   --grad_2: #4CC9F0;
   --grad_3: #7209B7;
-}
-
-/* .rankings {
-  display: flex;
-  background-color: #1F1F1F;
-  justify-content: center;
-  align-content: center;
-  height: 900px;
-
-} 
-
-.select{
-  display: flex;
-  position: relative;
-  top: 102px;
-  height: 33px;
-  width: 384px;
-  justify-content: space-around;
-  color: white;
-} */
-
-.rankings {
-  background-color: #1F1F1F;
-  height: 100vh;
-  width: 100vw;
 }
 
 .arrow{
@@ -597,52 +461,12 @@ export default {
   background-color: white;
 }
 
-/* .gradient{
-  position: absolute;
-  margin-left: 5vw;
-  z-index: 0;
-  width: 17vw;
-  height: 17vw;
-  border-radius: 50%;
-  border-width: 20px;
-  background: linear-gradient(135deg, #605ED0, #4CC9F0, #7209B7);
-} */
-
-/* .first{
-  border-color:#CEBD25;
-  background-color:#D9D004
-}
-
-.first.pilar{
-  height:20vh;
-} */
-
-
-/* 
-.second{
-  border-color:#1A9CD8;
-  background-color:#1A9CD8
-}
-
-.second.pilar{
-  height:15vh;
-} */
-
-/* .third{
-  border-color:#D93046;
-  background-color:#D93046
-}
-
-.third.pilar{
-  height:10vh;
-} */
-
 .stand_1{
   position: relative;
   width:27vw;
   height: 25vh;
   background-color: #4CC9F0;
-  /* background-image: url("../assets/Ranking_1_pilar.svg");  */
+
   background-position: bottom;
 }
 .stand_2{
@@ -650,7 +474,7 @@ export default {
   width:27vw;
   height: 21vh;
   background-color: #4CC9F0;
-  /* background-image: url("../assets/Ranking_2_pilar.svg");  */
+
   background-position: bottom;
 }
 .stand_3{
@@ -658,7 +482,7 @@ export default {
   width:27vw;
   height: 18vh;
   background-color: #4CC9F0;
-  /* background-image: url("../assets/Ranking_3_pilar.svg");  */
+
   background-position: bottom;
 }
 
