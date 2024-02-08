@@ -17,7 +17,7 @@ import TheQrCodePopup from './components/QrCode/TheQrCodePopup.vue';
 import { useStateStore } from '@/stores/StateStore';
 const stateStore = useStateStore();
 
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; 
 
 const route = useRoute();
@@ -29,6 +29,8 @@ const userPopup = ref(false);
 
 function onRouteChange() {
   pageName.value = route.name;
+  stateStore.navOpen = false;
+  stateStore.qrCodeOpen = false;
 
   if (route.meta.header !== undefined && route.meta.header === false) {
     header.value = false;
