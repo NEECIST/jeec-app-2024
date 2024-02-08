@@ -1,27 +1,31 @@
 <template>
-  <TheHeader v-if="header" :title="pageName"></TheHeader>
-  <TheUserInfo v-if="userPopup" :inert="stateStore.navOpen" variant="home"></TheUserInfo>
-  <main :inert="stateStore.navOpen">
+  <TheHeader v-if="header" :title="pageName" :inert="stateStore.qrCodeOpen"></TheHeader>
+  <TheHiddenHeader v-if="!header" :title="pageName"></TheHiddenHeader>
+  <TheUserInfo v-if="userPopup" :inert="stateStore.navOpen || stateStore.qrCodeOpen" variant="home"></TheUserInfo>
+  <TheQrCodePopup v-if="stateStore.qrCodeOpen"></TheQrCodePopup>
+  <main :inert="stateStore.navOpen || stateStore.qrCodeOpen">
     <router-view />
   </main>
 </template>
 
 <script setup>
 import TheHeader from './components/TheHeader.vue';
+import TheHiddenHeader from './components/TheHiddenHeader.vue';
 import TheUserInfo from './components/UserCard/TheUserInfo.vue';
+import TheQrCodePopup from './components/QrCode/TheQrCodePopup.vue';
 
 import { useStateStore } from '@/stores/StateStore';
 const stateStore = useStateStore();
 
-import { ref, watch, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, computed, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router'; 
 
 const route = useRoute();
 const router = useRouter();
 
 const pageName = ref("");
-const header = ref(true);
-const userPopup = ref(true);
+const header = ref(false);
+const userPopup = ref(false);
 
 function onRouteChange() {
   pageName.value = route.name;

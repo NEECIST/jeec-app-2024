@@ -1,6 +1,5 @@
 <template>
   <div class="wrapper">
-    <HiddenHeader></HiddenHeader>
     <div class="welcome">
       <h2>Welcome to</h2>
       <img alt="JEEC" src="@/assets/jeec_logo_darkmode.svg" />
@@ -17,8 +16,6 @@
 </template>
 
 <script setup>
-import HiddenHeader from "@/components/HiddenHeader.vue";
-
 import axios from "axios";
 import { useUserStore } from "@/stores/UserStore";
 import { decodeCredential } from "vue3-google-login";
