@@ -23,5 +23,5 @@ module.exports = defineConfig({
       maskIcon: 'img/icons/safari-pinned-tab.svg',
       msTileImage: 'img/icons/msapplication-icon-144x144.png'
     }
-  },
+  }
 })
