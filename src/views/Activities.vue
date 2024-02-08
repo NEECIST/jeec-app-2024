@@ -1,4 +1,17 @@
 <style>
+.loading-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}
+
+.loading-spinner.invisible{
+  opacity: 0;
+  transition: 0.01s;
+}
+
 .carousel{
   height: 90vh;
   width: 100%;
@@ -108,10 +121,13 @@
 
 
 <template>
-  <div class="activities">
-
-
-    <div style="margin-top: 8vh" v-if="loading_activities">
+  <HollowDotsSpinner class="loading-spinner"
+  :animation-duration="1250"
+  :size="65"
+  :color="'white'"
+/>
+  <div class="activities invisible">
+    <div style="margin-top: 4vh">
         <div class="carousel">
           <Carousel ref="schedule_carousel" :mouseDrag="false" :touchDrag="false" :itemsToShow="2.5" :wrapAround="true" :transition="500">
             <Slide v-for="weekday in weekdays" :key="weekday" style="flex-direction: column;">
@@ -137,15 +153,7 @@
           
         </div>
         
-        <!-- <div class="activities-wrapper">
-          <Activity
-            v-for="activity in activities"
-            :key="activity.name + activity.type + Math.floor(Math.random() * 10000)"
-            v-show="show_activity(activity)"
-            :activity="activity"
-          />
-          <div class="mobile" style="height: 10vh"></div>
-        </div> -->
+
 
         <div class="no-activities-warning" style="display: none">
           <span class="warning-msg">Go to your</span>
@@ -153,27 +161,25 @@
           <span class="warning-msg">to add Interests!</span>
         </div>
     </div>
-    <div v-else class="loading">
-     <!-- Loading Screen -->
-    </div>
+
   </div>
 </template>
 
 <script>
 import Buttons from "@/components/Buttons.vue";
-import Activity from "@/components/Activity.vue";
 import Event from "@/components/Event.vue";
 import UserService from "../services/user.service";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
 import { Carousel, Pagination, Navigation, Slide } from 'vue3-carousel'
+import { HollowDotsSpinner } from 'epic-spinners'
 
 import 'vue3-carousel/dist/carousel.css'
 
 export default {
   name: "Schedule",
   components: {
-    Activity,
+    HollowDotsSpinner,
     Event,
     Buttons,
     Carousel,
@@ -194,29 +200,10 @@ export default {
         "Thursday",
         "Friday"
       ],
-      event_days:[
-        "19 02 2024, Monday",
-        "20 02 2024, Tuesday",
-        "21 02 2024, Wednesday",
-        "22 02 2024, Thursday",
-        "23 02 2024, Friday",
-      ],
       loading_activities: true,
     };
   },
   methods: {
-    show_activity(activity) {
-      return (
-        activity.day === this.event_dates[this.model] &&
-        (this.button === "all" ||
-          (this.button === "my interests" && activity.interest))
-      );
-    },
-    click(name) {
-      if (name !== this.button) {
-        this.button = name;
-      }
-    },
     // get weekday from string format "dd mm yyyy, weekday"
     getWeekday(date) {
       return date.split(", ")[1];
@@ -289,6 +276,7 @@ export default {
       active_slide.firstChild.style.pointerEvents = "none";
     }
 
+    // workaround to make add-to-calendar icon pointable
     const next_slide = document.querySelector(".carousel__slide--next");
     if (next_slide) {
       next_slide.style.pointerEvents = "none";
@@ -304,51 +292,22 @@ export default {
       }
     }
     
-
+    // get activities
     UserService.getActivities().then(
       (response) => {
         this.activities = response.data.data;
         console.log(this.activities)
       }
-    );
+    ).finally(() => {
+      this.loading_activities = false;
+      const activities = document.querySelector('.activities');
+      const loading_spinner = document.querySelector('.loading-spinner');
 
-    UserService.getEventDates().then(
-      (response) => {
-        this.event_dates = response.data;
-        // turn into Date objects
-        this.event_dates = this.event_dates.map((date) => new Date(date));
-        //console.log(this.event_dates)
+      loading_spinner.classList.add('invisible');
+      activities.classList.remove('invisible');
+      activities.classList.add('visible');
+    })
 
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-
-    
-
-    var now = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      new Date().getDate()
-    );
-
-
-
-    for (var i = 0; i < this.event_dates.length; i++) {
-      UserService.getActivities(
-      ).then(
-        (response) => {
-          this.activities = this.activities.concat(response.data.data);
-          this.loading_activities = false;
-          //console.log(this.activities)
-        },
-        (error) => {
-          console.log(error);
-          this.loading_activities = false;
-        }
-      );
-    }
   },
 };
 </script>
@@ -359,6 +318,15 @@ export default {
   background-color: #e6e6e600;
   align-items: start;
   overflow-x: visible;
+}
+
+.activities.invisible{
+  opacity: 0;
+}
+
+.activities.visible{
+  opacity: 1;
+  transition: 1s;
 }
 .no-activities-warning {
   margin-top: 16vh;
@@ -374,9 +342,5 @@ export default {
   font-weight: 600;
 }
 
-.loading {
-  text-align: center;
-  margin-top: 35vh;
-}
 
 </style>

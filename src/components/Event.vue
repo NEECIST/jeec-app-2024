@@ -60,8 +60,16 @@
 </template>
 
 <script>
+import { Carousel, Slide } from 'vue3-carousel'
+
+import 'vue3-carousel/dist/carousel.css'
+
 export default {
   name: "Event",
+  components:{
+    Carousel,
+    Slide
+  },
   props: {
     event: Object,
     color: Number,
@@ -71,8 +79,41 @@ export default {
   methods: {
     addEvent() {
       console.log("Add event");
-    }
-  }
+    },
+    // async isInSchedule() {
+    //   await axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/is_activity_in_schedule_vue', 
+    //   {student_ist_id: this.user.ist_id, activity_name: this.activity.name})
+    //      .then((response) => {
+    //       const data = response.data; // [{}, {}]
+    //       this.inSchedule = data.inSchedule;
+    //     });       
+    // },
+    // async click_see_more() {
+    //   this.dialog = true;
+    //   LogService.postLog("/see_more/" + this.activity.name);
+    // },
+    // async click_add_to_schedule(activity) {
+    //   axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/add_to_schedule_vue', 
+    //   {student_ist_id: this.user.ist_id, activity_name: activity.name})
+    //      .then((response) => {
+    //       const data = response.data; // [{}, {}]
+    //       this.error = data.error;
+    //       this.inSchedule = true;
+    //     });  
+    // },
+    // async click_delete_to_schedule(activity) {
+    //   axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/delete_from_schedule_vue', 
+    //   {student_ist_id: this.user.ist_id, activity_name: activity.name})
+    //      .then((response) => {
+    //       const data = response.data; // [{}, {}]
+    //       this.error = data.error;
+    //       this.inSchedule = false;
+    //     });  
+    // },
+    // async click_add_to_calendar() {
+    //   LogService.postLog("/add_to_calendar/" + this.activity.name);
+    // },
+  },
 
 };
 </script>
