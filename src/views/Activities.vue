@@ -125,7 +125,8 @@
   :animation-duration="1250"
   :size="65"
   :color="'white'"
-/>
+  />
+
   <div class="activities invisible">
     <div style="margin-top: 4vh">
         <div class="carousel">
@@ -166,7 +167,6 @@
 </template>
 
 <script>
-import Buttons from "@/components/Buttons.vue";
 import Event from "@/components/Event.vue";
 import UserService from "../services/user.service";
 import { useUserStore } from '@/stores/UserStore';
@@ -181,7 +181,6 @@ export default {
   components: {
     HollowDotsSpinner,
     Event,
-    Buttons,
     Carousel,
     Pagination,
     Navigation,
