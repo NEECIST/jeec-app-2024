@@ -25,7 +25,7 @@ const routes = [
   },
   {
     path: "/activities",
-    name: "Activities",
+    name: "Schedule",
     component: () => import("@/views/Activities.vue"),
   },
   {

@@ -17,7 +17,7 @@
         <div class="progress radient-border-passthrough_child" :style="'--progress:' + progress + '%;'"></div>
         <div class="tickets">
           <div 
-            v-for="(milestone, index) in milestones" :key="index"
+            v-for="(milestone, index) in userStore.milestones.daily" :key="index"
             :style="'width: ' + milestonePercentages[index] + '% ;'"
             ref="milestonesRef"
             class="ticket"
@@ -30,48 +30,49 @@
   </div>
 </template>
 <script setup>
-import { ref, defineProps, onMounted } from 'vue';
+import { ref, watch, defineProps, nextTick, onMounted } from 'vue';
+import { useUserStore } from '@/stores/UserStore';
+const userStore = useUserStore();
+
 const props = defineProps(["variant"]);
 
 const progress = ref(0);
 const milestonesRef = ref([]);
-
-const points = 600;
-const milestones = [50, 550, 1100].sort(function(a, b) { return a - b; });
-const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
-
-const milestonePercentages = [];
-
-function onGetPoints() {
-  const progressPercentage = (points / milestones[milestones.length - 1]) * 100;
-  progress.value = progressPercentage;
-
-  let percentage = 0;
-  let width = 0;
-
-  for (let index = 0; index < milestones.length; index++) {
-    if (index == milestones.length - 1) {
-      percentage = 100;
-      width = 0;
-    } else {
-      percentage = (milestones[index] / milestones[milestones.length - 1]) * 100;
-      width = percentage - ((milestonesMod[index] / milestones[milestones.length - 1]) * 100);
-    }
-
-    console.log(index, progressPercentage, percentage)
-    if (progressPercentage >= percentage) {
-      milestonesRef.value[index].classList.add("obtained");
-    }
-  
-    milestonePercentages.push(width.toString());  
-  }
-}
+const milestonePercentages = ref([])
 
 onMounted(() => {
-  onGetPoints();
-  console.log(2)
-});
+  watch(() => userStore.milestones.daily, async () => {
+    const userPoints = 600;
 
+    const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
+    const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
+
+    const progressPercentage = (userPoints / milestones[milestones.length - 1]) * 100;
+    progress.value = progressPercentage;
+
+    let milestonePercentage = 0;
+    let width = 0;
+
+    await nextTick();
+
+    for (let index = 0; index < milestones.length; index++) {
+      if (index == milestones.length - 1) {
+        milestonePercentage = 100;
+        width = 0;
+      } else {
+        milestonePercentage = (milestones[index] / milestones[milestones.length - 1]) * 100;
+        width = milestonePercentage - ((milestonesMod[index] / milestones[milestones.length - 1]) * 100);
+      }
+
+      console.log(index, progressPercentage, milestonePercentage)
+      if (progressPercentage >= milestonePercentage) {
+        milestonesRef.value[index].classList.add("obtained");
+      }
+    
+      milestonePercentages.value.push(width.toString());  
+    }
+  });
+});
 
 </script>
 <style scoped>
