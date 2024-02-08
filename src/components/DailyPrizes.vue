@@ -1,21 +1,36 @@
 <template>
   <div class="jeecpot-rewards" v-if="rewards">
 
-    <carousel :items-to-show="3">
-      <slide v-for="item in rewards" :key="slide">
-        <div>
-          <!-- {{ item.date }} -->
-        </div>
+    <carousel :items-to-show="3" :wrap-around="true">
+      <Slide v-for="(item, key) in rewards" :key="item" style="margin-bottom:15px; margin-top:15px; overflow:visible; flex-direction:column">
+        <!-- <div>
+          {{ currentSlide }}
+        </div> -->
 
         <div class="reward-img">
           <!-- <img :src="jeec_brain_url + item.img" class="activity-img"> -->
           <img :src="item" class="activity-img">
         </div>
-      </slide>
+        <p v-if="key==0">
+          Monday
+        </p>
+        <p v-if="key==1">
+          Tuesday
+        </p>
+        <p v-if="key==2">
+          Wednesday
+        </p>
+        <p v-if="key==3">
+          Thursday
+        </p>
+        <p v-if="key==4">
+          Friday
+        </p>
+      </Slide>
 
-      <template #addons>
-        <navigation />
-      </template>
+      <!-- <template #addons="{ currentSlide }">
+        {{ currentSlide }}
+      </template> -->
     </carousel>
 
 <!--    <div v-for="item in rewards" :key="item">
@@ -30,7 +45,6 @@
 
 
 <script>
-
 import { Carousel, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
 
@@ -170,6 +184,8 @@ export default {
   background-position: center;
   margin-left: auto;
   margin-right: auto;
+  overflow:visible;
+  margin-bottom:10px;
 }
 
 .activity-img {
@@ -186,7 +202,6 @@ export default {
   margin-left: auto;
   margin-right: auto;
   object-fit: contain;
-  margin-left: 2vh;
-  margin-right: 2vh;
+  box-shadow: 0px 0px 15px #4CC9F0;
 }
 </style>
