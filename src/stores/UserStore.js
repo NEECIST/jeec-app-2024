@@ -11,10 +11,6 @@ export const useUserStore = defineStore("UserStore", {
         username: "",
         email: "",
         picture: "",
-        student_external_id: "",
-        squad_id: "",
-        daily_ponts: "",
-        total_points:"",
       },
     };
   },

@@ -207,6 +207,13 @@ class UserService {
     });
   }
 
+  getDailyStudentsRanking() {
+    return axios.get(jeec_brain_url + "/student/daily-students-ranking", {
+      headers: authHeader()
+    });
+  }
+
+
   getSquadsRanking() {
     return axios.get(jeec_brain_url + "/student/squads-ranking", {
       headers: authHeader()
@@ -221,6 +228,12 @@ class UserService {
 
   getDailySquadsRanking() {
     return axios.get(jeec_brain_url + "/student/daily-squads-ranking", {
+      headers: authHeader()
+    });
+  }
+
+  getAllRanking() {
+    return axios.get(jeec_brain_url + "/student/get_all_rankings", {
       headers: authHeader()
     });
   }
