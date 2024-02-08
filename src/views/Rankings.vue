@@ -20,134 +20,26 @@
 
     <div style="height: 8vh"></div>
 
-    <div>
-      <div v-show="personal">
-        <div class="podium">
-          <div class="stand_2" v-if="students.length>1">
-            <img :src="ProcessImg(students[1].photo)" class="podium-img second">               
-            <p class="podium-text">{{students[1].name}}</p>
-            <div class="pilar_2">
-              <span class="number_2">2</span><sup class="super_2">nd</sup>
-            </div>
-          </div>
-          <div class="stand_1" v-if="students.length>0">
-            <img :src="ProcessImg(students[0].photo)" class="podium-img first">
-            <p class="podium-text">{{students[0].name}}</p>
-            <div class="pilar_1">
-              <span class="number_1">1</span><sup class="super_1">st</sup>
-            </div>
-          </div>
-          <div class="stand_3" v-if="students.length>2">
-            <img :src="ProcessImg(students[2].photo)" class="podium-img third">
-            <p class="podium-text">{{students[2].name}}</p>
-            <div class="pilar_3">
-              <span class="number_3">3</span><sup class="super_3">rd</sup>
-            </div>
-          </div>
-        </div>
-        
-        <div v-if="!show" class="top_10">
-          <div class="box">
-            <div class="student_ranking_number">
-              <p>{{ userdata.ranking_weekly }}th</p>
-            </div>
-          </div>
+      <Rank :other_rankingdata="students_daily"
+      :user_ranking="userdata_individual.ranking_daily"
+      :user_points="userdata_individual.daily_points">
+      </Rank>
 
-          <div class="student_name">
-             <p>You</p> 
-          </div>
+      <Rank :other_rankingdata="students_weekly" 
+      :user_ranking="userdata_individual.ranking_weekly" 
+      :user_points="userdata_individual.total_points">
+      </Rank>
 
-          <div class="student_xp">
-            <p>{{ userdata.total_points }} xp</p>
-          </div>
-        </div>
-   
-        <!-- <Rank
-            v-for="(student, index) in other_students"
-            v-show="personal"
-            :key="student.ist_id"
-            :name="student.name"
-            :rank="rank(index, students)"
-            :img_src="student.photo"
-            :total = "other_students.length"
-            :index="index"
-          /> -->
+      <Rank :other_rankingdata="squads_daily" 
+      :user_ranking="userdata_squad.ranking_daily" 
+      :user_points="userdata_squad.daily_points">
+      </Rank>
 
-        <div v-if="show">
-          <div v-for="index in 7" :key="index">
-            <div class="top_10">
-              <div class="box">
-                <div class="student_ranking_number">
-                  <p>{{ index + 3 }}th</p>
-                </div>
-              </div>
-              
+      <Rank :other_rankingdata="squads_weekly" 
+      :user_ranking="userdata_squad.ranking_weekly" 
+      :user_points="userdata_squad.total_points">
+      </Rank>
 
-              <div class="student_name">
-                <p>{{ students[index + 2].name }}</p>
-              </div>
-
-              <div class="student_xp">
-                <p>{{ students[index + 2].total_points }} xp</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-          
-        <div class="dropdown">
-          <button @click="show = !show"><img :src="arrow" class="arrow"></button>
-        </div>
-
-      </div>
-
-        <!-- <div v-show="squad">
-          <div class="podium">
-            <div class="stand" v-if="squads.length>1">
-              <img :src="jeec_brain_url + squads[1].image" class="podium-img second">                
-              <p class="podium-text">{{squads[1].name}}</p>
-              <div class="second pilar">
-                <span>2</span><sup class="super">nd</sup>
-              </div>
-            </div>
-            <div class="stand" v-if="squads.length>0">
-              <img :src="jeec_brain_url + squads[0].image" class="podium-img first">
-              <p class="podium-text">{{squads[0].name}}</p>
-              <div class="first pilar">
-                <span>1</span><sup class="super">st</sup>
-              </div>
-            </div>
-            <div class="stand" v-if="squads.length>2">
-              <img :src="jeec_brain_url + squads[2].image" class="podium-img third">
-              <p class="podium-text">{{squads[2].name}}</p>
-              <div class="third pilar">
-                <span>3</span><sup class="super">rd</sup>
-              </div>
-            </div> 
-          </div>
-            <Rank
-              v-for="(squad, index) in other_squads"
-              v-show="squad"
-              :key="squad.name"
-              :name="squad.name"
-              :cry="squad.cry"
-              :rank="rank(index, squads)"
-              :img_src="jeec_brain_url + squad.image"
-              :members="squad.members.data"
-              :total = "other_squads.length"
-              :index="index"
-            />
-        </div> -->
-  </div>
-    <!-- <div v-else class="loading">
-      <v-progress-circular
-        indeterminate
-        color="#27ade4"
-        :size="100"
-        :width="10"
-        class="loading-bar"
-      ></v-progress-circular>
-    </div> -->
   </div>
 </template>
 
@@ -170,20 +62,13 @@ export default {
 
   data: function () {
     return {
-      button: "personal",
-      students: [],
-      userdata: [],
-      squads: [],
-      daily_squads: [],
+      students_weekly: [],
+      students_daily: [],
+      userdata_individual: [],
+      userdata_squad: [],
+      squads_weekly: [],
+      squads_daily: [],
       jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
-      loading_students: true,
-      loading_squads: true,
-      loading_daily: true,
-      personal:true,
-      squad:false,
-      other_students:[],
-      other_squads:[],
-      names:[],
       arrow: arrow,
       show:false,
 
@@ -219,12 +104,15 @@ export default {
         this.rankingdata = response.data;
         console.log(this.rankingdata); 
 
-        this.students = this.rankingdata.individual_top10_weekly;
-        console.log(this.students);
+        this.students_weekly = this.rankingdata.individual_top10_weekly;
 
-        this.userdata = this.rankingdata.individual_ranking;
+        this.students_daily = this.rankingdata.individual_top10_daily;
 
-        
+        this.userdata_individual = this.rankingdata.individual_ranking;
+
+        this.squads_weekly = this.rankingdata.squad_top10_weekly;
+
+        this.squads_daily = this.rankingdata.squad_top10_daily;
 
         // for(let i=0;i<this.students.length;i++){
         //   if (this.students[i].username == this.user.username){
@@ -250,16 +138,6 @@ export default {
   --grad_1: #605ED0;
   --grad_2: #4CC9F0;
   --grad_3: #7209B7;
-}
-
-.arrow{
-  transform: rotate(180deg);
-  -webkit-transform: rotate(180deg);
-}
-
-.arrow{
-  transform: rotate(0deg);
-  -webkit-transform: rotate(0deg);
 }
 
 .top_10{
@@ -313,7 +191,6 @@ export default {
   height: 3.5vh;
   display: flex;
   margin-left: 28.5vw;
-  color: white;
   position: relative;
   background-color: #4CC9F0;
   justify-content: center;
@@ -447,6 +324,10 @@ export default {
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .podium-img{
@@ -486,58 +367,7 @@ export default {
   background-position: bottom;
 }
 
-.selected{
-  background-color: #03618C !important;
-}
-
-.btns{
-  margin-left:25vw;
-}
-
-.personal-btn{
-  background-color: #1A9CD8;
-  color:white;
-  font-family: Montserrat;
-  font-weight: 600;
-  font-size: 20px;
-  margin-right:5px;
-  width:25vw;
-  height:30px;
-  border-top-left-radius: 14px;
-  border-bottom-left-radius: 14px;
-}
-.squad-btn{
-  background-color: #1A9CD8;
-  color:white;
-  font-family: Montserrat;
-  font-weight: 600;
-  font-size: 20px;
-  width:25vw;
-  height:30px;
-  border-top-right-radius: 14px;
-  border-bottom-right-radius: 14px;
-}
 
 
-.rank-wrapper {
-  height: 82vh;
-  overflow-y: auto;
-}
 
-.big-title {
-  display: flex;
-  justify-content: space-between;
-}
-
-.big-title p {
-  font-size: 5vh;
-  font-weight: 600;
-  width: 100%;
-  text-align: center;
-}
-
-.loading {
-  text-align: center;
-  margin-top: 35vh;
-}
 </style>

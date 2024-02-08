@@ -1,28 +1,23 @@
 <template>
-  <div v-if="!loading_students && !loading_squads && !loading_daily">
-      <div v-show="personal">
-        <div class="podium">
-          <div class="stand_2" v-if="students.length>1">
-            <img :src="students[1].photo" class="podium-img second">               
-            <p class="podium-text">{{names[1]}}</p>
+  <div class="podium">
+          <div class="stand_2" v-if="other_rankingdata.length>1">
+            <img :src="ProcessImg(other_rankingdata[1].photo)" class="podium-img second">               
+            <p class="podium-text">{{other_rankingdata[1].name}}</p>
             <div class="pilar_2">
-              <!-- <img :src="pilar_2" class="ranking_pilar"> -->
               <span class="number_2">2</span><sup class="super_2">nd</sup>
             </div>
           </div>
-          <div class="stand_1">
-            <img :src="students[0].photo" class="podium-img first">
-            <p class="podium-text">{{names[0]}}</p>
+          <div class="stand_1" v-if="other_rankingdata.length>0">
+            <img :src="ProcessImg(other_rankingdata[0].photo)" class="podium-img first">
+            <p class="podium-text">{{other_rankingdata[0].name}}</p>
             <div class="pilar_1">
-              <!-- <img :src="pilar_1" class="ranking_pilar"> -->
               <span class="number_1">1</span><sup class="super_1">st</sup>
             </div>
           </div>
-          <div class="stand_3" v-if="students.length>2">
-            <img :src="students[2].photo" class="podium-img third">
-            <p class="podium-text">{{names[2]}}</p>
+          <div class="stand_3" v-if="other_rankingdata.length>2">
+            <img :src="ProcessImg(other_rankingdata[2].photo)" class="podium-img third">
+            <p class="podium-text">{{other_rankingdata[2].name}}</p>
             <div class="pilar_3">
-              <!-- <img :src="pilar_3" class="ranking_pilar"> -->
               <span class="number_3">3</span><sup class="super_3">rd</sup>
             </div>
           </div>
@@ -31,7 +26,7 @@
         <div v-if="!show" class="top_10">
           <div class="box">
             <div class="student_ranking_number">
-              <p>999th</p>
+              <p>{{ user_ranking }}th</p>
             </div>
           </div>
 
@@ -40,21 +35,10 @@
           </div>
 
           <div class="student_xp">
-            <p>{{ user.total_points }} xp</p>
+            <p>{{ user_points }} xp</p>
           </div>
         </div>
    
-        <!-- <Rank
-            v-for="(student, index) in other_students"
-            v-show="personal"
-            :key="student.ist_id"
-            :name="student.name"
-            :rank="rank(index, students)"
-            :img_src="student.photo"
-            :total = "other_students.length"
-            :index="index"
-          /> -->
-
         <div v-if="show">
           <div v-for="index in 7" :key="index">
             <div class="top_10">
@@ -66,159 +50,291 @@
               
 
               <div class="student_name">
-                <p>{{ names[index + 2] }}</p>
-                <!-- <p>FUlanoi</p> -->
+                <p>{{ other_rankingdata[index + 2].name }}</p>
               </div>
 
               <div class="student_xp">
-                <p>0 xp</p>
+                <p>{{ other_rankingdata[index + 2].points }} xp</p>
               </div>
             </div>
           </div>
 
         </div>
           
-        <div class="dropdown">
-          <button @click="show = !show"><img :src="arrow" class="arrow"></button>
+        <div @click="show = !show" class="dropdown">
+          <div><img :src="arrow" class="arrow"></div>
         </div>
-
-      </div>
-  </div>
-
-    <div v-else class="loading">
-      <v-progress-circular
-        indeterminate
-        color="#27ade4"
-        :size="100"
-        :width="10"
-        class="loading-bar"
-      ></v-progress-circular>
-  </div>
 
 </template>
 
 <script>
+import arrow from "../assets/chevron-compact-down.svg"
+
 export default {
   name: "Rank",
   data: function () {
     return {
-      dialog: false,
-      width: window.innerWidth,
+      show:false,
+      arrow:arrow,
+
     };
   },
   props: {
-    students: Object,
-    names: Object,
-    
+    other_rankingdata: Object,
+    user_ranking: Number,
+    user_points: Number,
   },
   computed: {
 
   },
   methods: {
-
+    ProcessImg(image) {
+      let photo = "data:image/png;base64," + image;
+      return photo;
+    }
   },
 };
 </script>
 
 <style scoped>
-.rank {
-  background-color: #1A9CD826;
+
+:root {
+  --Gold: #C1A875;
+  --Silver: #CDC9C2;
+  --Bronze: #C9705C;
+  --grad_1: #605ED0;
+  --grad_2: #4CC9F0;
+  --grad_3: #7209B7;
+}
+
+.top_10{
+  width: 85vw;
+  height: 4.5vh;
   display: flex;
+  margin-left: 6vw;
+  font-family: "Lexend Exa";
+  color: white;
+  position: relative;
+  background-color: #4CC9F0;
+}
+
+.student_name{
+  display: flex;
+  flex: 1;
+  justify-content: start;
   align-items: center;
-  width:90vw;
-  margin-left:5vw;
-  border-top:2px solid #1A9CD8B2;
-  border-bottom:2px solid #1A9CD8B2;
+  text-align: center;
+  font-family: "Lexend Exa";
+  font-size: 1.7vh;
+  font-weight: 600;
+  letter-spacing: 0.4vw;
 }
 
-.index {
-  margin: 0;
-  text-align: right;
-  font-family: Montserrat;
-  font-size: 5vw;
-  font-weight: 500;
-  margin-left:3vw;
-  margin-right:2vw;
+.student_ranking_number{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  width: 6vw;
+  height: 6vw;
+  font-size: 2.1vw;
+  background-color: #6D3F0B;
+  border-radius: 100%;
 }
 
-.top{
-  border-top-right-radius: 50px;
-  border-top-left-radius: 50px;
-  border-top: 2px solid transparent;
-  margin-top:3vh;
+.student_xp{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  text-align: center;
+  font-family: "Lexend Exa";
+  font-size: 1.3vh;
+  font-weight: 600;
+  width: 20vw;
 }
 
-.bottom{
-  border-bottom-right-radius: 50px;
-  border-bottom-left-radius: 50px;
-  border-bottom:2px solid transparent;
+.dropdown{
+  width: 40vw;
+  height: 3.5vh;
+  display: flex;
+  margin-left: 28.5vw;
+  position: relative;
+  background-color: #4CC9F0;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0px 0px 10vw 10vw;
 }
 
-.image {
-  width: 5vh;
-  height: 5vh;
-  border-radius: 50%;
-  border:2px solid #03618C
-}
 
-.personal-info p {
-  margin: 0;
+.box {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 15vw;
   margin-left: 3vw;
 }
 
-.name {
-  font-size: 3.5vh;
-  font-weight: 500;
-  line-height: 3vh;
+.number_1 {
+  font-family: "Russo One";
+  font-size: 7vh;
+  background: var(--Gold, linear-gradient(77deg, #C1A875 11.6%, #d6ad3c 25.31%, #b1982b 48.06%, #f7a503 55.72%, #f7a503 77.23%, #ffc400 85.34%, #ffc400 91.31%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.cry {
-  color: #848484;
-  font-size: 2.5vh;
-  font-style: italic;
-  font-weight: 500;
-  line-height: 3vh;
+.number_2 {
+  text-align: center;
+  font-family: "Russo One";
+  font-size: 5.5vh;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 45px; /* 93.75% */
+  background: var(--Silver, linear-gradient(77deg, #576265 11.6%, #9EA1A1 25.31%, #848B8A 48.06%, #576265 55.72%, #576265 77.23%, #757A7B 85.34%, #576265 91.31%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.level {
-  font-size: 2.1vh;
-  font-weight: 700;
-  line-height: 2.8vh;
-  color: #27ade4;
+.number_3 {
+  text-align: center;
+  font-family: "Russo One";
+  font-size: 4vh;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 45px; /* 93.75% */
+  background: linear-gradient(77deg, #db8553 11.6%, #da781d 25.31%, #ad4311 48.06%, #db8553 55.72%, #db8553 77.23%, #C9705C 85.34%, #C9705C 91.31%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.dialog-wrapper {
-  padding-top: 1vh;
-  padding-bottom: 1vh;
-  padding-left: 2vw;
-  padding-right: 2vw;
+.super_1{
+  text-align: center;
+  font-family: "Russo One";
+  font-size: 2vh;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 45px; /* 93.75% */
+  top: -0.9em;
+  background: var(--Gold, linear-gradient(77deg, #576265 11.6%, #9EA1A1 25.31%, #848B8A 48.06%, #576265 55.72%, #576265 77.23%, #757A7B 85.34%, #576265 91.31%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.super_2{
+  text-align: center;
+  font-family: "Russo One";
+  font-size: 2vh;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 45px; /* 93.75% */
+  top: -0.9em;
+  background: var(--Silver, linear-gradient(77deg, #576265 11.6%, #9EA1A1 25.31%, #848B8A 48.06%, #576265 55.72%, #576265 77.23%, #757A7B 85.34%, #576265 91.31%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.member {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-top: 1vh;
-  margin-bottom: 1vh;
+.super_3{
+  text-align: center;
+  font-family: "Russo One";
+  font-size: 2vh;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 45px; /* 93.75% */
+  top: -0.9em;
+  background: linear-gradient(77deg, #db8553 11.6%, #da781d 25.31%, #ad4311 48.06%, #db8553 55.72%, #db8553 77.23%, #C9705C 85.34%, #C9705C 91.31%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.member-photo {
-  height: 9vh;
-  width: 9vh;
-  border-radius: 50%;
+
+.podium{
+  width: 85vw;
+  margin-left: 6vw;
+  display:flex;
+  justify-content: space-between;
+  align-items: end;
 }
 
-.member-name {
-  margin: 0;
-  font-size: 3vh;
+.pilar_1{
+  text-align: center;
+  color:white;
+  vertical-align: middle;
+  width:27vw;
+  font-size: 7vh;
+}
+.pilar_2{
+  text-align: center;
+  color:white;
+  vertical-align: middle;
+  width:27vw;
+  font-size: 6vh;
+}
+
+.pilar_3{
+  text-align: center;
+  color:white;
+  vertical-align: middle;
+  width:27vw;
+  font-size: 4vh;
+}
+
+
+.podium-text{
+  color: var(--Greyish-White, #E7E7E7);
+  text-align: center;
+  font-family: "Lexend Exa";
+  font-size: 1.7vh;
+  font-style: normal;
   font-weight: 600;
-  margin-left: 2vw;
-  width: 51vw;
+  line-height: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.star {
-  position: absolute;
-  right: 3vw;
+.podium-img{
+  position:relative;
+  margin-left:auto;
+  margin-right:auto;
+  display:block;
+  width: 8vh;
+  height: 8vh;
+  border-radius: 50%;
+  border-width: 20px;
+  background-color: white;
 }
+
+.stand_1{
+  position: relative;
+  width:27vw;
+  height: 25vh;
+  background-color: #4CC9F0;
+
+  background-position: bottom;
+}
+.stand_2{
+  position: relative;
+  width:27vw;
+  height: 21vh;
+  background-color: #4CC9F0;
+
+  background-position: bottom;
+}
+.stand_3{
+  position: relative;
+  width:27vw;
+  height: 18vh;
+  background-color: #4CC9F0;
+
+  background-position: bottom;
+}
+
+
+
 
 </style>
