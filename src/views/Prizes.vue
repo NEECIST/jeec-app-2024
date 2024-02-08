@@ -15,13 +15,13 @@
       <div>
         <p class="prize-title daily">SOLO PRIZES</p>
 
-        <DailyPrizes :rewards="images.solo_daily_prizes" />
+        <DailyPrizes :rewards="images.individual_daily_rewards" v-if="ready" />
       </div>
       <!-- {{ weekly }} -->
       <div>
         <p class="prize-title daily">SQUAD PRIZES</p>
 
-        <DailyPrizes :rewards="images.squad_daily_prizes" />
+        <DailyPrizes :rewards="images.squad_daily_rewards" v-if="ready"/>
       </div>
     </div>
     <div v-else>
@@ -29,18 +29,18 @@
       <div>
         <p class="prize-title weekly">JEECPOT</p>
 
-        <WeeklyPrizes :rewards="images.jeecpot_prizes" />
+        <WeeklyPrizes :rewards="images.jeecpot" v-if="ready"/>
       </div>
       <!-- {{ weekly }} -->
       <div>
         <p class="prize-title weekly">SOLO PRIZES</p>
 
-        <WeeklyPrizes :rewards="images.solo_prizes" />
+        <WeeklyPrizes :rewards="images.individual_weekly_rewards" v-if="ready"/>
       </div>
       <div>
         <p class="prize-title weekly">SQUAD PRIZES</p>
 
-        <WeeklyPrizes :rewards="images.squad_prizes" />
+        <WeeklyPrizes :rewards="images.squad_weekly_rewards" v-if="ready"/>
       </div>
     </div>
 
@@ -56,7 +56,7 @@ import DailyPrizes from "@/components/DailyPrizes.vue";
 import WeeklyPrizes from "@/components/WeeklyPrizes.vue";
 import { mapState } from 'pinia'
 import { usePrizeStore } from "@/stores/PrizeStore";
-import image from "@/assets/profile.jpg"
+// import image from "@/assets/profile.jpg"
 
 export default {
   name: "Prizes",
@@ -70,17 +70,18 @@ export default {
   data: function () {
     return {
       daily: true,
-      images:{
-          solo_daily_prizes: [image,image,image,image,image],
-          squad_daily_prizes: [image,image,image,image,image],
-          jeecpot_prizes: [image,image,image],
-          squad_prizes: [image,image,image],
-          solo_prizes: [image,image,image],
-        },
+      ready:false,
+      // images:{
+      //     solo_daily_prizes: [image,image,image,image,image],
+      //     squad_daily_prizes: [image,image,image,image,image],
+      //     jeecpot_prizes: [image,image,image],
+      //     squad_prizes: [image,image,image],
+      //     solo_prizes: [image,image,image],
+      //   },
     };
   },
   computed: {
-    ...mapState(usePrizeStore, ['images_']),
+    ...mapState(usePrizeStore, ['images']),
   },
   methods: {
     click_daily() {
@@ -89,6 +90,15 @@ export default {
       this.daily = false;
     }
   },
+  watch:{
+    images(){
+      this.ready=true;
+      console.log(this.images);
+    }
+  },
+  mounted(){
+    
+  }
 };
 </script>
 

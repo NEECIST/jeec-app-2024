@@ -8,8 +8,8 @@
         </div> -->
 
         <div class="reward-img">
-          <!-- <img :src="jeec_brain_url + item.img" class="activity-img"> -->
-          <img :src="item" class="activity-img">
+          <img :src="jeec_brain_url + item" class="activity-img">
+          <!-- <img :src="item" class="activity-img"> -->
         </div>
         <p v-if="key==0">
           Monday

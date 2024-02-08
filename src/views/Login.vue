@@ -19,7 +19,9 @@
 import axios from "axios";
 import { useUserStore } from "@/stores/UserStore";
 import { decodeCredential } from "vue3-google-login";
+
 import CryptoJS from "crypto-js";
+
 
 const userStore = useUserStore();
 
@@ -38,6 +40,7 @@ const callback = (response) => {
 
       userStore.authUser(jwt);
     });
+
 };
 
 function decrypt(code) {
