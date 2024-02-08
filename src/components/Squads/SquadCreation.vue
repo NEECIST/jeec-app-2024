@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import UserService from "../services/user.service";
+import UserService from "../../services/user.service";
 
 export default {
   name: "SquadCreation",
@@ -69,7 +69,7 @@ export default {
     return {
       files: [],
       image_uploaded: true,
-      currentImage: require('../assets/logo.png'),  // Default image
+      currentImage: require('../../assets/logo.png'),  // Default image
       name: "",
       cry: "",
       error: "",
@@ -99,7 +99,7 @@ export default {
     },
     // Method to convert image URL to Blob
     async getDefaultImageBlob() {
-      const response = await fetch(require('../assets/logo.png')); // path to your default image
+      const response = await fetch(require('../../assets/logo.png')); // path to your default image
       const data = await response.blob(); // convert HTTP response to Blob
       return new File([data], "default-image.png", { type: 'image/png' }); // return blob as File
     },
