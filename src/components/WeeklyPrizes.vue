@@ -168,6 +168,8 @@ export default {
   object-fit: contain;
   margin-left:2vh;
   margin-right:2vh;
+  box-shadow: 0px 0px 15px #F72585;
+  overflow:visible;
 }
 
 .jeecpot-rewards {
