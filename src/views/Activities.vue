@@ -1,6 +1,7 @@
 <style>
 .carousel{
   height: 90vh;
+  width: 100%;
   overflow-y: hidden;
 }
 
@@ -38,7 +39,7 @@
   align-items: start;
   justify-content: start;
   display: flex;
-  flex-direction: column;
+  flex-direction: column;;
 
 }
 .carousel__track{
@@ -237,7 +238,13 @@ export default {
         setTimeout(() => {
           const new_active_slide = document.querySelector(".carousel__slide--active");
           if (new_active_slide) {
+            new_active_slide.style.pointerEvents = "all";
             new_active_slide.firstChild.style.pointerEvents = "none";
+            const next_slide = document.querySelector(".carousel__slide--next");
+            if (next_slide) {
+              next_slide.style.pointerEvents = "none";
+              next_slide.firstChild.style.pointerEvents = "all";
+            }
           }
         }, 550);
       // if clicked element is "prev"  
@@ -256,7 +263,13 @@ export default {
         setTimeout(() => {
           const new_active_slide = document.querySelector(".carousel__slide--active");
           if (new_active_slide) {
+            new_active_slide.style.pointerEvents = "all";
             new_active_slide.firstChild.style.pointerEvents = "none";
+            const next_slide = document.querySelector(".carousel__slide--next");
+            if (next_slide) {
+              next_slide.style.pointerEvents = "none";
+              next_slide.firstChild.style.pointerEvents = "all";
+            }            
           }
         }, 550);
       }
@@ -274,6 +287,12 @@ export default {
     const active_slide = document.querySelector(".carousel__slide--active");
     if (active_slide) {
       active_slide.firstChild.style.pointerEvents = "none";
+    }
+
+    const next_slide = document.querySelector(".carousel__slide--next");
+    if (next_slide) {
+      next_slide.style.pointerEvents = "none";
+      next_slide.firstChild.style.pointerEvents = "all";
     }
 
     // make non loopable slides
