@@ -16,10 +16,10 @@
     <!-- {{ solos }} -->
 
     <div>
-      <button style="background-color: #27ade4" @click.stop="click_daily()">
+      <button  @click.stop="click_daily()">
         Daily
       </button>
-      <button style="background-color: #27ade4" @click.stop="click_week()">
+      <button @click.stop="click_week()">
         Week
       </button>
     </div>
@@ -28,13 +28,13 @@
       <div>
         <p>SOLO PRIZES</p>
 
-        <DailyPrizes style="margin-top: 8vh" :rewards="images.solo_daily_prizes" />
+        <DailyPrizes :rewards="images.solo_daily_prizes" />
       </div>
       <!-- {{ weekly }} -->
       <div>
         <p>SQUAD PRIZES</p>
 
-        <DailyPrizes style="margin-top: 8vh" :rewards="images.squad_daily_prizes" />
+        <DailyPrizes :rewards="images.squad_daily_prizes" />
       </div>
     </div>
     <div v-else>
@@ -42,18 +42,18 @@
       <div>
         <p>JEECPOT</p>
 
-        <WeeklyPrizes style="margin-top: 8vh" :rewards="images.jeecpot_prizes" />
+        <WeeklyPrizes :rewards="images.jeecpot_prizes" />
       </div>
       <!-- {{ weekly }} -->
       <div>
         <p>SOLO PRIZES</p>
 
-        <WeeklyPrizes style="margin-top: 8vh" :rewards="images.solo_prizes" />
+        <WeeklyPrizes :rewards="images.solo_prizes" />
       </div>
       <div>
         <p>SQUAD PRIZES</p>
 
-        <WeeklyPrizes style="margin-top: 8vh" :rewards="images.squad_prizes" />
+        <WeeklyPrizes :rewards="images.squad_prizes" />
       </div>
     </div>
 
@@ -186,48 +186,5 @@ export default {
 </script>
 
 <style scoped>
-.prize-wrapper {
-  height: auto;
-  overflow-y: visible;
-}
 
-.prize-type {
-  position: absolute;
-  width: 65vw;
-  text-align: center;
-  top: 2vh;
-  text-transform: uppercase;
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 39px;
-  /* identical to box height */
-
-  letter-spacing: 0.01em;
-
-  color: #000000;
-}
-
-.arrow-btn {
-  position: fixed;
-  top: 12%;
-}
-
-.rewards {
-  background-color: #050505;
-  height: auto;
-}
-
-.loading {
-  text-align: center;
-  margin-top: 35vh;
-}
-
-@media screen and (min-width: 1100px) {
-  .buttons {
-    display: flex;
-    justify-content: center;
-  }
-}
 </style>
