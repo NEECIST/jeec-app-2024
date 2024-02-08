@@ -12,16 +12,16 @@
 
     <div class="item" :style="{borderColor: color}">
       <div class="main">
-        <div id="title" :style="{color: color}">
+        <h4 id="title" :style="{color: color}">
           {{ event.type }}
-        </div>
+        </h4>
 
-        <div id="text">
+        <h5 id="text">
           {{ event.name }}
-        </div>
+        </h5>
 
         <router-link id="info" :to="link" :style="{color: color}">
-          +info
+          more info
         </router-link>
       </div>
 
@@ -42,7 +42,11 @@
       </div>
 
       <div class="div-foto">
-        <div id="foto"></div>
+
+            <div id="foto" :style="{borderColor: color}"></div>
+            <div id="small-foto" :style="{borderColor: color}"></div>
+
+        
       </div>
 
     </div>
@@ -58,12 +62,11 @@
 </template>
 
 <script>
-
 export default {
   name: "Event",
   props: {
     event: Object,
-    color: Number,
+    color: String,
     foto: Object,
     link: String
   },
@@ -71,40 +74,30 @@ export default {
     addEvent() {
       console.log("Add event");
     },
-    // async isInSchedule() {
-    //   await axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/is_activity_in_schedule_vue', 
-    //   {student_ist_id: this.user.ist_id, activity_name: this.activity.name})
-    //      .then((response) => {
-    //       const data = response.data; // [{}, {}]
-    //       this.inSchedule = data.inSchedule;
-    //     });       
-    // },
-    // async click_see_more() {
-    //   this.dialog = true;
-    //   LogService.postLog("/see_more/" + this.activity.name);
-    // },
-    // async click_add_to_schedule(activity) {
-    //   axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/add_to_schedule_vue', 
-    //   {student_ist_id: this.user.ist_id, activity_name: activity.name})
-    //      .then((response) => {
-    //       const data = response.data; // [{}, {}]
-    //       this.error = data.error;
-    //       this.inSchedule = true;
-    //     });  
-    // },
-    // async click_delete_to_schedule(activity) {
-    //   axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/delete_from_schedule_vue', 
-    //   {student_ist_id: this.user.ist_id, activity_name: activity.name})
-    //      .then((response) => {
-    //       const data = response.data; // [{}, {}]
-    //       this.error = data.error;
-    //       this.inSchedule = false;
-    //     });  
-    // },
-    // async click_add_to_calendar() {
-    //   LogService.postLog("/add_to_calendar/" + this.activity.name);
-    // },
+    addToCalendar(){
+
+    }
   },
+  data: function () {
+    return {
+      button: "all",
+      model: 0,
+      event_dates: [],
+      activities: [],
+      weekdays: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      loading_activities: true,
+    };
+  },
+  mounted (){
+    console.log(this.event);
+
+  }
 
 };
 </script>
@@ -125,7 +118,7 @@ export default {
 
 .hour {
   margin-left: 10px;
-  font-size: 12pt;
+  font-size: 10pt;
   font-weight: bolder;
 }
 
@@ -188,19 +181,28 @@ export default {
 #title {
   margin-top: 5px;
   margin-left: 15px;
-  font-size: 15pt;
+  /* font-size: 15pt; */
   font-weight: bolder;
+  text-align: start;
 }
 
 #text {
   margin-left: 15px;
-  font-size: 15pt;
+  flex: 1;
+  /* font-size: 15pt; */
+  height: 40%;
   font-weight: bolder;
+  text-align: start;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 #info {
-  margin-left: 40px;
-  font-size: 10pt;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 8pt;
+  text-align: end;
 }
 
 #symbol {
@@ -213,6 +215,18 @@ export default {
   height: 60px;
   background: rgb(155, 24, 24);
   border-radius: 50%;
+  border-style: solid;
+}
+
+#small-foto {
+  width: 25px;
+  height: 25px;
+  background: rgb(21, 199, 45);
+  border-radius: 50%;
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  border-style: solid;
 }
 
 </style>

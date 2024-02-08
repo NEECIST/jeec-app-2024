@@ -13,7 +13,7 @@
 }
 
 .carousel{
-  height: 90vh;
+  /* height: 90vh; */
   width: 100%;
   overflow-y: hidden;
 }
@@ -32,13 +32,13 @@
   align-items: center;
   flex-direction: column;
 
-  .schedule{
+  /* .schedule{
     height: 70vh;
-  }
+  } */
 }
 
 #line {
-  height: 64vh;
+  height: 100%;
   width: 2px;
   position: fixed;
   background-color: white;
@@ -105,7 +105,7 @@
     transition: 0.5s;
     opacity: 1;
     width: 85vw;
-    height: 65vh;
+    /* height: 65vh; */
     overflow-x: hidden;
     overflow-y: scroll;
 
@@ -144,7 +144,7 @@
                 <div id="line"></div>
                 <div class="schedule">
                   <div v-for="event in activities" :key="event" class="event">
-                    <Event v-if="getWeekday(event.day) == weekday" color="blue" :event="event" link="/home"></Event>
+                    <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" link="/home"></Event>
                   </div>
                 </div>
                 
@@ -268,6 +268,8 @@ export default {
     if (!this.user) {
       this.$router.push("/");
     }
+
+    console.log(this.user)
 
     // make active slide non pointer
     const active_slide = document.querySelector(".carousel__slide--active");
