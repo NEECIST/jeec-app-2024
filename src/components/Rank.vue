@@ -1,28 +1,31 @@
 <template>
-  <div class="podium">
-          <div class="stand_2" v-if="other_rankingdata.length>1">
-            <img :src="ProcessImg(other_rankingdata[1].photo)" class="podium-img second">               
-            <p class="podium-text">{{other_rankingdata[1].name}}</p>
-            <div class="pilar_2">
-              <span class="number_2">2</span><sup class="super_2">nd</sup>
+  <div class="center">
+    <div class="podium">
+            <div class="stand_2" v-if="other_rankingdata.length>1">
+              <img :src="ProcessImg(other_rankingdata[1].photo)" class="podium-img second">               
+              <p class="podium-text">{{other_rankingdata[1].name}}</p>
+              <div class="pilar_2">
+                <span class="number_2">2</span><sup class="super_2">nd</sup>
+              </div>
             </div>
-          </div>
-          <div class="stand_1" v-if="other_rankingdata.length>0">
-            <img :src="ProcessImg(other_rankingdata[0].photo)" class="podium-img first">
-            <p class="podium-text">{{other_rankingdata[0].name}}</p>
-            <div class="pilar_1">
-              <span class="number_1">1</span><sup class="super_1">st</sup>
+            <div class="stand_1" v-if="other_rankingdata.length>0">
+              <img :src="ProcessImg(other_rankingdata[0].photo)" class="podium-img first">
+              <p class="podium-text">{{other_rankingdata[0].name}}</p>
+              <div class="pilar_1">
+                <span class="number_1">1</span><sup class="super_1">st</sup>
+              </div>
             </div>
-          </div>
-          <div class="stand_3" v-if="other_rankingdata.length>2">
-            <img :src="ProcessImg(other_rankingdata[2].photo)" class="podium-img third">
-            <p class="podium-text">{{other_rankingdata[2].name}}</p>
-            <div class="pilar_3">
-              <span class="number_3">3</span><sup class="super_3">rd</sup>
+            <div class="stand_3" v-if="other_rankingdata.length>2">
+              <img :src="ProcessImg(other_rankingdata[2].photo)" class="podium-img third">
+              <p class="podium-text">{{other_rankingdata[2].name}}</p>
+              <div class="pilar_3">
+                <span class="number_3">3</span><sup class="super_3">rd</sup>
+              </div>
             </div>
-          </div>
-        </div>
-        
+    </div>
+  </div>
+    
+      <div class="center">
         <div v-if="!show" class="top_10">
           <div class="box">
             <div class="student_ranking_number">
@@ -38,7 +41,9 @@
             <p>{{ user_points }} xp</p>
           </div>
         </div>
-   
+      </div>
+        
+      <div class="center">
         <div v-if="show">
           <div v-for="index in 7" :key="index">
             <div class="top_10">
@@ -60,10 +65,14 @@
           </div>
 
         </div>
-          
+      </div>
+        
+      <div class="center">
         <div @click="show = !show" class="dropdown">
           <div><img :src="arrow" class="arrow"></div>
         </div>
+      </div>  
+  
 
 </template>
 
@@ -107,11 +116,16 @@ export default {
   --grad_3: #7209B7;
 }
 
+.center{
+  display: flex;
+  justify-content: center;
+}
+
+
 .top_10{
   width: 85vw;
   height: 4.5vh;
   display: flex;
-  margin-left: 6vw;
   font-family: "Lexend Exa";
   color: white;
   position: relative;
@@ -157,7 +171,6 @@ export default {
   width: 40vw;
   height: 3.5vh;
   display: flex;
-  margin-left: 28.5vw;
   position: relative;
   background-color: #4CC9F0;
   justify-content: center;
@@ -253,7 +266,6 @@ export default {
 
 .podium{
   width: 85vw;
-  margin-left: 6vw;
   display:flex;
   justify-content: space-between;
   align-items: end;
