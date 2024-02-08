@@ -107,15 +107,16 @@ export default {
 
 .prize-title{
   text-align:center;
-  padding-bottom:10px;
   font-size:30px;
   font-weight: bold;
   letter-spacing:5px;
+  overflow:visible;
 }
 
 .weekly{
   color:#F72585;
   text-shadow: 0px 0px 15px #F72585;
+  margin-bottom:10px;
 }
 
 .daily{
