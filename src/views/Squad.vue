@@ -137,7 +137,6 @@
         />
         <div class="chips-container">
           <div v-for="(squadmate, index) in squadmates" :key="index" class="chip">
-            <!-- Add a conditional check for squadmate -->
             <span v-if="squadmate">{{ squadmate }}</span>
             <span class="close-icon" @click="remove(squadmate, $event)">×</span>
           </div>

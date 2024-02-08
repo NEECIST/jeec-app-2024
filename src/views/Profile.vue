@@ -234,6 +234,9 @@
       </v-card>
     </v-dialog>
   </div>
+
+  <squad> </squad>
+  
 </template>
 
 <script>
@@ -241,12 +244,12 @@ import Expbar from "@/components/Expbar.vue";
 import UserService from "../services/user.service";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
-
+import Squad from "@/views/Squad.vue";
 
 export default {
   name: "Profile",
   components: {
-    Expbar,
+    Expbar, Squad
   },
   data: function () {
     return {
