@@ -2,9 +2,10 @@
   <div class="jeecpot-rewards" v-if="rewards">
     <div class="reward-container">
       <div v-for="item in rewards" :key="item.position" class="reward-item">
-        {{ item.position }}
+        <!-- {{ item.position }} -->
         <div class="reward-img">
-          <img :src="jeec_brain_url + item.img" class="activity-img">
+          <!-- <img :src="jeec_brain_url + item.img" class="activity-img"> -->
+          <img :src="item" class="activity-img">
         </div>
       </div>
     </div>
@@ -33,7 +34,7 @@ export default {
 </script>
 
 <style scoped>
-.jeecpot-rewards {
+ .jeecpot-rewards {
   font-weight: 600;
   width: 100vw;
 }
@@ -144,9 +145,6 @@ export default {
   position: relative;
   height: 13vh;
   width: 13vh;
-  border: 0.1vh solid white;
-  border-radius: 50%;
-  background-color: white;
   background-size: 105%;
   background-repeat: no-repeat;
   background-position: center;
@@ -192,9 +190,6 @@ export default {
   position: relative;
   height: 13vh;
   width: 13vh;
-  border: 0.1vh solid white;
-  border-radius: 50%;
-  background-color: white;
   background-size: 105%;
   background-repeat: no-repeat;
   background-position: center;
@@ -218,5 +213,5 @@ export default {
   object-fit: contain;
   margin-left: 2vh;
   margin-right: 2vh;
-}
+} 
 </style>
