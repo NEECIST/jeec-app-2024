@@ -1,297 +1,310 @@
 <template>
   <div>
-    {{ user.name }}
-    <!-- <div class="top">
+    <!-- User:
+    {{ user }}
+    next_activity:
+    {{ next_activity }}
+    prizes
+    {{ prizes }}
+    cv_info
+    {{ cv_info }} -->
+    <div class="top">
       
       <div v-if="next_activity!=null" class="main-title">
-          <h1 >
-              UP NEXT
-          </h1>
-          <br>
-          <br>
-          <div class="top-container">
-          
+        <h1>
+            UP NEXT
+        </h1>
+        <br>
+        <br>
+        <div class="top-container">
           <div class="top-text">
-          <p>
-            {{ next_activity.name }}
-          </p>
-          <p>
-            {{ next_activity.start_time }} - {{ next_activity.end_time }}
-          </p>
-          <br>
-          <p>
-            {{ next_activity.activity_type }}
-          </p>
-        </div>
-        <div class="image-container">
-          <div v-for="image in next_activity.images" :key="image" >
-            <img :src="jeec_brain_url + image" class="activity-img" :class="{size2:next_activity.images.length==2,size3:next_activity.images.length==3,size4:next_activity.images.length>3}">
+            <p>
+              {{ next_activity.activity_type }}
+            </p>
+            <p>
+              {{ next_activity.name }}
+            </p>
+            <p>
+              {{ next_activity.start_time }} - {{ next_activity.end_time }}
+            </p>
+            <br>
           </div>
+          <div class="image-container">
+            <div v-for="image in next_activity.images" :key="image" >
+              <img :src="jeec_brain_url + image" class="activity-img" :class="{size2:next_activity.images.length==2,size3:next_activity.images.length==3,size4:next_activity.images.length>3}">
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      <p v-else class="no-more-activities">
+        There are no more activities scheduled
+      </p>
+    </div>
+
+    <div class="middle">
+      <!-- {{ prizes }} -->
+      <div v-if="prizes.img_solo_daily_prize != null || prizes.img_squad_daily_prize != null" class="mid-component">
+        <h1>TODAY'S PRIZE</h1>
+        
+        <div>
+          <p>SOLO</p>
+            
+          <div class="reward-img">
+            <img :src="jeec_brain_url + prizes.img_solo_daily_prize" class="activity-img">
+          </div>
+
+        </div>
+
+        <div>
+          <p>SQUAD</p>
+          <!-- {{ prizes.img_squad_daily_prize }} -->
+          <div class="reward-img">
+            <img :src="jeec_brain_url + prizes.img_squad_daily_prize" class="activity-img"> 
+          </div>
+
         </div>
         
-        </div>
-        </div>
-
-        <p v-else class="no-more-activities">
-          There are no more activities scheduled
-        </p>
-      
+        
+      </div>
+      <div v-else>
+        NO PRIZES TODAY
+      </div>
     </div>
-    <div class="middle">
-      <div class="mid-component">
-          <h1>NEXT REWARD</h1>
-          <div
-          class="reward-img"
-          :style="'background-image:' + 'url(' + _reward_level + ')'"
-        ></div>
-        <p>
-          {{(reward_level ? reward_level.end_points : 0) -
-              currentUser.total_points}}XP to go</p>
-      </div>
 
-        <div class="mid-component">
-          <h1>TODAY'S PRIZE</h1>
-          
-            <div
-              class="reward-img"
-              :style="'background-image:' + 'url(' + _today_reward + ')'"
-            ></div>
-            <div v-if="squad_ranking!=null">
-              <p v-if="squad_ranking==1">
-            1st place
-          </p>
-          <p v-else-if="squad_ranking==2">
-            2nd place
-          </p>
-          <p v-else-if="squad_ranking==3">
-            3rd place
-          </p>
-          <p v-else>
-            {{squad_ranking}}th place
-          </p>
-          <p v-if="xp_to_first!=0"> {{ xp_to_first }} points to reach first!</p>
-            </div>
-            <p v-else>
-              You haven't joined a squad yet!
-            </p>
-          
-          
-            </div>
-    
-      </div>
-
-      <div v-if="!has_cv" class="bottom">
-        <div class="cv-text">
+    <div class="bottom">
+        <div v-if="cv_info.uploaded_cv == false || cv_info.uploaded_cv == null" class="cv-text">
           <p> Still didn’t add your CV?
             Do it and pass by our check in to win a surprise reward  </p>
         </div>
-        <img :src="cv_logo" class="cv-img">
-      </div>
-      <div v-if="has_cv && quest.error==''" class="bottom">
-        <div class="quest-text">
-          <h1>Daily quest:</h1>
-          <div class="quest-info">
-            <div>
-              <h2>
-                Reward:
-              </h2>
-              <br>
-            <img class="quest-img" :src="jeec_brain_url + quest.image">
-            </div>
-            
-            <div>
-              <h2>{{ quest.name }}</h2>
-              <p>{{ quest.description }}</p>
-              <h3>Progress: {{ quest.progress }}/{{ quest.total }}</h3>
-            </div>
-          </div>
+        <div v-if="cv_info.uploaded_cv == true && (cv_info.approved_cv == false || cv_info.approved_cv == null)" class="cv-text">
+          <p> CV in validation process! </p>
         </div>
-        
-      </div> -->
+        <div v-if="cv_info.uploaded_cv == true && cv_info.approved_cv == true" class="cv-text">
+          <p> You already submited your CV! </p>
+        </div>
+      <router-link :to="{ name: 'Profile' }">
+        <img :src="cv_logo" class="cv-img">
+      </router-link>
+      
+    </div>
+
   </div>
 </template>
 
 <script>
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
+import axios from "axios";
+import authHeader from "@/services/auth-header";
 
 export default {
   name: "Home",
   computed: {
     ...mapState(useUserStore, ['user']),
-  }
-//   data: function () {
-//     return {
-//       cv_logo:require("../assets/cv_b-11 1.png"),
-//       jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
-//       default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
-//       squad: null,
-//       levels: null,
-//       today_reward: {image:null},
-//       xpbar_width: "92vw",
-//       height: 30,
-//       loading_squad: true,
-//       loading_level: true,
-//       loading_reward: true,
-//       has_cv: true,
-//       squad_ranking:null,
-//       xp_to_first:null,
-//       next_activity:null,
-//       quest:{error:'No quest'},
-//     };
-//   },
-//   mounted(){
+  },
+  data: function () {
+    return {
+      cv_logo:require("../assets/cv_b-11 1.png"),
+      jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
+  //     // default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
+  //     // squad: null,
+  //     // levels: null,
+  //     // today_reward: {image:null},
+  //     // xpbar_width: "92vw",
+  //     // height: 30,
+  //     // loading_squad: true,
+  //     // loading_level: true,
+  //     // loading_reward: true,
+  //     // has_cv: true,
+  //     // squad_ranking:null,
+  //     // xp_to_first:null,
+  //     // next_activity:null,
+  //     // quest:{error:'No quest'},
+      prizes: {
+        img_solo_daily_prize: '',
+        img_squad_daily_prize: '',
+        solo_ranking: '',
+        squad_ranking: '',
+      },
+      next_activity : {
+        name: "",
+        start_time: "",
+        end_time: "",
+        activity_type: "",
+        images: null
+      },
+      cv_info : {
+        uploaded_cv: "",
+        approved_cv: "",
+      },
+    };
+  },
+  mounted(){
+    axios
+      .get(
+        process.env.VUE_APP_JEEC_BRAIN_URL + "/student/cv_info",
+        {
+          headers: authHeader()
+        }
+      )
+      .then((response) => {
+        console.log(response)
+        const data = response.data
+        this.cv_info = data.cv_info
+      })
 
-//   },
-//   computed: {
-//     _today_reward() {
-//       return this.today_reward && this.today_reward.image
-//         ? this.jeec_brain_url + this.today_reward.image
-//         : this.default_image;
-//     },
-//     _reward_level() {
-//       return this.reward_level
-//         ? this.jeec_brain_url + this.reward_level.reward.image
-//         : this.default_image;
-//     },
-//     currentUser() {
-//       return this.$store.state.auth.user;
-//     },
-//     nameArray() {
-//       var names = this.$store.state.auth.user.name.split(" ");
+    axios
+      .get(
+        process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
+        {
+          headers: authHeader()
+        }
+      )
+      .then((response) => {
+        console.log(response)
+        const data = response.data
+        this.next_activity = data.activity
+      })
 
-//       if (names.length > 1) return names;
-//       else return [this.$store.state.auth.user.name, ""];
-//     },
-//     progress() {
-//       var xp = this.$store.state.auth.user.total_points;
-//       var start_points = this.$store.state.auth.user.level.data.start_points;
-//       var end_points = this.$store.state.auth.user.level.data.end_points;
+      axios
+        .get(
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
+          {
+            headers: authHeader()
+          }
+        )
+        .then((response) => {
+          console.log(response)
+          const data = response.data
+          this.prizes = data.prizes
+        })
 
-//       return ((xp - start_points) / (end_points - start_points)) * 100;
-//     },
-//     reward_level() {
-//       if (!this.levels) return null;
+  },
+  // computed: {
+  //   // _today_reward() {
+  //   //   return this.today_reward && this.today_reward.image
+  //   //     ? this.jeec_brain_url + this.today_reward.image
+  //   //     : this.default_image;
+  //   // },
+  //   // _reward_level() {
+  //   //   return this.reward_level
+  //   //     ? this.jeec_brain_url + this.reward_level.reward.image
+  //   //     : this.default_image;
+  //   // },
+  //   // currentUser() {
+  //   //   return this.$store.state.auth.user;
+  //   // },
+  //   // nameArray() {
+  //   //   var names = this.$store.state.auth.user.name.split(" ");
 
-//       for (var level of this.levels) {
-//         if (level.value === this.$store.state.auth.user.level.data.value)
-//           return level;
-//       }
+  //   //   if (names.length > 1) return names;
+  //   //   else return [this.$store.state.auth.user.name, ""];
+  //   // },
+  //   // progress() {
+  //   //   var xp = this.$store.state.auth.user.total_points;
+  //   //   var start_points = this.$store.state.auth.user.level.data.start_points;
+  //   //   var end_points = this.$store.state.auth.user.level.data.end_points;
 
-//       return null;
-//     },
-//   },
-//   methods: {
-//     resize() {
+  //   //   return ((xp - start_points) / (end_points - start_points)) * 100;
+  //   // },
+  //   // reward_level() {
+  //   //   if (!this.levels) return null;
+
+  //   //   for (var level of this.levels) {
+  //   //     if (level.value === this.$store.state.auth.user.level.data.value)
+  //   //       return level;
+  //   //   }
+
+  //   //   return null;
+  //   // },
+  // },
+  // methods: {
+  //   // resize() {
       
-//       this.xpbar_width = "92vw";
+  //   //   this.xpbar_width = "92vw";
       
-//     },
-//   },
-//   destroyed() {
-//     window.removeEventListener("resize", this.resize);
-//   },
-//   async created() {
-//     window.addEventListener("resize", this.resize);
-//     this.resize();
+  //   // },
+  // },
+  // // destroyed() {
+  // //   window.removeEventListener("resize", this.resize);
+  // // },
+  // async created() {
+  //   // window.addEventListener("resize", this.resize);
+  //   // this.resize();
 
-//     if (!this.currentUser) {
-//       this.$router.push("/");
-//     }
-
-//     axios.get(this.jeec_brain_url + "/student/cv", { headers: authHeader() }).then(response=>{
-//       if(response.data=="No CV uploaded"){
-//         this.has_cv=false;
-//       }
-//       else{
-//         this.has_cv=true;
-//       }
-//     })
+  //   // if (!this.currentUser) {
+  //   //   this.$router.push("/");
+  //   // }
       
-//     UserService.getNextActivity().then(
-//       (response) => {
+  //   // UserService.getNextActivity().then(
+  //   //   (response) => {
     
-//         this.next_activity = response.data.activity
-//       },
-//     );
-//     let user_squad=null
-//     await UserService.getUserSquad().then(
-//       (response) => {
-//         user_squad = response.data
-//       },
-//       (error)=>{
-//         console.log(error)
-//       }
-//     );
-//     let daily_squads_rank = null
-//     UserService.getDailySquadsRanking().then(
-//       (response) => {
+  //   //     this.next_activity = response.data.activity
+  //   //   },
+  //   // );
+  //   // let user_squad=null
+  //   // await UserService.getUserSquad().then(
+  //   //   (response) => {
+  //   //     user_squad = response.data
+  //   //   },
+  //   //   (error)=>{
+  //   //     console.log(error)
+  //   //   }
+  //   // );
+  //   // let daily_squads_rank = null
+  //   // UserService.getDailySquadsRanking().then(
+  //   //   (response) => {
         
-//         let top_daily_points=0
-//         daily_squads_rank = response.data
-//         if(daily_squads_rank.data.length>1){
+  //   //     let top_daily_points=0
+  //   //     daily_squads_rank = response.data
+  //   //     if(daily_squads_rank.data.length>1){
           
-//           top_daily_points = daily_squads_rank.data[0].daily_points
-//         }
-//         else{
+  //   //       top_daily_points = daily_squads_rank.data[0].daily_points
+  //   //     }
+  //   //     else{
         
-//           top_daily_points = daily_squads_rank.data.daily_points
-//         }
-//         this.xp_to_first = top_daily_points-user_squad.data.daily_points;
-//         if(Array.isArray(daily_squads_rank.data)){
-//           for(let i=1;i<=daily_squads_rank.data.length;i++){
-//             if(daily_squads_rank.data[i-1].name == user_squad.data.name){
-//               this.squad_ranking=i;
-//             }
-//           }
-//         }
-//         else{
-//           this.squad_ranking=1
-//         }
+  //   //       top_daily_points = daily_squads_rank.data.daily_points
+  //   //     }
+  //   //     this.xp_to_first = top_daily_points-user_squad.data.daily_points;
+  //   //     if(Array.isArray(daily_squads_rank.data)){
+  //   //       for(let i=1;i<=daily_squads_rank.data.length;i++){
+  //   //         if(daily_squads_rank.data[i-1].name == user_squad.data.name){
+  //   //           this.squad_ranking=i;
+  //   //         }
+  //   //       }
+  //   //     }
+  //   //     else{
+  //   //       this.squad_ranking=1
+  //   //     }
         
-//       },
-//     );
-
-//     UserService.getQuestProgress().then(
-//       (response) => {
-//         this.quest = response.data
-//       },
-//     );
+  //   //   },
+  //   // );
     
 
-//     UserService.getUserSquad().then(
-//       (response) => {
-//         this.squad = response.data.data;
-//         this.loading_squad = false;
-//       },
-//       (error) => {
-//         console.log(error);
-//         this.loading_squad = false;
-//       }
-//     );
+  //   // UserService.getUserSquad().then(
+  //   //   (response) => {
+  //   //     this.squad = response.data.data;
+  //   //     this.loading_squad = false;
+  //   //   },
+  //   //   (error) => {
+  //   //     console.log(error);
+  //   //     this.loading_squad = false;
+  //   //   }
+  //   // );
 
-//     UserService.getLevels().then(
-//       (response) => {
-//         this.levels = response.data.data;
-//         this.loading_level = false;
-//       },
-//       (error) => {
-//         console.log(error);
-//         this.loading_level = false;
-//       }
-//     );
 
-//     UserService.getTodaySquadReward().then(
-//       (response) => {
-//         this.today_reward = response.data;
-//         this.loading_reward = false;
-//       },
-//       (error) => {
-//         console.log(error);
-//         this.loading_reward = false;
-//       }
-//     );
-//   },
+  //   // UserService.getTodaySquadReward().then(
+  //   //   (response) => {
+  //   //     this.today_reward = response.data;
+  //   //     this.loading_reward = false;
+  //   //   },
+  //   //   (error) => {
+  //   //     console.log(error);
+  //   //     this.loading_reward = false;
+  //   //   }
+  //   // );
+  // },
 };
 </script>
 

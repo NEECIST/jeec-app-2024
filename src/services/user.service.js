@@ -32,6 +32,20 @@ class UserService {
     );
   }
 
+  addCVNOVO(cv) {
+    var formData = new FormData();
+    formData.append("cv", cv.files[0]);
+
+    return axios.post(jeec_brain_url + "/student/add-cv-novo", formData, {
+      headers: {
+        ...{
+          "Content-Type": "multipart/form-data"
+        },
+        ...authHeader()
+      }
+    });
+  }
+
   addCV(cv) {
     var formData = new FormData();
     formData.append("cv", cv.files[0]);
@@ -72,6 +86,12 @@ class UserService {
     return axios.get(jeec_brain_url + "/student/students?search=" + search, {
       headers: authHeader()
     });
+  }
+
+  getUserStudent(username) {
+    return axios.get(jeec_brain_url + "/student/studentUser", 
+    { headers: authHeader()}
+    );
   }
 
   inviteSquad(members) {
@@ -124,10 +144,10 @@ class UserService {
     );
   }
 
-  kickMember(ist_id) {
+  kickMember(username) {
     return axios.post(
       jeec_brain_url + "/student/kick-member",
-      { ist_id: ist_id },
+      { username: username },
       { headers: authHeader() }
     );
   }

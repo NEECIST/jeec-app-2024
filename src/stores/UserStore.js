@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import authHeader from "@/services/auth-header";
 
 export const useUserStore = defineStore("UserStore", {
   state: () => {
@@ -11,7 +12,12 @@ export const useUserStore = defineStore("UserStore", {
         username: "",
         email: "",
         picture: "",
+        student_external_id: "",
       },
+      milestones: {
+        daily: [],
+        final: 3000,
+      }
     };
   },
   actions: {
@@ -26,7 +32,6 @@ export const useUserStore = defineStore("UserStore", {
     },
 
     async authUser(jwt) {
-      console.log(jwt)
       await axios
         .get(
           process.env.VUE_APP_JEEC_BRAIN_URL + "/student/current_student_24",
@@ -42,7 +47,7 @@ export const useUserStore = defineStore("UserStore", {
           localStorage.setItem("loggedIn", JSON.stringify(true))
           localStorage.setItem("jwt", JSON.stringify(jwt))
         })
-      
+
       if (this.user.name != "") {
         window.location.replace('home');
       } else {
@@ -50,6 +55,22 @@ export const useUserStore = defineStore("UserStore", {
       }
 
       console.log(this.user)
+    },
+
+    async getMilestones() {
+      await axios
+        .get(
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/get_milestone",
+          {
+            headers: authHeader()
+          }
+        )
+        .then((response) => {
+          this.milestones.final = response.data.final_milestones;
+          this.milestones.daily = response.data.daily_milestones;
+
+          console.log(this.milestones)
+        })
     }
   },
 });

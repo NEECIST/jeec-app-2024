@@ -1,0 +1,50 @@
+name: Bug Report
+description: "Tell us more about the bug you found"
+title: "Title"
+description: Describe the problem in a few words
+labels: ["bug"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Name:
+      description: Tell us your name
+      placeholder: John Doe
+    validations:
+      required: true
+  - type: input
+    id: email
+    attributes:
+      label: Email:
+      description: Tell us the email you used to login
+      placeholder: john.doe@example.com
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Description of the problem:
+      description: Describe briefly what happened
+      placeholder: "The X button doesn't work"
+    validations:
+      required: false
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Browser:
+      multiple: false
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+        - Other
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Other:
+      placeholder: Opera
+    validations:
+      required: false
+
