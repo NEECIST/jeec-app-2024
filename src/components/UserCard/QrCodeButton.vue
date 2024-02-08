@@ -1,5 +1,6 @@
 <template>
-  <button @click="stateStore.qrCodeOpen = true" aria-label="Show the QR Code">
+  <button @click="stateStore.qrCodeOpen = true" aria-label="Show the QR Code"
+  :aria-expanded="stateStore.qrCodeOpen" aria-controls="qrcode">
     <img src="@/assets/qrcode-button.svg" aria-hidden="true">
   </button>
 </template>

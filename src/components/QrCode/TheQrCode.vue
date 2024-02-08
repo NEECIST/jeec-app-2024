@@ -1,11 +1,12 @@
 <template>
-  <div class="qrcode">
+  <div>
     <QRCodeVue3 
       width="200" 
       height="200" 
-      :value="this.user.student_external_id"
-      :image="qr_center_img"
-      :imageOptions="{imageSize: 0.7, margin: 8}"
+      :value="userStore.user.student_external_id"
+      :image="require('@/assets/jeec_logo_mobile.svg')"
+      :imageOptions="{imageSize: 0.7, margin: 2}"
+      imgclass="qrcode-image"
       :dotsOptions="{
           type: 'extra-rounded',
           gradient: {
@@ -17,40 +18,23 @@
               ],
             },
       }"
-      :backgroundOptions="{color: '#1f1f1f'}"
+      :backgroundOptions="{color: 'white'}"
       :cornersSquareOptions="{type: 'extra-rounded', color: '#6741c8'}"
       :cornersDotOptions="{type: 'square', color: '#6741c8'}"
+      alt="Show this QR Code"
     ></QRCodeVue3>
   </div>
 </template>
 
-<script>
+<script setup>
 import QRCodeVue3 from "qrcode-vue3";
-import { useUserStore } from '@/stores/UserStore';
-import { mapState } from 'pinia'
 
-export default {
-  name: "QRCode",
-  components: {
-    QRCodeVue3,
-  },
-  data: function () {
-    return {
-      qr_center_img: require("@/assets/jeec_mobile_white.svg"),
-    };
-  },
-  methods: {
-  },
-  computed: {
-    ...mapState(useUserStore, ['user']),
-  },
-};
+import { useUserStore } from '@/stores/UserStore';
+const userStore = useUserStore();
 </script>
 
-<style scoped>
-.qrcode {
-  display: flex;
-  width: 100%;
-  justify-content: center;
+<style>
+.qrcode-image {
+  border-radius: 18px;
 }
 </style>

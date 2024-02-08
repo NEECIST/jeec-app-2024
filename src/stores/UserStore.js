@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import authHeader from "@/services/auth-header";
 
 export const useUserStore = defineStore("UserStore", {
   state: () => {
@@ -16,8 +17,10 @@ export const useUserStore = defineStore("UserStore", {
         daily_points: "",
         total_points:"",
       },
-      
-      
+      milestones: {
+        daily: [],
+        final: 3000,
+      }
     };
   },
   actions: {
@@ -32,7 +35,6 @@ export const useUserStore = defineStore("UserStore", {
     },
 
     async authUser(jwt) {
-      console.log(jwt)
       await axios
         .get(
           process.env.VUE_APP_JEEC_BRAIN_URL + "/student/current_student_24",
@@ -49,78 +51,29 @@ export const useUserStore = defineStore("UserStore", {
           localStorage.setItem("jwt", JSON.stringify(jwt))
         })
 
-
       if (this.user.name != "") {
         window.location.replace('home');
       } else {
         window.location.reload();
       }
 
-      
-
       console.log(this.user)
     },
 
-    // async authUser2(jwt) {
-    //   console.log(jwt)
-      
-    //   await axios
-    //   .get(
-    //     process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
-    //     {
-    //       headers: {Authorization: jwt}
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log(response)
-    //     const data = response.data
-    //     this.next_activity = data.activity
-    //     // localStorage.setItem("next_activity", JSON.stringify(this.next_activity))
-    //     // localStorage.setItem("loggedIn", JSON.stringify(true))
-    //     // localStorage.setItem("jwt", JSON.stringify(jwt))
-    //   })
+    async getMilestones() {
+      await axios
+        .get(
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/get_milestone",
+          {
+            headers: authHeader()
+          }
+        )
+        .then((response) => {
+          this.milestones.final = response.data.final_milestones;
+          this.milestones.daily = response.data.daily_milestones;
 
-    //   if (this.user.name != "") {
-    //     window.location.replace('home');
-    //   } else {
-    //     window.location.reload();
-    //   }
-
-      
-
-    //   console.log(this.next_activity)
-    // },
-
-    // async authUser3(jwt) {
-    //   console.log(jwt)
-    //   await axios
-    //     .get(
-    //       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/reward",
-    //       {
-    //         headers: {Authorization: jwt}
-    //       }
-    //     )
-    //     .then((response) => {
-    //       console.log(response)
-    //       const data = response.data
-    //       this.prizes = data.prizes
-    //       localStorage.setItem("user", JSON.stringify(this.user))
-    //       localStorage.setItem("next_activity", JSON.stringify(this.next_activity))
-    //       localStorage.setItem("prizes", JSON.stringify(this.prizes))
-    //       localStorage.setItem("loggedIn", JSON.stringify(true))
-    //       localStorage.setItem("jwt", JSON.stringify(jwt))
-    //     })
-
-
-    //   if (this.user.name != "") {
-    //     window.location.replace('home');
-    //   } else {
-    //     window.location.reload();
-    //   }
-
-      
-
-    //   console.log(this.prizes)
-    // }
+          console.log(this.milestones)
+        })
+    }
   },
 });

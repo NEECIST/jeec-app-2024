@@ -129,4 +129,11 @@ const props = defineProps({
   .user-wrapper {
     grid-area: user;
   }
+
+  @media screen and (max-width: 850px) {
+    .user-card.home {
+      left: 50%;
+      translate: -50% 0;
+    }
+  }
 </style>

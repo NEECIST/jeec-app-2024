@@ -1,17 +1,21 @@
 <template>
   <div>
-    <h1>Show this code everywhere!</h1>
-    <TheQrCode></TheQrCode>
+    <h2>Show this code everywhere!</h2>
+    <TheQrCode class="center"></TheQrCode>
   </div>
 </template>
 <script setup>
 import TheQrCode from "@/components/QrCode/TheQrCode.vue"
 </script>
 <style scoped>
-  h1 {
+  h2 {
     margin: 0 auto;
     width: fit-content;
     padding-top: 4rem;
     padding-bottom: 3rem;
+  }
+  .center {
+    display: flex;
+    justify-content: center;
   }
 </style>

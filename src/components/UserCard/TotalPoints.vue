@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" :class="variant">
-    <p>Total</p>
+    <p>JeecPot</p>
     <div class="points radient-border-passthrough">
       <div class="progress radient-border-passthrough_child" :style="'--progress:' + progress + '%;'"></div>
       <p class="points-total">{{ progress }}%</p>
@@ -28,6 +28,7 @@ const progress = ref(40);
   p {
     font-family: 'Lexend Exa';
     font-size: 0.95rem;
+    text-transform: uppercase;
   }
   .points {
     width: 100%;
@@ -35,12 +36,14 @@ const progress = ref(40);
 
     --border-background: linear-gradient(130deg, #605ED0, #4CC9F0, #7209B7, #605ED0);
     --border-width: 2px;
+    --border-radius: 50px
   }
   .progress {
     padding-left: calc(var(--border-width) + var(--progress)) !important;
     background-size: 200%;
     background-repeat: repeat;
     animation: backgroundSlide 4s linear infinite reverse;
+    animation-delay: 1.5s;
   }
 
   .points-total {
