@@ -1,13 +1,5 @@
 <template>
   <div class="squad">
-    <!-- <Buttons
-      @_click="click"
-      :usernames="{
-        'my squad': button === 'my squad',
-        invites: button === 'invites',
-      }"
-      :n_invites="invites.length"
-    /> -->
 
     <div
       v-if="!loading_squad"
@@ -21,36 +13,20 @@
 
       <div v-else class="squad-info">
       
-      <img
-          class="squad-image"
-          :src="jeec_brain_url + squad.image"
-          alt="squad-image"
-        />
-      <div class="squad-texts">
-        <p class="squad-text">
-         {{ squad.username }}
-        </p>
-        <p class="squad-motto">
-          {{ squad.cry }}
-        </p>
+        <img
+            class="squad-image"
+            :src="jeec_brain_url + squad.image"
+            alt="squad-image"
+          />
+        <div class="squad-texts">
+          <p class="squad-text">
+          {{ squad.username }}
+          </p>
+          <p class="squad-motto">
+            {{ squad.cry }}
+          </p>
+        </div>
       </div>
-      </div>
-
-      <!-- {{ this.students.length > 0 && this.students[0].username ? this.students[0].username : '' }}
-      <div v-if="this.students.length > 0">
-        <img :src="students[0].photo" alt="Student Photo" class="avatar" />
-      </div> -->
-      
-      <!-- <ul>
-        <li
-          v-for="student in students"
-          :key="student.username"
-          v-if="student">
-          <img :src="student.photo" alt="Student Photo" class="avatar" />
-          {{ student.username }}
-        </li>
-      </ul> -->
-
       
       <div v-if="squad!=null && !champion_week" class="squad-rank weekly">
         <h1>
@@ -157,58 +133,8 @@
         </center>
       </div>
     </div>
-    <!-- <v-dialog v-model="add_members_dialog" :width="width > 1100 ? '50vw' : ''">
-      <v-card class="squad-dialog">
-        <p class="dialog-title">Add Squadmates</p>
-        <v-autocomplete 
-          v-model="squadmates"
-          :items="students"
-          outlined
-          chips
-          label="username"
-          item-text="username"
-          multiple
-          :filter="filterStudents"
-          :search-input.sync="search"
-          @change="limitStudents"
-        >
-          <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.username"
-              close
-              @click="remove(data.item)"
-              @click:close="remove(data.item)"
-            >
-              <v-avatar left>
-                <v-img :src="data.item.photo"></v-img>
-              </v-avatar>
-              {{ data.item.username }}
-            </v-chip>
-          </template>
-          <template v-slot:item="data">
-            <template v-if="typeof data.item !== 'object'">
-              <v-list-item-content v-text="data.item"></v-list-item-content>
-            </template>
-            <template v-else>
-              <v-list-item-avatar>
-                <img :src="data.item.photo" />
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title v-html="data.item.username"></v-list-item-title>
-                <v-list-item-subtitle
-                  v-html="data.item.username"
-                ></v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </template>
-        </v-autocomplete>
-        <center>
-          <button @click.stop="invite" class="invite">Invite</button>
-        </center>
-      </v-card>
-    </v-dialog>  -->
-        </div>  
+
+  </div>  
         <div v-if="squad!=null">
           <Member
             v-for="member in squad.members.data"
@@ -244,10 +170,10 @@
 </template>
 
 <script>
-import Invite from "@/components/Invite.vue";
-import UserService from "../services/user.service";
-import SquadCreation from "@/components/SquadCreation.vue";
-import Member from "@/components/Member.vue";
+import Invite from "@/components/Squads/Invite.vue";
+import UserService from "../../services/user.service";
+import SquadCreation from "@/components/Squads/SquadCreation.vue";
+import Member from "@/components/Squads/Member.vue";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
 
@@ -273,7 +199,7 @@ export default {
       students: [],
       search: null,
       today_reward: {},
-      default_image: require("../assets/jeec_colour_no_edition_transparent.svg"),
+      default_image: require("../../assets/jeec_colour_no_edition_transparent.svg"),
       width: window.innerWidth,
       loading_delete: false,
       loading_add: false,
@@ -561,34 +487,6 @@ export default {
   computed: {
     ...mapState(useUserStore, ['user']),
   },
-    
-
-
-    // if(this.length > 1) {
-    //     await UserService.getDailySquadsRanking().then(
-    //       (response) => {
-    //         let daily_squads = response.data.data;
-    //         if (!Array.isArray(this.daily_squads)) this.daily_squads = [this.daily_squads];
-    //         this.loading_daily = false;
-    //         this.daily_max_points = daily_squads[0].daily_points
-    //         this.weekly_max_points = daily_squads[0].total_points
-    //         this.squads_aux = daily_squads[0]
-    //       },
-    //       (error) => {
-    //         console.log(error);
-    //         this.loading_daily = false;
-    //       }
-    //     );
-    //     if (this.weekly_max_points == this.squad.total_points) {
-    //       this.champion_week = true
-    //     }
-    //     if (this.daily_max_points == this.squad.daily_points) {
-    //       this.champion_daily = true
-    //     }
-    // } else if (this.length == 1) {
-    //   this.champion_week = true
-    //   this.champion_daily = true
-    // } 
 
   mounted() {
     document.addEventListener('click', this.handleClickOutside);

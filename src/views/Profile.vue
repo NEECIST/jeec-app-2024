@@ -90,127 +90,7 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="redeem-code">
-      <p class="redeem-text">Redeem Code:</p>
-   
-      <input
-        type="text"
-        class="input-code"
-        placeholder="xxxx-xxxx-xxxx-xxxx"
-        v-model="code"
-        autofocus
-      />
-      <v-btn
-          v-if="!loading_redeem"
-          depressed
-          @click.stop="redeem"
-          class="white--text"
-          id="redeem-btn"
-          color="secundary"
-          >Redeem</v-btn
-        >
-        <v-progress-circular
-          v-else
-          style="margin-top: 1.9vh"
-          indeterminate
-          color="#27ade4"
-          :size="60"
-          :width="6"
-          class="loading-bar"
-        ></v-progress-circular>
-    </div> -->
-
-      <!-- <div class="your-code">
-      <p>Your referral code:</p>
-        <input ref="referral" type="text" :value="referral_code" readonly style="color:#757575" />
-        <v-btn
-          depressed
-          color="secundary"
-          class="white--text"
-          id="copy"
-          @click.stop="clipboard"
-          ><v-icon
-            >mdi-content-copy</v-icon
-          ></v-btn
-        >
-      </div> -->
       <br>
-
-
-
-    <!-- <div class="bottom" v-if="!loading_companies && !loading_tags">
-      <div class="bottom-container">
-       <br>
-      
-      <p class="interest-title">Themes</p>
-      <div class="tags">
-        <p
-          v-for="tag in tags"
-          :key="tag"
-          @click.stop="tag_click(tag)"
-          class="interest-tag"
-          :style="
-            this.student.tags.includes(tag) ? 'background-color:#D93046' : ''
-          "
-        >
-          {{ tag }}
-          <v-icon
-            v-if="xpbar_width === '62vw'"
-            color="white"
-            style="margin-left: 2vw"
-            >{{
-              this.student.tags.includes(tag) ? "mdi-check" : "mdi-plus"
-            }}</v-icon
-          >
-
-          <v-icon v-else large color="white" style="margin-left: 1vw">{{
-            this.student.tags.includes(tag) ? "mdi-check" : "mdi-plus"
-          }}</v-icon>
-        </p>
-      </div>
-    </div>
-    <div class="bottom-container">
-      <br>
-      <p class="interest-title">Partners</p>
-      <div class="tags">
-        <p
-          v-for="company in companies"
-          :key="company"
-          @click.stop="company_click(company)"
-          class="tag"
-          :style="
-            this.student.companies.includes(company)
-              ? 'background-color:#26A2D5'
-              : ''
-          "
-        >
-          {{ company
-          }}<v-icon
-            v-if="xpbar_width === '62vw'"
-            color="white"
-            style="margin-left: 2vw"
-            >{{
-              this.student.companies.includes(company) ? "mdi-check" : "mdi-plus"
-            }}</v-icon
-          >
-
-          <v-icon v-else large color="white" style="margin-left: 1vw">{{
-            this.student.companies.includes(company) ? "mdi-check" : "mdi-plus"
-          }}</v-icon>
-        </p>
-      </div>
-    </div>
-    </div>
-    <div v-else class="loading">
-      <v-progress-circular
-        indeterminate
-        color="#27ade4"
-        :size="100"
-        :width="10"
-        class="loading-bar"
-      ></v-progress-circular>
-    </div> -->
 
     <v-dialog v-model="dialog" :width="dialog_width">
       <v-card>
@@ -234,11 +114,24 @@
       </v-card>
     </v-dialog>
   </div>
+
+
+  <div v-if="!create_squad">
+    <button @click="change_Create"> Create Squad </button>
+  </div>
+  <div v-else>
+    <squad> </squad>
+  </div>
+
+  
+
+
 </template>
 
 <script>
 import Expbar from "@/components/Expbar.vue";
 import UserService from "../services/user.service";
+import Squad from "@/components/Squads/Squad.vue";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
 
@@ -246,7 +139,7 @@ import { mapState } from 'pinia';
 export default {
   name: "Profile",
   components: {
-    Expbar,
+    Expbar, Squad
   },
   data: function () {
     return {
@@ -269,12 +162,17 @@ export default {
       points: 0,
       squad: null,
       error: "",
+      create_squad: false,
       loading_redeem: false,
       loading_squad: true,
+      squad: null,
       student: {},
     };
   },
   methods: {
+    change_Create() {
+      this.create_squad = !this.create_squad;
+    },
     redeem() {
       if (this.code.replaceAll("-", "").length == 16) {
         this.loading_redeem = true;
@@ -647,10 +545,6 @@ export default {
 
 <style scoped>
 
-.profile {
-  background-color: #FFFCF8;
-  height:auto;
-}
 
 .top{
   background-color: #FFFCF8;
@@ -1091,5 +985,256 @@ tr {
 }
 
 
+.squad-texts{
+  margin-left:5vw;
+}
+
+.plus-members{
+  display:flex;
+  justify-content:start;
+  align-items: center;
+}
+
+.squad-rank{
+  margin-top:5vh;
+  margin-bottom:5vh;
+  width:50vw;
+  text-align:center;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.squad-rank h1{
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  font-family: Montserrat;
+  font-size: 24px;
+  font-weight: 600;
+  color:white;
+}
+
+.squad-rank h2{
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+  font-family: Montserrat;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.weekly h1{
+  background-color: #D93046;
+}
+
+.weekly h2{
+  background-color: #D9304633;
+}
+
+.daily h1{
+  background-color: #D9D004;
+
+}
+
+.daily h2{
+  background-color: #D9D00433;
+
+}
+
+.total h1{
+  background-color: #3843A6;
+
+}
+
+.total h2{
+  background-color: #CEE5FF;
+
+}
+
+.squad-info{
+  display:flex;
+  justify-content:start;
+  align-items: center;
+  width:100vw;
+}
+.squad {
+  background-color: #FFFCF8;
+  height:auto;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 35vh;
+}
+
+.squad-text{
+  font-family: Montserrat;
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom:0;
+}
+
+.squad-motto{
+  font-family: Montserrat;
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom:0;
+}
+
+
+.bottom-half{
+  background-color: #DDEDF3;
+  position:relative;
+  width:100vw;
+  height:auto;
+  border-top-right-radius: 10vw;
+  border-top-left-radius: 10vw;
+  padding-bottom:20vh;
+}
+
+.bottom-half h1{
+  color: #03618C;
+  font-family: Montserrat;
+  font-size: 32px;
+  font-weight: 600;
+  padding-top:5vh;
+  padding-left:3vw;
+  border-bottom: 3px solid #D9D004;
+  margin-right: 5vw;
+}
+
+.bottom-half h2{
+  font-family: Montserrat;
+  font-size: 24px;
+  font-weight: 600;
+  padding-top:5vh;
+  padding-left:3vw;
+  border-bottom: 3px solid #D9D004;
+  width:310px;
+}
+
+.squad-image{
+  height: 13vh;
+  width: 13vh;
+  border-radius: 50%;
+  border: 3px solid #03618C;
+  margin-left:10vw;
+}
+
+.plus-symbol{
+  color: #03618C;
+  font-weight:10;
+  font-size:60px;
+  padding-top:6vh;
+}
+
+.minus-symbol{
+  color:  #D93046;
+  font-weight:10;
+  font-size:60px;
+  padding-top:6vh;
+}
+
+.squad-dialog{
+  text-align: center;
+  background-color: #FFFCF8;
+  font-family: Montserrat;
+  font-size: 32px;
+  font-weight: 600;
+  border: 3px solid #03618C;
+}
+
+.hover {
+  color: red; /* or any other styles you want to apply on hover */
+}
+
+.hover-effect {
+  transition: all 0.3s ease; /* this makes the change in style smooth */
+  cursor: pointer; /* this changes the cursor to a hand when hovering over the text */
+}
+
+.hover-effect:hover {
+  transform: scale(1.2); /* this enlarges the text, giving it a "pop" effect */
+  color: red; /* changes the text color */
+}
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.squad-dialog {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.chip {
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.close-icon {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.autocomplete ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.autocomplete li {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
 
 </style>

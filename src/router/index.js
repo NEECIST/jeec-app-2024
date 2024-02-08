@@ -37,11 +37,6 @@ const routes = [
     }
   },
   {
-    path: "/squad",
-    name: "Squad",
-    component: () => import("@/views/Squad.vue"),
-  },
-  {
     path: "/rankings",
     name: "Rankings",
     component: () => import("@/views/Rankings.vue"),

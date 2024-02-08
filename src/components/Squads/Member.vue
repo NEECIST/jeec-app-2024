@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import UserService from "../services/user.service";
+import UserService from "../../services/user.service";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
 
@@ -41,7 +41,7 @@ export default {
   data: function () {
     return {
       loading_kick: false,
-      kick_img: require("../assets/icons/recycle-icon.svg"),
+      kick_img: require("../../assets/icons/recycle-icon.svg"),
     };
   },
   computed: {
