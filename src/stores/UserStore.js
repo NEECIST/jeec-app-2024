@@ -32,6 +32,11 @@ export const useUserStore = defineStore("UserStore", {
       }
     },
 
+    logOut(){
+      localStorage.clear()
+      window.location.reload()
+    },
+
     async authUser(jwt) {
       await axios
         .get(
