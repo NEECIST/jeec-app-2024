@@ -30,7 +30,7 @@
   </div>
 </template>
 <script setup>
-import { ref, watch, defineProps, nextTick, onMounted } from 'vue';
+import { ref, watch, defineProps, nextTick } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 const userStore = useUserStore();
 
@@ -40,38 +40,35 @@ const progress = ref(0);
 const milestonesRef = ref([]);
 const milestonePercentages = ref([])
 
-onMounted(() => {
-  watch(() => userStore.milestones.daily, async () => {
-    const userPoints = 600;
+watch(() => userStore.milestones.daily, async () => {
+  const userDailyPoints = 600;
 
-    const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
-    const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
+  const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
+  const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
 
-    const progressPercentage = (userPoints / milestones[milestones.length - 1]) * 100;
-    progress.value = progressPercentage;
+  const progressPercentage = (userDailyPoints / milestones[milestones.length - 1]) * 100;
+  progress.value = progressPercentage;
 
-    let milestonePercentage = 0;
-    let width = 0;
+  let milestonePercentage = 0;
+  let width = 0;
 
-    await nextTick();
+  await nextTick();
 
-    for (let index = 0; index < milestones.length; index++) {
-      if (index == milestones.length - 1) {
-        milestonePercentage = 100;
-        width = 0;
-      } else {
-        milestonePercentage = (milestones[index] / milestones[milestones.length - 1]) * 100;
-        width = milestonePercentage - ((milestonesMod[index] / milestones[milestones.length - 1]) * 100);
-      }
-
-      console.log(index, progressPercentage, milestonePercentage)
-      if (progressPercentage >= milestonePercentage) {
-        milestonesRef.value[index].classList.add("obtained");
-      }
-    
-      milestonePercentages.value.push(width.toString());  
+  for (let index = 0; index < milestones.length; index++) {
+    if (index == milestones.length - 1) {
+      milestonePercentage = 100;
+      width = 0;
+    } else {
+      milestonePercentage = (milestones[index] / milestones[milestones.length - 1]) * 100;
+      width = milestonePercentage - ((milestonesMod[index] / milestones[milestones.length - 1]) * 100);
     }
-  });
+
+    if (progressPercentage >= milestonePercentage) {
+      milestonesRef.value[index].classList.add("obtained");
+    }
+  
+    milestonePercentages.value.push(width.toString());  
+  }
 });
 
 </script>

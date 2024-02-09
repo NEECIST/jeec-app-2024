@@ -174,7 +174,7 @@ export default {
 }
 
 .top {
-  --border-radius: 50px 0 0 20px;
+  --border-radius: 30px;
   --border-width: 2.5px;
 
   width: 80%;
