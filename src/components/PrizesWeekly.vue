@@ -4,8 +4,8 @@
       <div v-for="item in rewards" :key="item.position" class="reward-item">
         <!-- {{ item.position }} -->
         <div class="reward-img">
-          <!-- <img :src="jeec_brain_url + item.img" class="activity-img"> -->
-          <img :src="item" class="activity-img">
+          <img :src="jeec_brain_url + item" class="activity-img">
+          <!-- <img :src="item" class="activity-img"> -->
         </div>
       </div>
     </div>

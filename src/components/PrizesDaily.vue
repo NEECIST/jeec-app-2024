@@ -1,15 +1,15 @@
 <template>
   <div class="jeecpot-rewards" v-if="rewards">
 
-    <carousel :items-to-show="3" :wrap-around="true">
+    <carousel :items-to-show="3">
       <Slide v-for="(item, key) in rewards" :key="item" style="margin-bottom:15px; margin-top:15px; overflow:visible; flex-direction:column">
         <!-- <div>
           {{ currentSlide }}
         </div> -->
 
         <div class="reward-img">
-          <!-- <img :src="jeec_brain_url + item.img" class="activity-img"> -->
-          <img :src="item" class="activity-img">
+          <img :src="jeec_brain_url + item" class="activity-img">
+          <!-- <img :src="item" class="activity-img"> -->
         </div>
         <p v-if="key==0">
           Monday
@@ -49,7 +49,7 @@ import { Carousel, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
 
 export default {
-  name: "DailyPrizes",
+  name: "PrizesDaily",
   props: {
     rewards: Object,
   },

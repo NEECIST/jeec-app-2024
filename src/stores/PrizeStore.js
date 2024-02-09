@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import authHeader from "../services/auth-header";
 
 export const usePrizeStore = defineStore("PrizeStore", {
   state: () => {
@@ -17,8 +18,8 @@ export const usePrizeStore = defineStore("PrizeStore", {
     };
   },
   actions: {
-    getRewards() {
-        axios
+    async getRewards() {
+        await axios
         .get(
           process.env.VUE_APP_JEEC_BRAIN_URL + "/student/prizes_images",
           {
@@ -26,7 +27,8 @@ export const usePrizeStore = defineStore("PrizeStore", {
           }
         )
         .then((response) => {
-          this.images = response.data.images
+          this.images = response.data
+          console.log(response.data)
         })
     },
   },
