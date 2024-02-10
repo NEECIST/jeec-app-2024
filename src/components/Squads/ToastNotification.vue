@@ -14,7 +14,7 @@
       if (this.visible) {
         setTimeout(() => {
           this.$emit('close');
-        }, 3000); // Close the toast after 3 seconds
+        }, 3000); 
       }
     },
     watch: {
@@ -32,21 +32,34 @@
   <style scoped>
   .toast {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 20px;
+    bottom: 20px; 
+    left: 50%; 
+    transform: translateX(-50%) translateY(100%);
+    padding: 20px 40px; 
     color: #fff;
-    border-radius: 5px;
-    animation: slide-in 0.5s ease-out;
+    border-radius: 8px; 
+    font-size: 1.5rem; 
+    animation: slide-up 0.5s ease-out forwards; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    z-index: 1000; 
   }
+  
+  @keyframes slide-up {
+    from {
+      transform: translateX(-50%) translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  }
+  
   .toast.success { background-color: #4CAF50; }
   .toast.error { background-color: #F44336; }
   .toast.points { background-color: #2196F3; }
+  
   .fade-enter-active, .fade-leave-active { transition: opacity 0.5s; }
-  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ { opacity: 0; }
-  @keyframes slide-in {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
-  }
+  .fade-enter, .fade-leave-to { opacity: 0; }
   </style>
   

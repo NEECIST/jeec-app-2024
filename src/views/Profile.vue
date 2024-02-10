@@ -60,6 +60,9 @@
 
     </div>
   </div>
+  <div>
+    <button @click="showNotification('funciona muito bem!!!', 'success')"> Notification </button>
+  </div>
 
   <div>
     <ToastNotification
@@ -165,50 +168,21 @@ export default {
       UserService.addCVNOVO(this.$refs.cv).then(
         (response) => {
           if (!this.student.uploaded_cv) {
-            this.$emit(
-              "notification",
-              "Added CV +" + process.env.VUE_APP_REWARD_CV + "pts",
-              "points"
-            );
+            this.showNotification("Added CV points", "points");
             this.student.uploaded_cv = true;
           } else {
-            this.$emit("notification", "CV uploaded successfully If approved you will receive a reward", "success");
+            this.showNotification("CV uploaded successfully If approved you will receive a reward", "success");
           }
         },
         (error) => {
           console.log(error);
-          this.$emit("notification", "Fail to upload CV", "error");
+          this.showNotification("Fail to upload CV", "error");
         }
       );
 
       this.$refs.cv.value = "";
     },
 
-    add_cv() {
-      UserService.addCV(this.$refs.cv).then(
-        (response) => {
-          if (!this.student.uploaded_cv) {
-            this.$emit(
-              "notification",
-              "Added CV +" + process.env.VUE_APP_REWARD_CV + "pts",
-              "points"
-            );
-          } else {
-            this.$emit("notification", "CV updated successfully", "success");
-          }
-
-          this.$store.dispatch("auth/userUpdate", response.data.data);
-          
-        },
-        (error) => {
-          console.log(error);
-          this.$emit("notification", "Fail to upload CV", "error");
-          
-        }
-      );
-
-      this.$refs.cv.value = "";
-    },
     see_cv() {
       if (this.student.uploaded_cv) {
         UserService.getCV().then(
