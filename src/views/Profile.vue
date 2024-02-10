@@ -22,41 +22,47 @@
         </button>
         <input hidden type="file" accept="application/pdf" ref="cv" @change="add_cv_novo" />
       </div>
+
       <div class="linkedin">
-        <button v-if="this.student.linkedin_url === null" @click.stop="dialog = true">
+        <button @click="toggleModal">
           <img :src="link_img" alt="">
-          <p>Submit your LinkedIn</p>
+          <p>{{ student.linkedin_url === null ? 'Submit your LinkedIn' : 'LinkedIn Submitted' }}</p>
         </button>
-        <button v-else @click.stop="dialog = true">
-          <img :src="link_img" alt="">
-          <p>LinkedIn Submitted</p>
-        </button>
-        <div class="linkedin-input">
-          <form @submit="add_linkedin">
-            <input
-              type="url"
-              ref="linkedin_url"
-              placeholder="https://www.linkedin.com/in/XXXXX/"
-              pattern="^https?://((www|\w\w)\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\w|\d)+/?){3}))$"
-              autofocus
-              :value="this.student.linkedin_url"
-              required
-            />
-            <button type="submit">Confirm</button>
-          </form>
+      </div>
+    
+      <div class="modal" v-if="modalVisible == true">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 style="text-align: center;">Add LinkedIn</h4>
+            <button class="close-button" @click="toggleModal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form @submit="add_linkedin">
+              <input
+                type="url"
+                ref="linkedin_url"
+                class="input-field"
+                placeholder="https://www.linkedin.com/in/XXXXX/"
+                pattern="^https?://((www|\w\w)\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\w|\d)+/?){3}))$"
+                autofocus
+                :value="this.student.linkedin_url"
+                required
+              />
+              <br />
+              <center>
+                <button class="submit-button"  type="submit">Confirm</button>
+              </center>
+            </form>
+          </div>
         </div>
       </div>
+
+
     </div>
   </div>
 
   <Squad></Squad>
   
-  <!-- <div v-if="!create_squad">
-    <button @click="change_Create"> Create Squad </button>
-  </div>
-  <div v-else>
-    <Squad></Squad>
-  </div> -->
 </template>
 
 <script>
@@ -75,9 +81,12 @@ export default {
   data: function () {
     return {
       loading_linkedin: false,
+      modalVisible: false,
       cv_img: require("../assets/cv_button_img.svg"),
       link_img: require("../assets/linkedin_button_img.svg"),
       code: "",
+      dialog: false,
+      dialog_width: "",
       prev_length: 0,
       points: 0,
       squad: null,
@@ -93,11 +102,19 @@ export default {
     ...mapState(useUserStore, ['user'])
   },
   methods: {
+
+    toggleModal() {
+      console.log(this.modalVisible);
+      this.modalVisible = !this.modalVisible;
+    },
+
     change_Create() {
       this.create_squad = !this.create_squad;
     },
     add_linkedin(e) {
       e.preventDefault();
+
+      this.modalVisible = false;
 
       this.loading_linkedin = true;
       var url = this.$refs.linkedin_url.value;
@@ -257,5 +274,68 @@ export default {
 .linkedin-input {
   position: absolute;
   visibility: hidden;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #2c3e50;
+  padding: 20px;
+  border-radius: 8px;
+  width: 30%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  border-bottom: 1px solid #34495e;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  color: #ecf0f1;
+}
+
+.modal-body {
+  color: #ecf0f1;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #ecf0f1;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #7f8c8d;
+  box-sizing: border-box;
+}
+
+.submit-button {
+  background-color: #2980b9;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.submit-button:hover {
+  background-color: #3498db;
 }
 </style>

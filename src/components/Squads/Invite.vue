@@ -1,33 +1,36 @@
 <template>
-  <div class="invite">
-    <div class="squad-info-top">
-      <img
-        class="squad-image"
-        :src="jeec_brain_url + invite.squad_image"
-        alt="squad-image"
-      />
-      <div class="squad-data">
-        <p class="squad-name">{{ invite.squad_name }}</p>
-        <p class="squad-cry">{{ invite.squad_cry }}</p>
+  <div >
+    <div  class="invitation-card">
+      <div class="card-content">
+        <img class="squad-image"
+          :src="jeec_brain_url + invite.squad_image"
+          alt="squad-image"
+        />
+        <div class="text-section">
+          <p class="invitation-text">You've been invited to</p>
+          <h3 class="squad-name">{{ invite.squad_name }}</h3>
+          <p lass="motto">{{ invite.squad_cry }}</p>
+          
+        </div>
+        <p>By {{ nameArray[0] }} {{ nameArray[nameArray.length-1] }}</p>
+      
+
+        <div v-if="!loading" class="button-section">
+          <button @click.stop="accept" class="join-button">Join</button>
+          <button @click.stop="reject" class="decline-button">Decline</button>
+        </div>
         
-      </div>
-      <p class="squad-rank">By {{ nameArray[0] }} {{ nameArray[nameArray.length-1] }}</p>
-    </div>
-
-      <div class="buttons" v-if="!loading">
-        <button @click.stop="accept" class="plus-symbol">⊕</button>
-        <button @click.stop="reject" class="minus-symbol">⊖</button>
-      </div>
-
-      <v-progress-circular
-        v-else
+        <v-progress-circular v-else
         style="margin-top: 2vh"
         indeterminate
         color="#27ade4"
         :size="60"
         :width="6"
         class="loading-bar"
-      ></v-progress-circular>
+        ></v-progress-circular>
+      </div>
+    </div>
+     
   </div>
 </template>
 
@@ -69,76 +72,111 @@ export default {
 </script>
 
 <style scoped>
-.invite {
-  margin-bottom: 1vh;
-  padding-left: 5vw;
-  padding-right: 5vw;
-  padding-top: 5vh;
-  padding-bottom: 2vh;
+
+.invitation-card {
+  background: #2c3e50;
+  border-radius: 20px;
+  padding: 2em;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  width: 360px;
 }
 
-.squad-info-top {
+.invitation-card::before {
+  content: '';
+  position: absolute;
+  top: -2px; right: -2px; bottom: -2px; left: -2px;
+  z-index: -1;
+  background: #00f;
+  border-radius: inherit;
+  background-image: linear-gradient(45deg, #6e8efb, #a777e3);
+  animation: glowing-border 2s infinite;
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: space-between;
 }
 
-.squad-image {
-  height: 13vh;
-  width: 13vh;
+@keyframes glowing-border {
+  0% { box-shadow: 0 0 5px #6e8efb; }
+  50% { box-shadow: 0 0 20px #a777e3; }
+  100% { box-shadow: 0 0 5px #6e8efb; }
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-placeholder {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  border: 3px solid #03618C;
-  margin-left:5vw;
-  margin-right:5vw;
+  background: #333;
+  margin-bottom: 1rem;
 }
 
-.squad-data {
-  align-self: center;
-  margin-right:5vw;
+.text-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.invitation-text {
+  margin: 0;
 }
 
 .squad-name {
+  margin: 0.5rem 0;
+}
+
+.motto {
   margin: 0;
-  margin-top: -1vh;
-  margin-bottom: -0.9vh;
-  font-size: 3.7vh;
-  font-weight: 600;
+  font-style: italic;
 }
 
-.squad-cry {
-  margin: 0;
-  font-size: 2.5vh;
-  font-weight: 500;
-}
-
-.squad-rank {
-  margin: 0;
-  font-size: 2.7vh;
-  font-weight: 700;
-}
-
-.from {
-  text-align: center;
-  font-size: 3vh;
-  font-weight: 600;
-}
-
-.buttons {
+.button-section {
   display: flex;
-  justify-content: space-evenly;
-  align-items: start;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.join-button, .decline-button {
+  border: none;
+  padding: 0.5rem 1rem;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.join-button {
+  background: #3498db;
+}
+
+.join-button:hover {
+  background: #2980b9;
+}
+
+.decline-button {
+  background: #e74c3c;
+}
+
+.decline-button:hover {
+  background: #c0392b;
+}
+
+.squad-image {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px; 
+  margin-right: 1rem; 
 }
 
 
-.plus-symbol{
-  color: #03618C;
-  font-weight:10;
-  font-size:60px;
-}
-
-.minus-symbol{
-  color:  #D93046;
-  font-weight:10;
-  font-size:60px;
-}
 </style>

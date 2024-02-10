@@ -2,9 +2,10 @@
   <div class="squad-creation">
     <div class="squad-create">
       <div>
+        <h1> SQUAD </h1>
         <input
           type="text"
-          placeholder="New Squad"
+          placeholder="Squad Name"
           v-model="name"
           class="squad-input"
           :class="{ input_exists: name.length }"
@@ -43,7 +44,7 @@
       <!-- Other parts of your template remain unchanged -->
       
         <button @click.stop="create_squad" class="button" v-if="!loading">
-              <span class="plus-symbol">⊕</span> Create squad
+          Create Squad
         </button> 
       
       <v-progress-circular
@@ -183,12 +184,11 @@ export default {
 }
 
 .squad-create {
-  padding-top: 2vh;
-  padding-bottom: 2vh;
-  padding-left: 5vw;
-  padding-right: 5vw;
-  display:flex;
-  justify-content: space-around;
+  background-color: #2c3e50; 
+  border-radius: 20px;
+  padding: 2vh;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
@@ -223,18 +223,18 @@ export default {
 }
 
 .squad-input {
-  font-size: 2.5vh;
-  font-weight: 600;
-  margin-top:2vh;
-  margin-bottom:2vh;
-  padding-left: 2vw;
-  width: 30vw;
-  min-width:200px;
-  height: 6vh;
-  background: rgba(26, 156, 216, 0.15);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 15px;
-  border-left: 13px solid #1A9CD8
+  background: #27ade4;
+  border: none;
+  border-radius: 5px;
+  margin: 1vh 0;
+  padding: 1vh;
+  width: 80%; 
+  color: white;
+  font-size: 3vh; 
+}
+
+.squad-input::placeholder {
+  color: rgba(255, 255, 255, 0.7); 
 }
 
 .input_exists {
@@ -243,15 +243,18 @@ export default {
 }
 
 .button {
-  font-size: 4vh;
-  font-weight: 600;
-  width: auto;
-  height: auto;
-  padding-top: 1vh;
-  padding-bottom: 1vh;
-  margin-left: 10vw;
-  margin-right: 1vw;
-  margin-top: 4vh;
+  background-color: #03618C; 
+  color: white; 
+  border: none;
+  border-radius: 5px;
+  padding: 2vh 4vh;
+  font-size: 3vh; 
+  cursor: pointer; 
+  margin-top: 2vh;
+}
+
+.button:hover {
+  background-color: #0272a4; 
 }
 
 .plus-symbol{

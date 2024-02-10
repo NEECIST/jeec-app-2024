@@ -1,151 +1,107 @@
 <template>
-  <div class="squad">
-
+  <div>
     <div
       v-if="!loading_squad"
     >
-
-      <SquadCreation
-        v-if="squad === null"
-        @create="create_squad"
-        @notification="notification"
-      />
-
-      <div v-else class="squad-info">
-      
-        <img
-            class="squad-image"
-            :src="jeec_brain_url + squad.image"
-            alt="squad-image"
+      <div v-if="squad === null">
+        <div v-if="!create_squad_var">
+          <button class="create-squad-button" @click="change_Create"> Create Squad </button>
+        </div>
+        <div v-else>
+          <SquadCreation
+            v-if="squad === null"
+            @create="create_squad"
+            @notification="notification"
           />
-        <div class="squad-texts">
-          <p class="squad-text">
-          {{ squad.username }}
-          </p>
-          <p class="squad-motto">
-            {{ squad.cry }}
-          </p>
         </div>
       </div>
-      
-      <div v-if="squad!=null && !champion_week" class="squad-rank weekly">
-        <h1>
-          Weekly rank 
-        </h1>
-        <h2>
-          {{ weekly_max_points - squad.total_points }}xp to first! 
-        </h2>
-        
-      </div>
-      <div v-else-if="squad!=null && champion_week" class="squad-rank weekly">
-        <h1>
-          Weekly rank
-        </h1>
-        <h2>
-          You are currently the week champ!!!
-        </h2>
-      </div>
 
-
-      <div v-if="squad!=null && !champion_daily"  class="squad-rank daily">
-        <h1>
-          Daily rank 
-        </h1>
-        <h2>
-          {{ daily_max_points - squad.daily_points }}xp to first! 
-        </h2>
-      </div>
-      <div v-else-if="squad!=null && champion_daily" class="squad-rank daily">
-        <h1>
-          Daily rank
-        </h1>
-        <h2>
-          You are currently the daily champ!!!
-        </h2>
-      </div>
-
-      <div v-if="squad!=null" class="squad-rank total">
-        <h1>
-          Total Squad Points
-        </h1>
-        <h2>
-          {{ squad.total_points }}
-        </h2>
-      </div>
-      
-      <div style="margin-top: 8vh" class="bottom-half" v-if="squad!=null || invites.length > 0">
-        <div v-if="squad!=null" class="plus-members">
-          <h1>Members ({{squad.members.data.length}}/4)</h1>
-          <center class="bottom-buttons">
-
-        <button class="plus-symbol" @click.stop="add_members_dialog = true"
-        v-if="squad.members.data.length < 4 && !loading_add">
-          ⊕
-        </button>
-
-      <button
-        v-if="!loading_delete"
-        @click.stop="leave_squad"
-        class="minus-symbol"
-      >
-      ⊖
-      </button>
-      <v-progress-circular
-        v-else
-        style="margin-left: 12vw; margin-right: 12vw"
-        indeterminate
-        color="#27ade4"
-        :size="60"
-        :width="6"
-        class="loading-bar"
-      ></v-progress-circular>
-    </center>
-
-    <div v-if="add_members_dialog" class="dialog-overlay" @keydown.esc="closeDialog">
-      <div class="squad-dialog" :style="{ width: (width > 1100 ? '50vw' : '') }" ref="dialog">
-        <p class="dialog-title">Add Squadmates</p>
-        <input
-          v-model="search"
-          type="text"
-          placeholder="Search username..."
-          class="search-input"
-          @input="filterStudents"
-        />
-        <div class="chips-container">
-          <div v-for="(squadmate, index) in squadmates" :key="index" class="chip">
-            <!-- Add a conditional check for squadmate -->
-            <span v-if="squadmate">{{ squadmate }}</span>
-            <span class="close-icon" @click="remove(squadmate, $event)">×</span>
-          </div>
-        </div>
-        <div class="autocomplete">
-        <div v-if="Array.isArray(this.students) && this.students.length > 0">
-          <ul>
-            <li v-for="student in this.students" :key="student.username" @click="addSquadmate(student)">
-              <img :src="student.photo" alt="Student Photo" class="avatar" />
-              {{ student.username }}
-            </li>
-          </ul>
-        </div>
-        </div>
+      <div v-if="squad!=null">
         <center>
-          <button @click.stop="invite" class="invite">Invite</button>
+          <h1> YOUR SQUAD </h1>
         </center>
       </div>
-    </div>
 
-  </div>  
-        <div v-if="squad!=null">
-          <Member
-            v-for="member in squad.members.data"
-            :key="member.username"
-            :member="member"
-            :captain_ist_id="squad.captain_ist_id"
-            @kick="kick_member"
-          />
+
+      <div  v-if="squad!=null" class="border-container">
+
+        <div v-if="squad!=null" class="squad-info">
+          
+          <div class="squad-image-placeholder">
+            <img
+              class="squad-image"
+              :src="jeec_brain_url + squad.image"
+              alt="squad-image"
+            />
+          </div>
+          <div class="squad-texts">
+              <p class="squad-name"> {{ squad.name }} </p>
+              <p class="squad-motto">  {{ squad.cry }} </p>
+          </div>
         </div>
-        
-        <h2 v-if="invites.length > 0"> You've been invited to:</h2>
+      
+        <div v-if="squad!=null || invites.length > 0">
+          <div v-if="squad!=null">
+
+            <h1>Members ({{squad.members.data.length}}/4)</h1>
+
+            <div v-if="add_members_dialog" class="dialog-overlay" @keydown.esc="closeDialog">
+              <div class="squad-dialog" :style="{ width: (width > 1100 ? '50vw' : '') }" ref="dialog">
+                <p class="dialog-title">Add Squadmates</p>
+                <input
+                  v-model="search"
+                  type="text"
+                  placeholder="Search username..."
+                  class="search-input"
+                  @input="filterStudents"
+                />
+                <div class="chips-container">
+                  <div v-for="(squadmate, index) in squadmates" :key="index" class="chip">
+                    <!-- Add a conditional check for squadmate -->
+                    <span v-if="squadmate">{{ squadmate }}</span>
+                    <span class="close-icon" @click="remove(squadmate, $event)">×</span>
+                  </div>
+                </div>
+                <div class="autocomplete">
+                  <div v-if="Array.isArray(this.students) && this.students.length > 0">
+                    <ul>
+                      <li v-for="student in this.students" :key="student.username" @click="addSquadmate(student)">
+                        <img :src="student.photo" alt="Student Photo" class="avatar" />
+                        {{ student.username }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <center>
+                  <button @click.stop="invite" class="invite">Invite</button>
+                </center>
+              </div>
+            </div>
+          </div>  
+          
+          <div v-if="squad!=null" >
+            <Member
+              v-for="member in squad.members.data"
+              :key="member.username"
+              :member="member"
+              :captain_ist_id="squad.captain_ist_id"
+              @kick="kick_member"
+            />
+          </div>
+
+          <button class="plus-symbol none_back" @click.stop="add_members_dialog = true"
+            v-if="squad.members.data.length < 4 && !loading_add">
+            <img :src=plus_squad_button alt="Plus Squad Icon" class="button-plus-icon"/>  Add Members
+          </button>
+
+          <div class="button-container">
+            <button v-if="!loading_delete" @click.stop="leave_squad" class="leave_style">
+              <img :src=leave_squad_button alt="Leave Squad Icon" class="button-icon"/>
+            </button>
+          </div> 
+        </div>
+      </div>
+      
       <Invite
         @accept="accept_invite"
         @reject="reject_invite"
@@ -153,8 +109,10 @@
         :key="invite.sender_username"
         :invite="invite"
       />
+
     </div>
-    </div>
+
+    
     <div v-else class="loading">
       <v-progress-circular
         indeterminate
@@ -164,9 +122,8 @@
         class="loading-bar"
       ></v-progress-circular>
     </div>
-
-    
   </div>
+
 </template>
 
 <script>
@@ -209,10 +166,18 @@ export default {
       champion_daily: false,
       hover: false,
       members_with_squad: null,
-      invited_members: null
+      invited_members: null,
+      create_squad_var: false,
+      leave_squad_button: require("../../assets/leave_squad.png"),
+      plus_squad_button: require("../../assets/plus_sign.png")
     };
   },
   methods: {
+
+    change_Create() {
+      this.create_squad_var = !this.create_squad_var;
+    },
+
     filterStudents() {
       console.log("aquiii");
       console.log(this.search);
@@ -586,15 +551,6 @@ export default {
 
 <style scoped>
 
-.squad-texts{
-  margin-left:5vw;
-}
-
-.plus-members{
-  display:flex;
-  justify-content:start;
-  align-items: center;
-}
 
 .squad-rank{
   margin-top:5vh;
@@ -623,42 +579,8 @@ export default {
   font-weight: 600;
 }
 
-.weekly h1{
-  background-color: #D93046;
-}
-
-.weekly h2{
-  background-color: #D9304633;
-}
-
-.daily h1{
-  background-color: #D9D004;
-
-}
-
-.daily h2{
-  background-color: #D9D00433;
-
-}
-
-.total h1{
-  background-color: #3843A6;
-
-}
-
-.total h2{
-  background-color: #CEE5FF;
-
-}
-
-.squad-info{
-  display:flex;
-  justify-content:start;
-  align-items: center;
-  width:100vw;
-}
 .squad {
-  background-color: #FFFCF8;
+  background-color: none;
   height:auto;
 }
 
@@ -674,70 +596,23 @@ export default {
   margin-bottom:0;
 }
 
-.squad-motto{
-  font-family: Montserrat;
-  font-size: 30px;
-  font-weight: 600;
-  margin-bottom:0;
-}
-
-
-.bottom-half{
-  background-color: #DDEDF3;
-  position:relative;
-  width:100vw;
-  height:auto;
-  border-top-right-radius: 10vw;
-  border-top-left-radius: 10vw;
-  padding-bottom:20vh;
-}
-
-.bottom-half h1{
-  color: #03618C;
-  font-family: Montserrat;
-  font-size: 32px;
-  font-weight: 600;
-  padding-top:5vh;
-  padding-left:3vw;
-  border-bottom: 3px solid #D9D004;
-  margin-right: 5vw;
-}
-
-.bottom-half h2{
-  font-family: Montserrat;
-  font-size: 24px;
-  font-weight: 600;
-  padding-top:5vh;
-  padding-left:3vw;
-  border-bottom: 3px solid #D9D004;
-  width:310px;
-}
-
-.squad-image{
-  height: 13vh;
-  width: 13vh;
-  border-radius: 50%;
-  border: 3px solid #03618C;
-  margin-left:10vw;
-}
-
 .plus-symbol{
-  color: #03618C;
+  background: none;
+  color: blueviolet;
   font-weight:10;
-  font-size:60px;
-  padding-top:6vh;
+  font-size:40px;
 }
 
 .minus-symbol{
+  background: none;
   color:  #D93046;
   font-weight:10;
   font-size:60px;
-  padding-top:6vh;
 }
 
 .squad-dialog{
   text-align: center;
-  background-color: #FFFCF8;
+  background-color: #1F2A47;
   font-family: Montserrat;
   font-size: 32px;
   font-weight: 600;
@@ -745,17 +620,17 @@ export default {
 }
 
 .hover {
-  color: red; /* or any other styles you want to apply on hover */
+  color: red; 
 }
 
 .hover-effect {
-  transition: all 0.3s ease; /* this makes the change in style smooth */
-  cursor: pointer; /* this changes the cursor to a hand when hovering over the text */
+  transition: all 0.3s ease; 
+  cursor: pointer; 
 }
 
 .hover-effect:hover {
-  transform: scale(1.2); /* this enlarges the text, giving it a "pop" effect */
-  color: red; /* changes the text color */
+  transform: scale(1.2);
+  color: red; 
 }
 
 .dialog-overlay {
@@ -772,7 +647,7 @@ export default {
 }
 
 .squad-dialog {
-  background-color: #fff;
+
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -793,13 +668,14 @@ export default {
 }
 
 .chips-container {
+  background: none;
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 10px;
 }
 
 .chip {
-  background-color: #f0f0f0;
+  background-color: #8A9BAE;
   padding: 5px 10px;
   border-radius: 20px;
   margin-right: 5px;
@@ -838,5 +714,156 @@ export default {
   margin-right: 10px;
 }
 
+button.create-squad-button {
+  display: flex;
+  height: 50px;
+  border: none;
+  background: none;
+  width: 220px;
+  background: rgb(35, 49, 54);
+  border-radius: 25px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2ch;
+  gap: 1ch;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 16px; 
+  font-weight: bold; 
+  transition: background-color 0.3s ease;
+  margin: 20px auto;
+}
+
+button.create-squad-button:hover {
+  background-color: #3e5f67; 
+}
+
+button.create-squad-button img {
+  height: 80%; 
+}
+
+button.create-squad-button p {
+  flex-grow: 1;
+  text-align: left;
+  margin-left: 1ch; 
+}
+
+.squad-info {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  background-color: none;
+  border-radius: 10px;
+  padding: 10px;
+  color: #C6C6C6;
+  font-family: 'Montserrat', sans-serif; 
+}
+
+.squad-image-placeholder {
+  position: relative; 
+  width: 30vh;
+  height: 30vh;
+  border-radius: 50%;
+  background-color: #1F2A47; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  order: 2; 
+  margin-right: 500px;
+}
+
+.squad-texts {
+  display: flex;
+  flex-direction: column;
+  order: 1; 
+  margin-left: 500px;
+}
+
+.squad-name {
+  font-size: 60px;
+  font-weight: bold;
+  color: #FFFFFF; 
+  margin-bottom: 4px; 
+}
+
+.squad-motto {
+  font-size: 48px; 
+  font-weight: normal; 
+  color: #8A9BAE; 
+}
+
+.squad-image{
+  height: 30vh;
+  width: 30vh;
+  border-radius: 50%;
+  border: 3px solid #03618C;
+  margin-left:10vw;
+}
+
+.none_back{
+  cursor: pointer;
+  background: none;
+  border: none; 
+  outline: none; 
+}
+
+button.invite {
+
+  background: none;
+  border: none;
+  color: inherit; 
+  font-family: inherit; 
+  font-size: inherit;
+  padding: 0;
+  margin: 0; 
+  width: auto; 
+  height: auto;
+  cursor: pointer; 
+  text-align: center; 
+  display: inline-block; 
+  line-height: normal; 
+  vertical-align: middle; 
+  transition: none; 
+}
+
+button.invite{
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  background-color: #03618C;
+  color: #C6C6C6;
+}
+
+.border-container {
+  background-color: #34495e;
+  border: 1px solid #ffffff;
+  border-radius: 10px; 
+  padding: 20px; 
+}
+
+.button-plus-icon {
+  background: none;
+  width: 30px;
+  height: 30px; 
+}
+
+button.minus-symbol .button-icon {
+  background: none;
+  vertical-align: right; 
+  margin-top: 500px;
+  width: 20px;
+  height: 20px; 
+}
+
+.leave_style {
+  background: none;
+  cursor: pointer;
+  border: none; 
+  outline: none; 
+}
+.button-container {
+  text-align: right; 
+}
 
 </style>
