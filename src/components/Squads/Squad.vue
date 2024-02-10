@@ -101,7 +101,7 @@
           </div> 
         </div>
       </div>
-      
+
       <Invite
         @accept="accept_invite"
         @reject="reject_invite"

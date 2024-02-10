@@ -61,6 +61,15 @@
     </div>
   </div>
 
+  <div>
+    <ToastNotification
+      :message="toastMessage"
+      :type="toastType"
+      :visible="showToast"
+      @close="showToast = false"
+    ></ToastNotification>
+  </div>
+
   <Squad></Squad>
   
 </template>
@@ -69,6 +78,7 @@
 import TheUserInfo from "@/components/UserCard/TheUserInfo.vue";
 import Squad from "@/components/Squads/Squad.vue";
 import UserService from "../services/user.service";
+import ToastNotification from "@/components/Squads/ToastNotification.vue";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
 
@@ -76,7 +86,7 @@ import { mapState } from 'pinia';
 export default {
   name: "Profile",
   components: {
-    TheUserInfo, Squad
+    TheUserInfo, Squad, ToastNotification
   },
   data: function () {
     return {
@@ -96,12 +106,21 @@ export default {
       loading_squad: true,
       squad: null,
       student: {},
+      showToast: false,
+      toastMessage: '',
+      toastType: 'success',
     };
   },
   computed: {
     ...mapState(useUserStore, ['user'])
   },
   methods: {
+
+    showNotification(message, type) {
+      this.toastMessage = message;
+      this.toastType = type;
+      this.showToast = true;
+    },
 
     toggleModal() {
       console.log(this.modalVisible);
@@ -123,25 +142,17 @@ export default {
       UserService.addLinkedin(url).then(
         (response) => {
           if (!this.student.linkedin_url) {
-            this.$emit(
-              "notification",
-              "Added LinkedIn +" + process.env.VUE_APP_REWARD_LINKEDIN + "pts",
-              "points"
-            );
+            this.showNotification("Added LinkedIn points", "points");
             this.student.linkedin_url = url;
           } else {
-            this.$emit(
-              "notification",
-              "LinkedIn updated successfully",
-              "success"
-            );
+            this.showNotification("LinkedIn updated successfully", "success");
           }
           
           this.loading_linkedin = false;
         },
         (error) => {
           console.log(error);
-          this.$emit("notification", "Failed to add LinkedIn", "error");
+          this.showNotification("Failed to add LinkedIn", "error");
           this.loading_linkedin = false;
         }
       );
