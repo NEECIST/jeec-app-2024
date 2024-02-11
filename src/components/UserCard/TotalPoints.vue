@@ -1,17 +1,36 @@
 <template>
   <div class="wrapper" :class="variant">
-    <p>JeecPot</p>
+    <p>JEECPOT</p>
     <div class="points radient-border-passthrough">
       <div class="progress radient-border-passthrough_child" :style="'--progress:' + progress + '%;'"></div>
-      <p class="points-total">{{ progress }}%</p>
+      <p v-if="progress >= 100" class="points-total">Eligible!</p>
+      <p v-else class="points-total">{{ progress }}%</p>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, watch, defineProps } from 'vue';
+import { useUserStore } from '@/stores/UserStore';
+const userStore = useUserStore();
+
 const props = defineProps(["variant"]);
 
-const progress = ref(40);
+const progress = ref(0);
+
+watch(() => userStore.milestones.final, () => {
+  const userTotalPoints = 10000;
+
+  const milestone = userStore.milestones.final;
+  
+  const progressPercentage = (userTotalPoints / milestone) * 100;
+  
+  if (progressPercentage > 100) {
+    progress.value = 100;
+  } else {
+    progress.value = progressPercentage;
+  }
+
+});
 </script>
 <style scoped>
   .wrapper {
@@ -28,11 +47,11 @@ const progress = ref(40);
   p {
     font-family: 'Lexend Exa';
     font-size: 0.95rem;
-    text-transform: uppercase;
   }
   .points {
     width: 100%;
     height: 18px;
+    overflow: hidden;
 
     --border-background: linear-gradient(130deg, #605ED0, #4CC9F0, #7209B7, #605ED0);
     --border-width: 2px;

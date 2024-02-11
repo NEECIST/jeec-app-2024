@@ -15,9 +15,8 @@ export const useUserStore = defineStore("UserStore", {
         student_external_id: "",
       },
       milestones: {
-        ready: false,
         daily: [],
-        final: 3000,
+        final: 0,
       }
     };
   },
@@ -30,6 +29,11 @@ export const useUserStore = defineStore("UserStore", {
         buffer = localStorage.getItem("user")
         this.user = { ... JSON.parse(buffer) }
       }
+    },
+
+    logOut(){
+      localStorage.clear()
+      window.location.reload()
     },
 
     async authUser(jwt) {
@@ -69,7 +73,6 @@ export const useUserStore = defineStore("UserStore", {
         .then((response) => {
           this.milestones.final = response.data.final_milestone;
           this.milestones.daily = response.data.daily_milestones;
-          this.milestones.ready = true
         })
     }
   },

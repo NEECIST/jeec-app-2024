@@ -2,9 +2,10 @@
   <div class="squad-creation">
     <div class="squad-create">
       <div>
+        <h1> SQUAD </h1>
         <input
           type="text"
-          placeholder="New Squad"
+          placeholder="Squad Name"
           v-model="name"
           class="squad-input"
           :class="{ input_exists: name.length }"
@@ -20,7 +21,6 @@
           />
       </div>
      
-      <!-- Image Section -->
       <div v-if="!image_uploaded" class="image-input disabled" @click.stop="input_click">
         <p>Add<br />Photo</p>
       </div>
@@ -40,11 +40,9 @@
         ref="uploaded_image"
       />
      
-      <!-- Other parts of your template remain unchanged -->
-      
-        <button @click.stop="create_squad" class="button" v-if="!loading">
-              <span class="plus-symbol">⊕</span> Create squad
-        </button> 
+      <button @click.stop="create_squad" class="button" v-if="!loading">
+        Create Squad
+      </button> 
       
       <v-progress-circular
         v-else
@@ -58,6 +56,16 @@
       <p class="error-msg">{{ error }}</p>
     </div>
   </div>
+
+  <div>
+    <ToastNotification
+      :message="toastMessage"
+      :type="toastType"
+      :visible="showToast"
+      @close="showToast = false"
+    ></ToastNotification>
+  </div>
+
 </template>
 
 <script>
@@ -69,7 +77,7 @@ export default {
     return {
       files: [],
       image_uploaded: true,
-      currentImage: require('../../assets/logo.png'),  // Default image
+      currentImage: require('../../assets/logo.png'),  
       name: "",
       cry: "",
       error: "",
@@ -79,8 +87,8 @@ export default {
   },
   // other computed properties...
   methods: {
+    
     input_click() {
-      // Trigger the file input
       this.$refs.image_input.click();
     },
     input_file(event) {
@@ -90,7 +98,7 @@ export default {
         var reader = new FileReader();
 
         reader.onload = (e) => {
-          this.currentImage = e.target.result; // File content will be used as an image source
+          this.currentImage = e.target.result; 
           this.image_uploaded = true;
         };
 
@@ -99,9 +107,9 @@ export default {
     },
     // Method to convert image URL to Blob
     async getDefaultImageBlob() {
-      const response = await fetch(require('../../assets/logo.png')); // path to your default image
-      const data = await response.blob(); // convert HTTP response to Blob
-      return new File([data], "default-image.png", { type: 'image/png' }); // return blob as File
+      const response = await fetch(require('../../assets/logo.png')); 
+      const data = await response.blob(); 
+      return new File([data], "default-image.png", { type: 'image/png' });
     },
     
     async create_squad() {
@@ -113,18 +121,13 @@ export default {
 
       let imageData;
       if (this.files.length > 0) {
-        // If user uploaded file, use it
         imageData = this.files[0];
       } else {
-        // Otherwise, use default image as Blob (treated as File)
         imageData = await this.getDefaultImageBlob();
       }
 
-      // Now, 'imageData' is a File object whether it's a user-uploaded file or the default image.
-
-      // Assuming 'UserService.createSquad' needs FormData, we can create it like this:
       const formData = new FormData();
-      formData.append('file', imageData); // append the image file to the FormData
+      formData.append('file', imageData); 
       formData.append('name', this.name);
       formData.append('cry', this.cry);
 
@@ -133,14 +136,12 @@ export default {
           // handle success
           this.$emit("create", response.data.data);
           this.error = "";
-          this.$emit("notification", "Squad created successfully", "success");
           this.loading = false;
         })
         .catch((error) => {
           // handle error
           this.error = error.response.data.error;
           console.log(error);
-          this.$emit("notification", "Failed to create squad", "error");
           this.loading = false;
         });
         this.$router.go()
@@ -183,12 +184,11 @@ export default {
 }
 
 .squad-create {
-  padding-top: 2vh;
-  padding-bottom: 2vh;
-  padding-left: 5vw;
-  padding-right: 5vw;
-  display:flex;
-  justify-content: space-around;
+  background-color: #2c3e50; 
+  border-radius: 20px;
+  padding: 2vh;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
@@ -223,18 +223,18 @@ export default {
 }
 
 .squad-input {
-  font-size: 2.5vh;
-  font-weight: 600;
-  margin-top:2vh;
-  margin-bottom:2vh;
-  padding-left: 2vw;
-  width: 30vw;
-  min-width:200px;
-  height: 6vh;
-  background: rgba(26, 156, 216, 0.15);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 15px;
-  border-left: 13px solid #1A9CD8
+  background: #27ade4;
+  border: none;
+  border-radius: 5px;
+  margin: 1vh 0;
+  padding: 1vh;
+  width: 80%; 
+  color: white;
+  font-size: 3vh; 
+}
+
+.squad-input::placeholder {
+  color: rgba(255, 255, 255, 0.7); 
 }
 
 .input_exists {
@@ -243,15 +243,18 @@ export default {
 }
 
 .button {
-  font-size: 4vh;
-  font-weight: 600;
-  width: auto;
-  height: auto;
-  padding-top: 1vh;
-  padding-bottom: 1vh;
-  margin-left: 10vw;
-  margin-right: 1vw;
-  margin-top: 4vh;
+  background-color: #03618C; 
+  color: white; 
+  border: none;
+  border-radius: 5px;
+  padding: 2vh 4vh;
+  font-size: 3vh; 
+  cursor: pointer; 
+  margin-top: 2vh;
+}
+
+.button:hover {
+  background-color: #0272a4; 
 }
 
 .plus-symbol{
