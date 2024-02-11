@@ -21,7 +21,6 @@
           />
       </div>
      
-      <!-- Image Section -->
       <div v-if="!image_uploaded" class="image-input disabled" @click.stop="input_click">
         <p>Add<br />Photo</p>
       </div>
@@ -41,11 +40,9 @@
         ref="uploaded_image"
       />
      
-      <!-- Other parts of your template remain unchanged -->
-      
-        <button @click.stop="create_squad" class="button" v-if="!loading">
-          Create Squad
-        </button> 
+      <button @click.stop="create_squad" class="button" v-if="!loading">
+        Create Squad
+      </button> 
       
       <v-progress-circular
         v-else
@@ -59,6 +56,16 @@
       <p class="error-msg">{{ error }}</p>
     </div>
   </div>
+
+  <div>
+    <ToastNotification
+      :message="toastMessage"
+      :type="toastType"
+      :visible="showToast"
+      @close="showToast = false"
+    ></ToastNotification>
+  </div>
+
 </template>
 
 <script>
@@ -70,7 +77,7 @@ export default {
     return {
       files: [],
       image_uploaded: true,
-      currentImage: require('../../assets/logo.png'),  // Default image
+      currentImage: require('../../assets/logo.png'),  
       name: "",
       cry: "",
       error: "",
@@ -80,8 +87,8 @@ export default {
   },
   // other computed properties...
   methods: {
+    
     input_click() {
-      // Trigger the file input
       this.$refs.image_input.click();
     },
     input_file(event) {
@@ -91,7 +98,7 @@ export default {
         var reader = new FileReader();
 
         reader.onload = (e) => {
-          this.currentImage = e.target.result; // File content will be used as an image source
+          this.currentImage = e.target.result; 
           this.image_uploaded = true;
         };
 
@@ -100,9 +107,9 @@ export default {
     },
     // Method to convert image URL to Blob
     async getDefaultImageBlob() {
-      const response = await fetch(require('../../assets/logo.png')); // path to your default image
-      const data = await response.blob(); // convert HTTP response to Blob
-      return new File([data], "default-image.png", { type: 'image/png' }); // return blob as File
+      const response = await fetch(require('../../assets/logo.png')); 
+      const data = await response.blob(); 
+      return new File([data], "default-image.png", { type: 'image/png' });
     },
     
     async create_squad() {
@@ -114,18 +121,13 @@ export default {
 
       let imageData;
       if (this.files.length > 0) {
-        // If user uploaded file, use it
         imageData = this.files[0];
       } else {
-        // Otherwise, use default image as Blob (treated as File)
         imageData = await this.getDefaultImageBlob();
       }
 
-      // Now, 'imageData' is a File object whether it's a user-uploaded file or the default image.
-
-      // Assuming 'UserService.createSquad' needs FormData, we can create it like this:
       const formData = new FormData();
-      formData.append('file', imageData); // append the image file to the FormData
+      formData.append('file', imageData); 
       formData.append('name', this.name);
       formData.append('cry', this.cry);
 
@@ -134,14 +136,12 @@ export default {
           // handle success
           this.$emit("create", response.data.data);
           this.error = "";
-          this.$emit("notification", "Squad created successfully", "success");
           this.loading = false;
         })
         .catch((error) => {
           // handle error
           this.error = error.response.data.error;
           console.log(error);
-          this.$emit("notification", "Failed to create squad", "error");
           this.loading = false;
         });
         this.$router.go()

@@ -18,7 +18,7 @@
         </button>
         <button v-else>
           <img :src="cv_img" alt="">
-          <p>error</p>
+          <p>Loading</p>
         </button>
         <input hidden type="file" accept="application/pdf" ref="cv" @change="add_cv_novo" />
       </div>
@@ -59,9 +59,6 @@
 
 
     </div>
-  </div>
-  <div>
-    <button @click="showNotification('funciona muito bem!!!', 'success')"> Notification </button>
   </div>
 
   <div>

@@ -95,7 +95,7 @@
           </button>
 
           <div class="button-container">
-            <button v-if="!loading_delete" @click.stop="leave_squad" class="leave_style">
+            <button v-if="!loading_squad" @click.stop="leave_squad" class="leave_style">
               <img :src=leave_squad_button alt="Leave Squad Icon" class="button-icon"/>
             </button>
           </div> 
@@ -124,6 +124,15 @@
     </div>
   </div>
 
+  <div>
+    <ToastNotification
+      :message="toastMessage"
+      :type="toastType"
+      :visible="showToast"
+      @close="showToast = false"
+    ></ToastNotification>
+  </div>
+
 </template>
 
 <script>
@@ -131,6 +140,7 @@ import Invite from "@/components/Squads/Invite.vue";
 import UserService from "../../services/user.service";
 import SquadCreation from "@/components/Squads/SquadCreation.vue";
 import Member from "@/components/Squads/Member.vue";
+import ToastNotification from "@/components/Squads/ToastNotification.vue";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
 
@@ -139,7 +149,8 @@ export default {
   components: {
     Invite,
     SquadCreation,
-    Member
+    Member, 
+    ToastNotification
   },
   data: function () {
     return {
@@ -169,10 +180,19 @@ export default {
       invited_members: null,
       create_squad_var: false,
       leave_squad_button: require("../../assets/leave_squad.png"),
-      plus_squad_button: require("../../assets/plus_sign.png")
+      plus_squad_button: require("../../assets/plus_sign.png"),
+      showToast: false,
+      toastMessage: '',
+      toastType: 'success',
     };
   },
   methods: {
+
+    showNotification(message, type) {
+      this.toastMessage = message;
+      this.toastType = type;
+      this.showToast = true;
+    },
 
     change_Create() {
       this.create_squad_var = !this.create_squad_var;
@@ -225,7 +245,7 @@ export default {
       }
     },
     notification(message, type) {
-      this.$emit("notification", message, type);
+      this.showNotification(message, type);
     },
     create_squad(squad) {
       this.squad = squad;
@@ -267,11 +287,7 @@ export default {
           this.notification("Failed to join squad", "error");
         },
         (error) => {
-          this.$emit(
-            "notification",
-            "Squad is full",
-            "success"
-          );
+          this.showNotification("Squad is full", "success");
           console.log(error)
         }
       );
@@ -319,7 +335,7 @@ export default {
           },
           (error) => {
             console.log(error);
-            this.$emit("notification", "Failed to send invitation", "error");
+            this.showNotification("Failed to send invitation", "error");
 
             UserService.getSquadInvitationsSent().then(
               (response) => {
@@ -381,11 +397,7 @@ export default {
             string_notification_squads = string_notification_squads + " " + this.members_with_squad[i] + ","
           }
         }
-        this.$emit(
-          "notification",
-          string_notification_invites + "\n" + string_notification_squads,
-          "success"
-        );
+        this.showNotification(string_notification_invites + "\n" + string_notification_squads, "success");
         
       }
     },
@@ -416,19 +428,20 @@ export default {
       this.$router.go()
     },
     leave_squad() {
+      
       if (!confirm("Are you sure you want to proceed?")) {
         return;
       }
-      this.loading_delete = true;
+      this.loading_squad = true;
       UserService.leaveSquad().then(
         (response) => {
           this.$emit("delete", response.data.data);
-          this.loading_delete = false;
+          this.loading_squad = false;
           this.$router.go()
         },
         (error) => {
           console.log(error);
-          this.loading_delete = false;
+          this.loading_squad = false;
         }
       );
     },
