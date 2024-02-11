@@ -51,7 +51,10 @@ const routes = [
     name: "Prizes",
     component: () => import("@/views/Prizes.vue"),
   },
-  // { path: "*", component: Login },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/home",
+  },
 ]
 
 const router = createRouter({
