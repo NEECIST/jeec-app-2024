@@ -26,20 +26,24 @@
       <div>
         <p class="prize-title daily">TODAY</p>
 
-        <Rank :other_rankingdata="students_daily"
+        <RankingsPodium :other_rankingdata="students_daily"
         :user_ranking="userdata_individual.ranking_daily"
-        :user_points="userdata_individual.daily_points">
-        </Rank>
+        :user_points="userdata_individual.daily_points"
+        :identity="'You'"
+        :flag="true">
+        </RankingsPodium>
 
       </div>
 
       <div>
         <p class="prize-title daily">WEEK</p>
 
-        <Rank :other_rankingdata="students_weekly" 
+        <RankingsPodium :other_rankingdata="students_weekly" 
         :user_ranking="userdata_individual.ranking_weekly" 
-        :user_points="userdata_individual.total_points">
-        </Rank>
+        :user_points="userdata_individual.total_points"
+        :identity="'You'"
+        :flag="true">
+        </RankingsPodium>
 
       </div>
     </div>
@@ -48,36 +52,34 @@
       <div>
         <p class="prize-title daily">TODAY</p>
         
-        <Rank :other_rankingdata="squads_daily" 
+        <RankingsPodium :other_rankingdata="squads_daily" 
         :user_ranking="userdata_squad.ranking_daily" 
-        :user_points="userdata_squad.daily_points">
-        </Rank>
+        :user_points="userdata_squad.daily_points"
+        :identity="identityy"
+        :flag="user_squad_flag">
+        </RankingsPodium>
 
       </div>
 
       <div>
         <p class="prize-title daily">WEEK</p>
         
-        <Rank :other_rankingdata="squads_weekly" 
+        <RankingsPodium :other_rankingdata="squads_weekly" 
         :user_ranking="userdata_squad.ranking_weekly" 
-        :user_points="userdata_squad.total_points">
-        </Rank>
+        :user_points="userdata_squad.total_points"
+        :identity="identityy"
+        :flag="user_squad_flag">
+        </RankingsPodium>
 
       </div>
     </div>
 
-
-
-
-
-  
-
-     
+    
   </div>
 </template>
 
 <script>
-import Rank from "@/components/Rank.vue";
+import RankingsPodium from "@/components/RankingsPodium.vue";
 import UserService from "../services/user.service";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
@@ -87,7 +89,7 @@ import arrow from "../assets/chevron-compact-down.svg"
 export default {
   name: "Rankings",
   components: {
-    Rank,
+    RankingsPodium,
   },
   computed: {
       ...mapState(useUserStore, ['user']),
@@ -105,8 +107,9 @@ export default {
       arrow: arrow,
       show: false,
       daily: true,
-
+      identityy: String,
       rankingdata: [],
+      user_squad_flag: true,
     };
   },
   methods: {
@@ -153,11 +156,38 @@ export default {
 
         this.squads_daily = this.rankingdata.squad_top10_daily;
 
-        // for(let i=0;i<this.students.length;i++){
-        //   if (this.students[i].username == this.user.username){
-        //     this.students[i].name = "you";
-        //   }
-        // }
+        if(this.rankingdata.squad_ranking == null){
+          this.user_squad_flag = false;
+        }else{
+          this.user_squad_flag = true;
+          this.userdata_squad = this.rankingdata.squad_ranking;
+
+          //Already have a condition in endpoint that dont let two squads have the same name
+
+          for(let i=0;i<this.squads_weekly.length;i++){
+            if (this.squads_weekly[i].name == this.userdata_squad.name){
+              this.squads_weekly[i].name = "Your Squad";
+            }
+          }
+
+          for(let i=0;i<this.squads_daily.length;i++){
+            if (this.squads_daily[i].name == this.userdata_squad.name){
+              this.squads_daily[i].name = "Your Squad";
+            }
+          }
+        }
+
+        for(let i=0;i<this.students_weekly.length;i++){
+          if (this.students_weekly[i].username == this.user.username){
+            this.students_weekly[i].name = "you";
+          }
+        }
+
+        for(let i=0;i<this.students_daily.length;i++){
+          if (this.students_daily[i].username == this.user.username){
+            this.students_daily[i].name = "you";
+          }
+        }
       },
     );
 
