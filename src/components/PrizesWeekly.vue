@@ -1,10 +1,13 @@
 <template>
   <div class="jeecpot-rewards" v-if="rewards">
     <div class="reward-container">
-      <div v-for="item in rewards" :key="item.position" class="reward-item">
+      <div v-for="(item,key) in rewards" :key="item.position" class="reward-item">
         <!-- {{ item.position }} -->
-        <div class="reward-img">
-          <img :src="jeec_brain_url + item" class="activity-img">
+        <div class="reward-img" :class="{'small-cnt': key!=1}">
+          <img :src="jeec_brain_url + item" class="activity-img" :class="{'big': key==1},{'small': key!=1}">
+          <p class="ranking second" v-if="key==0">2<sub>nd</sub></p>
+          <p class="ranking first" v-if="key==1">1<sub>st</sub></p>
+          <p class="ranking third" v-if="key==2">3<sub>rd</sub></p>
           <!-- <img :src="item" class="activity-img"> -->
         </div>
       </div>
@@ -181,6 +184,7 @@ export default {
   display: flex; /* Use flexbox to make the items align horizontally */
   justify-content: space-around; /* Adjust as needed */
   flex-wrap: wrap; /* Allow items to wrap to next line if necessary */
+  align-items: flex-end;
 }
 
 .reward-item {
@@ -202,8 +206,6 @@ export default {
 .activity-img {
   align-self: right;
   position: relative;
-  height: 13vh;
-  width: 13vh;
   border: 0.1vh solid white;
   border-radius: 50%;
   background-color: white;
@@ -216,4 +218,42 @@ export default {
   margin-left: 2vh;
   margin-right: 2vh;
 } 
+
+.big{
+  height: 13vh;
+  width: 13vh;
+}
+
+.small{
+  height: 10vh;
+  width: 10vh;
+}
+
+.small-cnt{
+  top:3vh;
+}
+
+.ranking{
+  position:relative;
+  bottom:4vh;
+  left:3vh;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  text-align:center;
+  display: table-cell;
+  vertical-align: middle;
+  box-shadow: 0px 0px 15px #F72585;
+}
+
+.first{
+  background-color:#C1A875;
+}
+
+.second{
+  background-color:#CDC9C2;
+}
+.third{
+  background-color:#C9705C;
+}
 </style>
