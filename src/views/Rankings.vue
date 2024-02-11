@@ -1,30 +1,23 @@
 <template>
-  <!-- <div class="rankings">
 
-    <div class="select">
-      <div class="solo">
-        SOLO
-      </div>
-      <div class="squad">
-        SQUAD
-      </div> 
-    </div>
-
-  </div> -->
   <div class="rankings">
 
     <div class="main-button-container">
-      <button  @click.stop="click_daily()" class="main-button" style="border-top-left-radius:20px">
+      <div @click.stop="click_daily()" id="main-button-left" class="main-button radient-border-passthrough">
         SOLO
-      </button>
-      <button @click.stop="click_week()" class="main-button" style="border-top-right-radius:20px">
+      </div>
+      <div @click.stop="click_week()" id="main-button-right" class="main-button radient-border-passthrough">
         SQUAD
-      </button>
+      </div>
     </div>
+
+    <div class="spacing"></div>
 
     <div v-if="daily">
       <div>
         <p class="prize-title daily">TODAY</p>
+
+        <div class="spacing"></div>
 
         <RankingsPodium :other_rankingdata="students_daily"
         :user_ranking="userdata_individual.ranking_daily"
@@ -33,10 +26,14 @@
         :flag="true">
         </RankingsPodium>
 
+        <div class="spacing"></div>
+
       </div>
 
       <div>
         <p class="prize-title daily">WEEK</p>
+
+        <div class="spacing"></div>
 
         <RankingsPodium :other_rankingdata="students_weekly" 
         :user_ranking="userdata_individual.ranking_weekly" 
@@ -44,7 +41,6 @@
         :identity="'You'"
         :flag="true">
         </RankingsPodium>
-
       </div>
     </div>
     <div v-else>
@@ -52,6 +48,8 @@
       <div>
         <p class="prize-title daily">TODAY</p>
         
+        <div class="spacing"></div>
+
         <RankingsPodium :other_rankingdata="squads_daily" 
         :user_ranking="userdata_squad.ranking_daily" 
         :user_points="userdata_squad.daily_points"
@@ -59,11 +57,14 @@
         :flag="user_squad_flag">
         </RankingsPodium>
 
+        <div class="spacing"></div>
       </div>
 
       <div>
         <p class="prize-title daily">WEEK</p>
         
+        <div class="spacing"></div>
+
         <RankingsPodium :other_rankingdata="squads_weekly" 
         :user_ranking="userdata_squad.ranking_weekly" 
         :user_points="userdata_squad.total_points"
@@ -76,6 +77,7 @@
 
     
   </div>
+  <div style="height: 20vh"></div>
 </template>
 
 <script>
@@ -199,17 +201,36 @@ export default {
 </script>
 
 <style scoped>
-
+.spacing{
+  height: 3vh;
+}
 .main-button-container{
   display:flex;
   justify-content:space-around;
 }
+
 .main-button{
+  display: flex;
+  justify-content: center;
   width:45vw;
-  background:none;
-  border-left:none;
-  border-right:none;
+  height: 2.7vh;
   font-size:20px;
+  --border-width: 2px 0 0 0;
+  background: none;
+  font-family: "Lexend Exa";
+  letter-spacing: 0.2vw;
+}
+
+.main-button::before{
+  content: "";
+}
+
+#main-button-left{
+  --border-radius: 20px 0px 0px 0px;
+}
+
+#main-button-right{
+  --border-radius: 0px 20px 0px 0px;
 }
 
 .prize-title{

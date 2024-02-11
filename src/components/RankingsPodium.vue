@@ -1,33 +1,33 @@
 <template>
   <div class="center">
     <div class="podium">
-            <div class="stand_2" v-if="other_rankingdata.length>1">
+            <div :id="'stand-2'" class="stand radient-border-passthrough" v-if="other_rankingdata.length>1">
               <div class="img-wrapper radient-border-passthrough">
                 <img :src="ProcessImg(other_rankingdata[1].photo)" class="podium-img">
               </div>            
               <p class="podium-text">{{other_rankingdata[1].name}}</p>
               <div class="pilar_2">
-                <span :id="'number-2'" class="number">2</span><sup class="super_2">nd</sup>
+                <span :id="'number-2'" class="number">2</span><sup :id="'super-2'" class="super">nd</sup>
               </div> 
               <div :id="'line-silver'" class="line"></div>
             </div>
-            <div class="stand_1" v-if="other_rankingdata.length>0">
+            <div :id="'stand-1'" class="stand radient-border-passthrough" v-if="other_rankingdata.length>0">
               <div class="img-wrapper radient-border-passthrough">
                 <img :src="ProcessImg(other_rankingdata[0].photo)" class="podium-img">
               </div>
               <p class="podium-text">{{other_rankingdata[0].name}}</p>
               <div class="pilar_1">
-                <span :id="'number-1'" class="number">1</span><sup class="super_1">st</sup>
+                <span :id="'number-1'" class="number">1</span><sup :id="'super-1'" class="super">st</sup>
               </div>
               <div :id="'line-gold'" class="line"></div>
             </div>
-            <div class="stand_3" v-if="other_rankingdata.length>2">
+            <div :id="'stand-3'" class="stand radient-border-passthrough" v-if="other_rankingdata.length>2">
               <div class="img-wrapper radient-border-passthrough">
                 <img :src="ProcessImg(other_rankingdata[2].photo)" class="podium-img">
               </div>
               <p class="podium-text">{{other_rankingdata[2].name}}</p>
               <div class="pilar_3">
-                <span :id="'number-3'" class="number">3</span><sup class="super_3">rd</sup>
+                <span :id="'number-3'" class="number">3</span><sup :id="'super-3'" class="super">rd</sup>
               </div>
               <div :id="'line-bronze'" class="line"></div>
             </div>
@@ -35,7 +35,7 @@
   </div>
     
       <div class="center">
-        <div v-if="!show && flag" class="top_10">
+        <div v-if="!show && flag" class="top_10 radient-border-passthrough">
             <div class="box">
               <div class="student_ranking_number">
                 <p>{{ user_ranking }}th</p>
@@ -57,7 +57,7 @@
       <div class="center">
         <div v-if="show">
           <div v-for="index in 7" :key="index">
-            <div class="top_10">
+            <div class="top_10 radient-border-passthrough">
               <div class="box">
                 <div class="student_ranking_number">
                   <p>{{ index + 3 }}th</p>
@@ -79,7 +79,7 @@
       </div>
         
       <div class="center">
-        <div @click="show = !show" class="dropdown">
+        <div @click="show = !show" class="dropdown radient-border-passthrough">
           <div><img :src="arrow" class="arrow"></div>
         </div>
       </div>  
@@ -136,7 +136,12 @@ export default {
   font-family: "Lexend Exa";
   color: white;
   position: relative;
-  background-color: #4CC9F0;
+  --border-radius: 0;
+  --border-width: 0 0 2px 0;
+}
+
+.top_10::before{
+  content: "";
 }
 
 .student_name{
@@ -163,6 +168,7 @@ export default {
   border-radius: 100%;
 }
 
+
 .student_xp{
   display: flex;
   justify-content: start;
@@ -179,10 +185,14 @@ export default {
   height: 3.5vh;
   display: flex;
   position: relative;
-  background-color: #4CC9F0;
   justify-content: center;
   align-items: center;
-  border-radius: 0px 0px 10vw 10vw;
+  --border-radius: 0px 0px 10vw 10vw;
+  --border-width: 0 0 2px 0;
+}
+
+.dropdown::before{
+  content: "";
 }
 
 
@@ -196,7 +206,7 @@ export default {
 
 .line {
   width: 100%;
-  height: 5px;
+  height: 3px;
   bottom: 0px;
   position: absolute;
 }
@@ -278,46 +288,49 @@ export default {
   background-color: #C9705C;
 }
 
-.super_1{
+.super{
   text-align: center;
   font-family: "Russo One";
   font-size: 2vh;
   font-style: normal;
   font-weight: 400;
-  line-height: 45px; /* 93.75% */
+  line-height: 45px; 
   top: -0.9em;
-  background-image: linear-gradient(90deg, #844414 0%, #c7801d 20%, #ffe233 50%, #c7801d 80%, #844414 100%);
   background-clip: text;
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.super_2{
-  text-align: center;
-  font-family: "Russo One";
-  font-size: 2vh;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 45px; /* 93.75% */
-  top: -0.9em;
-  background: linear-gradient(90deg, #787878 0%, #b5b5b5 25%, #e3e3e3 50%, #b5b5b5 75%, #787878 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.super::before {
+  content: "";
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(77deg, #576265 11.6%, #9EA1A1 25.31%, #848B8A 48.06%, #576265 55.72%, #576265 77.23%, #757A7B 85.34%, #576265 91.31%);
+  mix-blend-mode: luminosity;
 }
 
-.super_3{
-  text-align: center;
-  font-family: "Russo One";
-  font-size: 2vh;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 45px; /* 93.75% */
-  top: -0.9em;
-  background: linear-gradient(90deg, #844414 0%, #cf7d52 25%, #fcd5be 50%, #cf7d52 75%, #844414 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.super::after {
+  content: "";
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(339deg, rgba(255, 255, 255, 0.00) 52.79%, #FFF 95.95%);
+  mix-blend-mode: overlay;
+}
+
+
+#super-1{
+  background-color: #C1A875;
+}
+
+#super-2{
+  background-color: #CDC9C2;
+}
+
+#super-3{
+  background-color: #C9705C;
 }
 
 
@@ -383,25 +396,23 @@ export default {
   object-fit: cover;
 }
 
-.stand_1{
-  position: relative;
+
+.stand{
   width:27vw;
-  height: 25vh;
-  background-color: #4CC9F0;
-}
-.stand_2{
-  position: relative;
-  width:27vw;
-  height: 21vh;
-  background-color: #4CC9F0;
-}
-.stand_3{
-  position: relative;
-  width:27vw;
-  height: 18vh;
-  background-color: #4CC9F0;
+  --border-radius: 0;
 }
 
+#stand-1{
+  height: 25vh;
+}
+
+#stand-2{
+  height: 21vh;
+}
+
+#stand-3{
+  height: 18vh;
+}
 
 
 
