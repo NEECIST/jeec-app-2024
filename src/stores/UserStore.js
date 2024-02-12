@@ -17,6 +17,12 @@ export const useUserStore = defineStore("UserStore", {
       milestones: {
         daily: [],
         final: 0,
+      },
+      userPoints: {
+        total_points: 0,
+        daily_points: 0,
+        jeecpot: 0,
+        tickets: 0
       }
     };
   },
@@ -61,7 +67,6 @@ export const useUserStore = defineStore("UserStore", {
 
       console.log(this.user)
     },
-
     async getMilestones() {
       await axios
         .get(
@@ -73,6 +78,18 @@ export const useUserStore = defineStore("UserStore", {
         .then((response) => {
           this.milestones.final = response.data.final_milestone;
           this.milestones.daily = response.data.daily_milestones;
+        })
+    },
+    async getPoints() {
+      await axios
+        .get(
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/game_info",
+          {
+            headers: authHeader()
+          }
+        )
+        .then((response) => {
+          this.userPoints = response.data;
         })
     }
   },

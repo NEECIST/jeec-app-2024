@@ -10,23 +10,23 @@
       </div>
     </div>
 
-    <div class="item" :style="{borderColor: color}">
+    <div class="item radient-border-passthrough" :class="'type-' + event.type.replace(/\s/g, '').replace(/\W/g, '').toLowerCase()">
       <div class="main" :class="{'desc-open': showDesc}">
-        <h4 id="title" :style="{color: color}">
+        <h2 id="title">
           {{ event.type }}
-        </h4>
+        </h2>
 
-        <h5 id="text">
+        <h3 id="text">
           {{ event.name }}
-        </h5>
+        </h3>
 
         <div id="description" v-bind:class="{'desc-open': showDesc}">
           <br>
-          <h5>{{ event.description }}</h5>
+          <p>{{ event.description }}</p>
           <br>
         </div>
 
-        <div id="info" :style="{color: color}" >
+        <div id="info">
           <a @click="toggleDesc()"> {{showmore_text}} </a>
         </div>
       </div>
@@ -49,23 +49,23 @@
 
       <div class="div-foto">
           <div v-if="speakers_image_list.length > 0">
-            <div v-if="loadImg" id="foto" :style="{borderColor: color}">
+            <div v-if="loadImg" id="foto" class="radient-border-passthrough">
               <FadeLoop style="height: 60px;" :image_list="speakers_image_list" :index="index"></FadeLoop>
             </div>
 
-            <div v-if="companies_image_list.length > 0" id="small-foto" :style="{borderColor: color}">
+            <div v-if="companies_image_list.length > 0" id="small-foto" class="radient-border-passthrough">
               <FadeLoop style="height: 25px;" :image_list="companies_image_list" :index="index"></FadeLoop>
             </div>
           </div>
 
           <div v-else-if="speakers_image_list.length == 0 && companies_image_list.length > 0">
-            <div v-if="loadImg" id="foto" :style="{borderColor: color}">
+            <div v-if="loadImg" id="foto" class="radient-border-passthrough">
               <FadeLoop style="height: 60px;" :image_list="companies_image_list" :index="index"></FadeLoop>
             </div>
           </div>
 
           <div v-else>
-            <div v-if="loadImg" id="foto" :style="{borderColor: color}" style="background-color: darkgray;">
+            <div v-if="loadImg" id="foto" class="radient-border-passthrough" style="background-color: darkgray;">
               <img style="border-radius: 0%;height: 70%; width: 70%;" src="/img/jeec_mobile_white.a2f38783.svg" alt="JEEC">
             </div>
            
@@ -145,11 +145,11 @@ export default {
       if(this.showDesc == false){
         this.showDesc = true;
         this.hideDesc = false;
-        this.showmore_text = "show less"
+        this.showmore_text = "- info"
       } else {
         this.showDesc = false;
         this.hideDesc = true;
-        this.showmore_text = "show more"
+        this.showmore_text = "+ info"
       }
     }
   },
@@ -160,7 +160,7 @@ export default {
       loadImg: false,
       showDesc: false,
       hideDesc: true,
-      showmore_text: "show more",
+      showmore_text: "+ info",
       atcb_config: {
         customLabels:{"apple":"Apple Calendar", "google":"Google Calendar", "outlookcom":"Outlook Calendar"},
         name: "[JEEC] " + this.event.name,
@@ -205,15 +205,60 @@ export default {
 }
 
 .item {
+  --border-radius: 0 40px 40px 40px;
+  --border-width: 2px;
+  --background: var(--background_, radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.14) 0%, rgba(76, 202, 240, 0.08) 70%, rgba(76, 202, 240, 0) 100%));
+  --border-background: var(--border-background_, linear-gradient(165deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%));
+
+  --color: white;
+
   margin-left: 20px;
   margin-top: 5px;
   margin-bottom: 5px;
   min-height: 80px;
-  border-radius: 0 45px 45px 45px;
   display: flex;
   align-items: center;
-  border-style: solid;
+}
 
+.item::before {
+  content: "";
+}
+
+.item.type-insidetalks {
+  --color: #f72585;
+  --background_: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(247, 37, 132, 0.14), rgba(247, 37, 132, 0.08) 60%, rgba(247, 37, 132, 0));
+  --border-background_: linear-gradient(165deg, #A414A4, #F72585 40%, #7209B7);
+}
+
+.item.type-workshop {
+  --color: #4cc9f0;
+  --background_: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(76, 201, 240, 0.18), rgba(76, 201, 240, 0.12) 60%, rgba(76, 201, 240, 0));
+  --border-background_: linear-gradient(165deg, #605ED0, #4CC9F0 40%, #7209B7);
+}
+
+.item.type-1515 {
+  --color: #a428f6;
+  --background_: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(114, 9, 183, 0.14), rgba(114, 9, 183, 0.08) 60%, rgba(114, 9, 183, 0));
+  --border-background_: linear-gradient(165deg, #7209B7, #A414A4 40%, #7209B7);
+}
+
+.item.type-mainspeaker,
+.item.type-discussionpanel {
+  --color: rgb(96, 94, 208);
+  --background_: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(96, 94, 208, 0.14), rgba(96, 94, 208, 0.08) 60%, rgba(96, 94, 208, 0));
+  --border-background_: linear-gradient(165deg, #605ED0, #7a57ea 40%, #7209B7);
+}
+
+.item.type-cerimony {
+  --color: #1a9cd8;
+  --background_: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(26, 156, 216, 0.14), rgba(26, 156, 216, 0.08) 60%, rgba(26, 156, 216, 0));
+  --border-background_: linear-gradient(165deg, #1a9cd8, #5499ed 40%, #7209B7);
+}
+
+.item.type-fastmeeting {
+  --color: rgb(221, 64, 221);
+  --background_: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(221, 64, 221, 0.14), rgba(221, 64, 221, 0.08) 60%, rgba(221, 64, 221, 0));
+  --border-background_: linear-gradient(165deg, #A414A4, #F72585 40%, #7209B7);
 }
 
 .main {
@@ -224,12 +269,14 @@ export default {
   justify-content: flex-start;
   align-self:flex-start;
   padding-top: 6px;
-  padding-left: 2ch;
+  padding-left: 15px;
 }
 
 .add {
   height: 100%;
   margin: 0px;
+  margin-top: 48px;
+  align-self: flex-start;
 
 
   a{
@@ -238,8 +285,8 @@ export default {
   }
 
   a g path{
-    /* fill: #E7E7E7; */
-    fill: #a73b3b;
+    fill: #E7E7E7;
+    /* fill: #a73b3b; */
   }
 
   a:hover g path {
@@ -255,6 +302,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  align-self: flex-start;
+  margin-top: 7px;
 }
 
 #circle {
@@ -266,17 +315,20 @@ export default {
 
 #title {
   margin-top: 5px;
-  margin-left: 15px;
   /* font-size: 15pt; */
   font-weight: bolder;
   text-align: start;
+  font-size: 1.3rem;
+  color: var(--color);
+  font-family: 'Lexend Exa';
 }
 
 #text {
-  margin-left: 15px;
   flex: 1;
   /* font-size: 15pt; */
   height: 40%;
+  font-size: 1rem;
+  letter-spacing: 1px;
   font-weight: bolder;
   text-align: start;
   overflow: hidden;
@@ -290,15 +342,15 @@ export default {
 
 #info {
   display: flex;
-  justify-content: flex-end;
-  font-size: 8pt;
-  text-align: end;
-  margin-bottom: 5px;
+  font-size: 0.7rem;
+  margin: 8px 0;
+  margin-left: 20px;
   a{
     text-decoration-line: underline;
     pointer-events: all;
     cursor: pointer;
     z-index: 100;
+    color: var(--color);
   }
   
 }
@@ -307,6 +359,8 @@ export default {
   margin-left: 15px;
   text-align: start;
   padding-bottom: 5px;
+  max-width: 600px;
+  font-size: 0.9rem;
 }
 
 #description {
@@ -327,27 +381,39 @@ export default {
 }
 
 #foto {
+  --border-radius: 50%;
+  --border-width: 2px;
+  --background: var(--background_, radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.14) 0%, rgba(76, 202, 240, 0.08) 70%, rgba(76, 202, 240, 0) 100%));
+  --border-background: var(--border-background_, linear-gradient(165deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%));
+
   width: 60px;
   height: 60px;
   background: rgb(255, 255, 255);
-  border-radius: 50%;
-  border-style: solid;
   justify-content: center;
   align-items: center;
   display: flex;
+}
 
-
+#foto::before {
+  content: "";
 }
 
 #small-foto {
+  --border-radius: 50%;
+  --border-width: 1px;
+  --background: var(--background_, radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.14) 0%, rgba(76, 202, 240, 0.08) 70%, rgba(76, 202, 240, 0) 100%));
+  --border-background: var(--border-background_, linear-gradient(165deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%));
+
   width: 25px;
   height: 25px;
   background: white;
-  border-radius: 50%;
   position: absolute;
   left: 5px;
   bottom: 0px;
-  border-style: solid;
+}
+
+#small-foto::before {
+  content: "";
 }
 
 </style>

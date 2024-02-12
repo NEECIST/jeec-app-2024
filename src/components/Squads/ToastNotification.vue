@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
       <div v-if="visible" class="toast" :class="type">
-        {{ message }}
+        <p>{{ message }}</p>
       </div>
     </transition>
   </template>

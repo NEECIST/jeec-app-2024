@@ -1,6 +1,6 @@
 <template>
   <div>
-    <QRCodeVue3 
+    <!-- <QRCodeVue3 
       width="200" 
       height="200" 
       :value="userStore.user.student_external_id"
@@ -21,6 +21,19 @@
       :backgroundOptions="{color: 'white'}"
       :cornersSquareOptions="{type: 'extra-rounded', color: '#6741c8'}"
       :cornersDotOptions="{type: 'square', color: '#6741c8'}"
+      alt="Show this QR Code"
+    ></QRCodeVue3> -->
+    <QRCodeVue3 
+      width="200" 
+      height="200" 
+      :value="userStore.user.student_external_id"
+      :dotsOptions="{
+          type: 'square',
+          color: '#000000'
+      }"
+      :backgroundOptions="{color: 'white'}"
+      :cornersSquareOptions="{type: 'square', color: '#000000'}"
+      :cornersDotOptions="{type: 'square', color: '#000000'}"
       alt="Show this QR Code"
     ></QRCodeVue3>
   </div>

@@ -19,11 +19,12 @@
 
         <div class="spacing"></div>
 
-        <RankingsPodium :other_rankingdata="students_daily"
-        :user_ranking="userdata_individual.ranking_daily"
-        :user_points="userdata_individual.daily_points"
-        :identity="'You'"
-        :flag="true">
+        <RankingsPodium 
+          :other_rankingdata="students_daily"
+          :user_ranking="userdata_individual.ranking_daily"
+          :user_points="userdata_individual.daily_points"
+          :identity="'You'"
+          :flag="true">
         </RankingsPodium>
 
         <div class="spacing"></div>

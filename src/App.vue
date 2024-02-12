@@ -15,7 +15,13 @@ import TheUserInfo from './components/UserCard/TheUserInfo.vue';
 import TheQrCodePopup from './components/QrCode/TheQrCodePopup.vue';
 
 import { useStateStore } from '@/stores/StateStore';
+import { useUserStore } from '@/stores/UserStore';
+import { usePrizeStore } from '@/stores/PrizeStore';
+
 const stateStore = useStateStore();
+const userStore = useUserStore();
+
+userStore.getPoints()
 
 import { ref, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; 

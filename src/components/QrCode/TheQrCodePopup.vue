@@ -108,11 +108,11 @@ const stateStore = useStateStore();
     width: 210px;
     height: 210px;
     margin: 0 auto;
+    margin-top: 1.4rem;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #404040;
-    border-radius: 20px;
   }
   .qrcode {
     position: relative;
