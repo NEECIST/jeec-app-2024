@@ -116,6 +116,7 @@ export default {
         description: this.event.description,
         startDate: this.formatToCalendarDate(),
         startTime: this.event.time,
+        location: this.event.location,
         endTime: this.event.end_time,
         options: ["Google", "Apple", "Outlook.com"],
       }

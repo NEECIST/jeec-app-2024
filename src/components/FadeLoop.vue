@@ -51,25 +51,29 @@ export default {
   }},
   methods: {
     toNextImage(duration){
-      setTimeout(() => {
-          this.isShow = false;
-          this.isFade = true;
+        this.isShow = false;
+        this.isFade = true;
+
+        setTimeout(() => {
+          if(this.i == this.image_list.length - 1) this.i = 0;
+          else ++this.i;
+
+          this.isShow = true;
+          this.isFade = false;
 
           setTimeout(() => {
-            if(this.i == this.image_list.length - 1) this.i = 0;
-            else ++this.i;
-            this.isShow = true;
-            this.isFade = false;
             this.toNextImage();
-          }, 1000);
-
-        }, duration);
+          }, 3000);
+        }, 1000);
     }
   },
   mounted (){
 
     if(this.image_list.length > 1){
-      this.toNextImage(2500);
+      setTimeout(() => {
+        this.toNextImage();
+      }, 3000);
+      
     }
   }
 
