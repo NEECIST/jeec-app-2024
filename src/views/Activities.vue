@@ -155,8 +155,8 @@
                 
                 <div class="schedule">
                   <div class="line"></div>
-                  <div v-for="event in activities" :key="event" class="event">
-                    <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" link="/home"></Event>
+                  <div v-for="(event, index) in activities" :key="event" class="event">
+                    <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" :index="weekday+index" link="/home"></Event>
                   </div>
                 </div> 
                 
@@ -241,7 +241,9 @@ export default {
             const next_slide = document.querySelector(".carousel__slide--next");
             if (next_slide) {
               next_slide.style.pointerEvents = "none";
-              next_slide.firstChild.style.pointerEvents = "all";
+              if(next_slide.innerText != "Monday"){
+                next_slide.firstChild.style.pointerEvents = "all";
+              }
             }
           }
         }, 550);

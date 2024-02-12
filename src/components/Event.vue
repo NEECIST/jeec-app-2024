@@ -42,9 +42,12 @@
       </div>
 
       <div class="div-foto">
-
-            <div id="foto" :style="{borderColor: color}"></div>
-            <div id="small-foto" :style="{borderColor: color}"></div>
+            <div v-if="loadImg" id="foto" :style="{borderColor: color}">
+              <FadeLoop style="height: 60px;" :image_list="image_list" :index="index"></FadeLoop>
+            </div>
+            <div v-if="image_list.length > 0" id="small-foto" :style="{borderColor: color}">
+              
+            </div>
 
         
       </div>
@@ -62,13 +65,22 @@
 </template>
 
 <script>
+import FadeLoop from './FadeLoop.vue';
+import { Carousel, Slide } from 'vue3-carousel';
+
 export default {
   name: "Event",
+  components: {
+    FadeLoop,
+    Carousel,
+    Slide
+  },
   props: {
     event: Object,
     color: String,
     foto: Object,
-    link: String
+    link: String,
+    index: String
   },
   methods: {
     addEvent() {
@@ -76,26 +88,23 @@ export default {
     },
     addToCalendar(){
 
+    },
+    getImageList(event){
+      let image_list = [];
+      for (let i = 0; i < event.companies.data.length; i++) {
+        image_list.push(process.env.VUE_APP_JEEC_BRAIN_URL + event.companies.data[i].logo);
+      }
+      return image_list;
     }
   },
   data: function () {
     return {
-      button: "all",
-      model: 0,
-      event_dates: [],
-      activities: [],
-      weekdays: [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
-      ],
-      loading_activities: true,
+      image_list: this.getImageList(this.event),
+      loadImg: false,
     };
   },
   mounted (){
-    // console.log(this.event);
+    this.loadImg = true
 
   }
 
@@ -215,9 +224,14 @@ export default {
 #foto {
   width: 60px;
   height: 60px;
-  background: rgb(155, 24, 24);
+  background: rgb(255, 255, 255);
   border-radius: 50%;
   border-style: solid;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+
+
 }
 
 #small-foto {
