@@ -41,13 +41,17 @@ const milestonesRef = ref([]);
 const milestonePercentages = ref([])
 
 watch(() => userStore.milestones.daily, async () => {
-  const userDailyPoints = 600;
+  const userDailyPoints = userStore.userPoints.daily_points;
 
   const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
   const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
 
   const progressPercentage = (userDailyPoints / milestones[milestones.length - 1]) * 100;
-  progress.value = progressPercentage;
+  if (progressPercentage >= 100) {
+    progress.value = 100;
+  } else {
+    progress.value = progressPercentage;
+  }
 
   let milestonePercentage = 0;
   let width = 0;

@@ -19,7 +19,7 @@ body {
   position: relative;
 }
 
-h1, h2 {
+h1, h2, h3, h4 {
   font-family: "Russo One", sans-serif;
   color: var(--clr-dark-font)
 }

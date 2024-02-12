@@ -9,7 +9,7 @@
   </div>
 </template>
 <script setup>
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch, defineProps, useSSRContext } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 const userStore = useUserStore();
 
@@ -18,7 +18,7 @@ const props = defineProps(["variant"]);
 const progress = ref(0);
 
 watch(() => userStore.milestones.final, () => {
-  const userTotalPoints = 10000;
+  const userTotalPoints = userStore.userPoints.total_points;
 
   const milestone = userStore.milestones.final;
   

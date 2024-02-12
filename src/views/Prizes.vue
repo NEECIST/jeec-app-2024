@@ -81,9 +81,10 @@ export default {
   methods: {
     click_daily() {
       this.daily = true;
-    }, click_week() {
+    }, 
+    click_week() {
       this.daily = false;
-    }
+    },
   },
   watch:{
     images(){
@@ -91,9 +92,6 @@ export default {
       console.log(this.images);
     }
   },
-  mounted(){
-    
-  }
 };
 </script>
 
