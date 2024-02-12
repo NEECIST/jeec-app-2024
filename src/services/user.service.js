@@ -46,15 +46,9 @@ class UserService {
     });
   }
 
-  addCV(cv) {
-    var formData = new FormData();
-    formData.append("cv", cv.files[0]);
-
-    return axios.post(jeec_brain_url + "/student/add-cv", formData, {
+  addCV() {
+    return axios.post(jeec_brain_url + "/student/add-cv", {
       headers: {
-        ...{
-          "Content-Type": "multipart/form-data"
-        },
         ...authHeader()
       }
     });
@@ -79,6 +73,14 @@ class UserService {
         },
         ...authHeader()
       }
+    });
+  }
+
+  getStudentsAll() {
+    console.log(authHeader());
+    return axios.post(jeec_brain_url + "/student/studentsAll2", 
+    {
+      headers: authHeader()
     });
   }
  

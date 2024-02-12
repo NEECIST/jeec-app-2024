@@ -16,6 +16,10 @@
         </div>
       </div>
 
+      <!-- <div v-for="student2 in students2">
+        {{ student2 }}
+      </div> -->
+
       <div v-if="squad!=null">
         <center>
           <h1> YOUR SQUAD </h1>
@@ -63,10 +67,10 @@
                   </div>
                 </div>
                 <div class="autocomplete">
-                  <div v-if="Array.isArray(this.students) && this.students.length > 0">
+                  <div v-if="Array.isArray(this.students2) && this.students2.length > 0">
                     <ul>
-                      <li v-for="student in this.students" :key="student.username" @click="addSquadmate(student)">
-                        <img :src="student.photo" alt="Student Photo" class="avatar" />
+                      <li v-for="student in this.students3" :key="student.username" @click="addSquadmate(student)">
+                        <!-- <img :src="student.photo" alt="Student Photo" class="avatar" /> -->
                         {{ student.username }}
                       </li>
                     </ul>
@@ -158,6 +162,7 @@ export default {
       squad: null,
       invites: [],
       invites_sent: [],
+      students3: [],
       loading_squad: true,
       jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
       daily_max_points:0,
@@ -165,7 +170,7 @@ export default {
       squadmates: [],
       add_members_dialog: false,
       students: [],
-      search: null,
+      search: "",
       today_reward: {},
       default_image: require("../../assets/jeec_colour_no_edition_transparent.svg"),
       width: window.innerWidth,
@@ -184,6 +189,8 @@ export default {
       showToast: false,
       toastMessage: '',
       toastType: 'success',
+      students2: [],
+      photos: []
     };
   },
   methods: {
@@ -199,24 +206,13 @@ export default {
     },
 
     filterStudents() {
-      console.log("aquiii");
-      console.log(this.search);
-      UserService.getStudents(this.search).then(
-        (response) => {
-          var students = response.data.data;
-          if (!Array.isArray(students)) students = [students];
-          
-          var squad_members = this.squad.members.data.map((item) => item.username);
-          var invites_sent = this.invites_sent.map((item) => item.username);
-        
-          this.students = students.filter(
-            (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
-          );
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+      if (this.search.trim() === '') {
+        this.students3 = [];
+      } else {
+        this.students3 = this.students2.filter(student => 
+          student.username.toLowerCase().includes(this.search.toLowerCase())
+        );
+      }
     },
     closeDialog(event) {
       if (event.key === 'Escape') {
@@ -471,6 +467,7 @@ export default {
   },
 
   async beforeMount() {
+
     if (!this.user) {
       this.$router.push("/");
     } 
@@ -506,6 +503,17 @@ export default {
       }
     );
 
+    UserService.getStudentsAll().then(
+      (response) => {
+        this.students2 = response.data.students;
+        console.log(this.students2[0]);
+      },
+      (error) => {
+        console.log('houve um erro')
+        console.log(error);
+      }
+    );
+
     await UserService.getSquadsLength().then((response) => {
       const data = response.data; this.length = data.length; 
       }
@@ -513,51 +521,28 @@ export default {
     
     
     
-    if(this.squad != null) {
+    // if(this.squad != null) {
       
-      UserService.getStudents('').then(
-        (response) => {
-          var students = response.data.data;
-          this.students = [students];
+    //   UserService.getStudents('').then(
+    //     (response) => {
+    //       var students = response.data.data;
+    //       this.students = [students];
 
-          var squad_members = this.squad.members.data.map((item) => item.username);
-          var invites_sent = this.invites_sent.map((item) => item.username);
+    //       var squad_members = this.squad.members.data.map((item) => item.username);
+    //       var invites_sent = this.invites_sent.map((item) => item.username);
 
-          this.students = this.students.filter(
-            (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
-          );
-          console.log("students");
-          console.log(students);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    }
+    //       this.students = this.students.filter(
+    //         (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
+    //       );
+    //       console.log("students");
+    //       console.log(students);
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //     }
+    //   );
+    // }
     
-  },
-
-  watch: {
-    search(val) {
-      console.log("aquiii");
-      console.log(val);
-      UserService.getStudents(val).then(
-        (response) => {
-          var students = response.data.data;
-          if (!Array.isArray(students)) students = [students];
-          
-          var squad_members = this.squad.members.data.map((item) => item.username);
-          var invites_sent = this.invites_sent.map((item) => item.username);
-
-          this.students = students.filter(
-            (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
-          );
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
   },
 };
 </script>
