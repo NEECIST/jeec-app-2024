@@ -39,6 +39,9 @@
               <p class="squad-name"> {{ squad.name }} </p>
               <p class="squad-motto">  {{ squad.cry }} </p>
           </div>
+
+          <p> {{ squad.total_points }} </p>
+          <p> {{ squad.daily_points }} </p>
         </div>
       
         <div v-if="squad!=null || invites.length > 0">
