@@ -3,7 +3,7 @@
     <div class="podium">
             <div :id="'stand-2'" class="stand radient-border-passthrough" v-if="other_rankingdata.length>1">
               <div class="img-wrapper radient-border-passthrough">
-                <img :src="ProcessImg(other_rankingdata[1].photo)" class="podium-img">
+                <img :src="ProcessImg(other_rankingdata[1].photo, type)" class="podium-img">
               </div>            
               <p class="podium-text">{{other_rankingdata[1].name}}</p>
               <div class="pilar_2">
@@ -13,7 +13,7 @@
             </div>
             <div :id="'stand-1'" class="stand radient-border-passthrough" v-if="other_rankingdata.length>0">
               <div class="img-wrapper radient-border-passthrough">
-                <img :src="ProcessImg(other_rankingdata[0].photo)" class="podium-img">
+                <img :src="ProcessImg(other_rankingdata[0].photo, type)" class="podium-img">
               </div>
               <p class="podium-text">{{other_rankingdata[0].name}}</p>
               <div class="pilar_1">
@@ -23,7 +23,7 @@
             </div>
             <div :id="'stand-3'" class="stand radient-border-passthrough" v-if="other_rankingdata.length>2">
               <div class="img-wrapper radient-border-passthrough">
-                <img :src="ProcessImg(other_rankingdata[2].photo)" class="podium-img">
+                <img :src="ProcessImg(other_rankingdata[2].photo, type)" class="podium-img">
               </div>
               <p class="podium-text">{{other_rankingdata[2].name}}</p>
               <div class="pilar_3">
@@ -80,7 +80,7 @@
         
       <div class="center">
         <div @click="show = !show" class="dropdown radient-border-passthrough">
-          <div><img :src="arrow" class="arrow"></div>
+          <div><img :src="arrow" class="arrow" :class="{open: show}"></div>
         </div>
       </div>  
   
@@ -97,6 +97,7 @@ export default {
       show:false,
       arrow:arrow,
       Image:Image,
+      
     };
   },
   props: {
@@ -105,24 +106,34 @@ export default {
     user_points: Number,
     identity: String,
     flag: Boolean,
+    type: String,
   },
   computed: {
 
   },
   methods: {
-    ProcessImg(image) {
-      let photo = "data:image/png;base64," + image;
-      return photo;
+    ProcessImg(image, type) {
+      if(type == "Student"){
+        let photo = "data:image/png;base64," + image;
+        return photo;
+      }else{
+        let photo = process.env.VUE_APP_JEEC_BRAIN_URL + image;
+        return photo;
+      }
     }
   },
 };
 </script>
 
 <style scoped>
+
 :root {
   --color-dark: #1F1F1F;
 }
 
+.arrow.open{
+  rotate: 180deg;
+}
 
 .center{
   display: flex;
@@ -400,6 +411,7 @@ export default {
 .stand{
   width:27vw;
   --border-radius: 0;
+  --background: radial-gradient(ellipse 100% 100% at 50% 100%, #4ccaf03e, #4ccaf021 45%, #4ccaf000);
 }
 
 #stand-1{

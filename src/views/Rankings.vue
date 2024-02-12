@@ -19,12 +19,12 @@
 
         <div class="spacing"></div>
 
-        <RankingsPodium 
-          :other_rankingdata="students_daily"
-          :user_ranking="userdata_individual.ranking_daily"
-          :user_points="userdata_individual.daily_points"
-          :identity="'You'"
-          :flag="true">
+        <RankingsPodium :other_rankingdata="students_daily"
+        :user_ranking="userdata_individual.ranking_daily"
+        :user_points="userdata_individual.daily_points"
+        :identity="'You'"
+        :flag="true"
+        :type="'Student'">
         </RankingsPodium>
 
         <div class="spacing"></div>
@@ -40,7 +40,8 @@
         :user_ranking="userdata_individual.ranking_weekly" 
         :user_points="userdata_individual.total_points"
         :identity="'You'"
-        :flag="true">
+        :flag="true"
+        :type="'Student'">
         </RankingsPodium>
       </div>
     </div>
@@ -55,7 +56,8 @@
         :user_ranking="userdata_squad.ranking_daily" 
         :user_points="userdata_squad.daily_points"
         :identity="identityy"
-        :flag="user_squad_flag">
+        :flag="user_squad_flag"
+        :type="'Squad'">
         </RankingsPodium>
 
         <div class="spacing"></div>
@@ -70,7 +72,8 @@
         :user_ranking="userdata_squad.ranking_weekly" 
         :user_points="userdata_squad.total_points"
         :identity="identityy"
-        :flag="user_squad_flag">
+        :flag="user_squad_flag"
+        :type="'Squad'">
         </RankingsPodium>
 
       </div>
