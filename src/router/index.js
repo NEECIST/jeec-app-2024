@@ -24,9 +24,9 @@ const routes = [
     component: () => import("@/views/QRCode.vue"),
   },
   {
-    path: "/activities",
+    path: "/schedule",
     name: "Schedule",
-    component: () => import("@/views/Activities.vue"),
+    component: () => import("@/views/Schedule.vue"),
   },
   {
     path: "/profile",

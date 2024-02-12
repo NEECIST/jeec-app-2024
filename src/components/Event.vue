@@ -11,7 +11,7 @@
     </div>
 
     <div class="item" :style="{borderColor: color}">
-      <div class="main">
+      <div class="main" :class="{'desc-open': showDesc}">
         <h4 id="title" :style="{color: color}">
           {{ event.type }}
         </h4>
@@ -20,7 +20,7 @@
           {{ event.name }}
         </h5>
 
-        <div id="description" v-bind:class="{'desc-open': showDesc, 'desc-closed': hideDesc}">
+        <div id="description" v-bind:class="{'desc-open': showDesc}">
           <br>
           <h5>{{ event.description }}</h5>
           <br>
@@ -219,6 +219,12 @@ export default {
 .main {
   flex: 1;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-self:flex-start;
+  padding-top: 6px;
+  padding-left: 2ch;
 }
 
 .add {
@@ -278,6 +284,10 @@ export default {
   text-overflow: ellipsis;
 }
 
+.main.desc-open #text {
+  white-space: normal;
+}
+
 #info {
   display: flex;
   justify-content: flex-end;
@@ -293,22 +303,22 @@ export default {
   
 }
 
-#description{
+#description {
   margin-left: 15px;
   text-align: start;
   padding-bottom: 5px;
 }
 
-#description.desc-closed{
+#description {
   max-height: 0;
   opacity: 0;
-  transition: 500ms;
+  transition: all 500ms ease-in-out;
 }
 
-#description.desc-open{
-  max-height: auto;
+#description.desc-open {
+  max-height: 500px;
   opacity: 1;
-  transition: all 500ms;
+  transition: all 500ms ease-in-out;
 }
 
 #symbol {
