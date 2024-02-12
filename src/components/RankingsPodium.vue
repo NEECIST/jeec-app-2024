@@ -56,7 +56,7 @@
         
       <div class="center">
         <div v-if="show">
-          <div v-for="index in 7" :key="index">
+          <div v-for="index in other_rankingdata.length - 3" :key="index">
             <div class="top_10 radient-border-passthrough">
               <div class="box">
                 <div class="student_ranking_number">
