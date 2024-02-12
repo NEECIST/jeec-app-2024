@@ -20,14 +20,14 @@
           <button @click.stop="reject" class="decline-button">Decline</button>
         </div>
         
-        <v-progress-circular v-else
+        <!-- <v-progress-circular v-else
         style="margin-top: 2vh"
         indeterminate
         color="#27ade4"
         :size="60"
         :width="6"
         class="loading-bar"
-        ></v-progress-circular>
+        ></v-progress-circular> -->
       </div>
     </div>
      

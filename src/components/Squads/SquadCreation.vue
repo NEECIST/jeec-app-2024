@@ -44,7 +44,7 @@
         Create Squad
       </button> 
       
-      <v-progress-circular
+      <!-- <v-progress-circular
         v-else
         style="margin-top: 3vh"
         indeterminate
@@ -52,7 +52,7 @@
         :size="80"
         :width="8"
         class="loading-bar"
-      ></v-progress-circular>
+      ></v-progress-circular> -->
       <p class="error-msg">{{ error }}</p>
     </div>
   </div>
@@ -77,7 +77,7 @@ export default {
     return {
       files: [],
       image_uploaded: true,
-      currentImage: require('../../assets/logo.png'),  
+      currentImage: require('../../assets/jeec_colour_no_edition_transparent.svg'),  
       name: "",
       cry: "",
       error: "",
