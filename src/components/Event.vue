@@ -20,9 +20,15 @@
           {{ event.name }}
         </h5>
 
-        <router-link id="info" :to="link" :style="{color: color}">
-          more info
-        </router-link>
+        <div id="description" v-bind:class="{'desc-open': showDesc, 'desc-closed': hideDesc}">
+          <br>
+          <h5>{{ event.description }}</h5>
+          <br>
+        </div>
+
+        <div id="info" :style="{color: color}" >
+          <a @click="toggleDesc()"> {{showmore_text}} </a>
+        </div>
       </div>
 
       <div class="add" @click="addToCalendar()">
@@ -42,12 +48,30 @@
       </div>
 
       <div class="div-foto">
+          <div v-if="speakers_image_list.length > 0">
             <div v-if="loadImg" id="foto" :style="{borderColor: color}">
-              <FadeLoop style="height: 60px;" :image_list="image_list" :index="index"></FadeLoop>
+              <FadeLoop style="height: 60px;" :image_list="speakers_image_list" :index="index"></FadeLoop>
             </div>
-            <div v-if="image_list.length > 0" id="small-foto" :style="{borderColor: color}">
-              
+
+            <div v-if="companies_image_list.length > 0" id="small-foto" :style="{borderColor: color}">
+              <FadeLoop style="height: 25px;" :image_list="companies_image_list" :index="index"></FadeLoop>
             </div>
+          </div>
+
+          <div v-else-if="speakers_image_list.length == 0 && companies_image_list.length > 0">
+            <div v-if="loadImg" id="foto" :style="{borderColor: color}">
+              <FadeLoop style="height: 60px;" :image_list="companies_image_list" :index="index"></FadeLoop>
+            </div>
+          </div>
+
+          <div v-else>
+            <div v-if="loadImg" id="foto" :style="{borderColor: color}" style="background-color: darkgray;">
+              <img style="border-radius: 0%;height: 70%; width: 70%;" src="/img/jeec_mobile_white.a2f38783.svg" alt="JEEC">
+            </div>
+           
+          </div>
+            
+            
 
         
       </div>
@@ -87,29 +111,56 @@ export default {
     addEvent() {
       console.log("Add event");
     },
+
     formatToCalendarDate(){
       const date = this.event.day.split(',')[0];
       const date_components = date.split(' ');
       const calendarDate = date_components[2] + '-' + date_components[1] + '-' + date_components[0];
       return calendarDate;
     },
+
     addToCalendar(){
       const atcb_button = document.querySelector(".add");
       atcb_action(this.atcb_config, atcb_button)
     },
 
-    getImageList(event){
+    getCompaniesImageList(event){
       let image_list = [];
       for (let i = 0; i < event.companies.data.length; i++) {
         image_list.push(process.env.VUE_APP_JEEC_BRAIN_URL + event.companies.data[i].logo);
       }
       return image_list;
+    },
+
+    getSpeakersImageList(event){
+      let image_list = [];
+      for (let i = 0; i < event.speakers.data.length; i++) {
+        image_list.push(process.env.VUE_APP_JEEC_BRAIN_URL + event.speakers.data[i].image);
+      }
+      return image_list;
+    },
+
+    toggleDesc(){
+
+      if(this.showDesc == false){
+        this.showDesc = true;
+        this.hideDesc = false;
+        this.showmore_text = "show less"
+      } else {
+        this.showDesc = false;
+        this.hideDesc = true;
+        this.showmore_text = "show more"
+      }
     }
   },
   data: function () {
     return {
-      image_list: this.getImageList(this.event),
+      companies_image_list: this.getCompaniesImageList(this.event),
+      speakers_image_list: this.getSpeakersImageList(this.event),
       loadImg: false,
+      showDesc: false,
+      hideDesc: true,
+      showmore_text: "show more",
       atcb_config: {
         customLabels:{"apple":"Apple Calendar", "google":"Google Calendar", "outlookcom":"Outlook Calendar"},
         name: "[JEEC] " + this.event.name,
@@ -133,8 +184,10 @@ export default {
 
 .event {
   width: 100%;
-  height: 110px;
+  min-height: 110px;
   margin-top: 10px;
+
+
 }
 
 .hour-info {
@@ -155,11 +208,12 @@ export default {
   margin-left: 20px;
   margin-top: 5px;
   margin-bottom: 5px;
-  height: 80px;
+  min-height: 80px;
   border-radius: 0 45px 45px 45px;
   display: flex;
   align-items: center;
   border-style: solid;
+
 }
 
 .main {
@@ -168,12 +222,9 @@ export default {
 }
 
 .add {
-  width: 25px;
   height: 100%;
-  position: relative;
   margin: 0px;
-  display: flex;
-  flex-direction: column-reverse;
+
 
   a{
     width: 100%;
@@ -232,6 +283,32 @@ export default {
   justify-content: flex-end;
   font-size: 8pt;
   text-align: end;
+  margin-bottom: 5px;
+  a{
+    text-decoration-line: underline;
+    pointer-events: all;
+    cursor: pointer;
+    z-index: 100;
+  }
+  
+}
+
+#description{
+  margin-left: 15px;
+  text-align: start;
+  padding-bottom: 5px;
+}
+
+#description.desc-closed{
+  max-height: 0;
+  opacity: 0;
+  transition: 500ms;
+}
+
+#description.desc-open{
+  max-height: auto;
+  opacity: 1;
+  transition: all 500ms;
 }
 
 #symbol {
@@ -255,11 +332,11 @@ export default {
 #small-foto {
   width: 25px;
   height: 25px;
-  background: rgb(21, 199, 45);
+  background: white;
   border-radius: 50%;
   position: absolute;
   left: 5px;
-  bottom: 5px;
+  bottom: 0px;
   border-style: solid;
 }
 
