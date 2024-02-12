@@ -726,22 +726,21 @@ button.create-squad-button p {
 
 .squad-image-placeholder {
   position: relative; 
-  width: 30vh;
-  height: 30vh;
+  width: 100%;
+  max-width: 200px;
+  flex-shrink: 0;
   border-radius: 50%;
   background-color: #1F2A47; 
   display: flex;
   justify-content: center;
   align-items: center;
   order: 2; 
-  margin-right: 500px;
 }
 
 .squad-texts {
   display: flex;
   flex-direction: column;
   order: 1; 
-  margin-left: 500px;
 }
 
 .squad-name {
@@ -758,11 +757,10 @@ button.create-squad-button p {
 }
 
 .squad-image{
-  height: 30vh;
-  width: 30vh;
+  height: 100%;
+  width: 100%;
   border-radius: 50%;
   border: 3px solid #03618C;
-  margin-left:10vw;
 }
 
 .none_back{
@@ -816,7 +814,6 @@ button.invite{
 button.minus-symbol .button-icon {
   background: none;
   vertical-align: right; 
-  margin-top: 500px;
   width: 20px;
   height: 20px; 
 }
@@ -826,6 +823,11 @@ button.minus-symbol .button-icon {
   cursor: pointer;
   border: none; 
   outline: none; 
+}
+
+.leave_style .button-icon {
+  width: 40px;
+  height: 40px;
 }
 .button-container {
   text-align: right; 
