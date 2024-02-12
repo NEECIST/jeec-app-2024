@@ -29,6 +29,21 @@
           <p>{{ student.linkedin_url === null ? 'Submit your LinkedIn' : 'LinkedIn Submitted' }}</p>
         </button>
       </div>
+
+      <div v-if="this.student.uploaded_cv == true" class="linkedin">
+        <button @click="see_cv">
+          <img :src="cv_img" alt="">
+          <p>See CV</p>
+        </button>
+      </div>
+
+      <a
+        style="display: none"
+        ref="see_cv"
+        :href="cv_url"
+        :download="this.student.username + '_cv.pdf'"
+        >CV</a
+      >
     
       <div class="modal" v-if="modalVisible == true">
         <div class="modal-content">
@@ -49,9 +64,9 @@
                 required
               />
               <br />
-              <center>
+              <div class="center-container">
                 <button class="submit-button"  type="submit">Confirm</button>
-              </center>
+              </div>
             </form>
           </div>
         </div>
@@ -123,7 +138,6 @@ export default {
     },
 
     toggleModal() {
-      console.log(this.modalVisible);
       this.modalVisible = !this.modalVisible;
     },
 
@@ -151,7 +165,7 @@ export default {
           this.loading_linkedin = false;
         },
         (error) => {
-          console.log(error);
+
           this.showNotification("Failed to add LinkedIn", "error");
           this.loading_linkedin = false;
         }
@@ -211,8 +225,6 @@ export default {
       (response) => {
         
         this.student = response.data.data;
-        console.log("ola")
-        console.log("ola", this.student.uploaded_cv)
       },
       (error) => {
         console.log(error);
@@ -320,4 +332,10 @@ export default {
 .submit-button:hover {
   background-color: #3498db;
 }
+
+.center-container {
+  display: flex;
+  justify-content: center;
+}
+
 </style>

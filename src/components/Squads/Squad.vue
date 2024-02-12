@@ -15,15 +15,12 @@
           />
         </div>
       </div>
-
-      <!-- <div v-for="student2 in students2">
-        {{ student2 }}
-      </div> -->
+      
 
       <div v-if="squad!=null">
-        <center>
+        <div class="center-container">
           <h1> YOUR SQUAD </h1>
-        </center>
+        </div>
       </div>
 
 
@@ -76,9 +73,11 @@
                     </ul>
                   </div>
                 </div>
-                <center>
+                
+                <div class="center-container">
                   <button @click.stop="invite" class="invite">Invite</button>
-                </center>
+                </div>
+                
               </div>
             </div>
           </div>  
@@ -116,16 +115,6 @@
 
     </div>
 
-    
-    <div v-else class="loading">
-      <v-progress-circular
-        indeterminate
-        color="#27ade4"
-        :size="100"
-        :width="10"
-        class="loading-bar"
-      ></v-progress-circular>
-    </div>
   </div>
 
   <div>
@@ -312,7 +301,6 @@ export default {
 
         await UserService.inviteSquad(this.squadmates).then(
           (response) => {
-            console.log('convite enviado 1');
             this.squadmates = [];
             const data = response.data;
             this.members_with_squad = data.members_with_squad
@@ -474,20 +462,26 @@ export default {
 
     UserService.getUserSquad().then(
       (response) => {
-        this.squad = response.data.data;
-        var squad = this.squad;
 
-        squad.members.data.forEach(function (item, i) {
-          if (item.name === squad.captain_ist_id) {
-            squad.members.data.splice(i, 1);
-            squad.members.data.unshift(item);
-          }
-        });
+        if(response.data.error) {
+          this.squad = null;
+          this.loading_squad = false;
+        } else {
+          this.squad = response.data.data;
+          var squad = this.squad;
 
-        this.loading_squad = false;
+          squad.members.data.forEach(function (item, i) {
+            if (item.name === squad.captain_ist_id) {
+              squad.members.data.splice(i, 1);
+              squad.members.data.unshift(item);
+            }
+          });
+
+          this.loading_squad = false;
+        }
+        
       },
       (error) => {
-        console.log('olaaaaa');
         console.log(error);
         this.loading_squad = false;
       }
@@ -496,7 +490,6 @@ export default {
     UserService.getSquadInvitationsReceived().then(
       (response) => {
         this.invites = response.data.data;
-        console.log(this.invites)
       },
       (error) => {
         console.log(error);
@@ -506,10 +499,8 @@ export default {
     UserService.getStudentsAll().then(
       (response) => {
         this.students2 = response.data.students;
-        console.log(this.students2[0]);
       },
       (error) => {
-        console.log('houve um erro')
         console.log(error);
       }
     );
@@ -518,30 +509,6 @@ export default {
       const data = response.data; this.length = data.length; 
       }
     );
-    
-    
-    
-    // if(this.squad != null) {
-      
-    //   UserService.getStudents('').then(
-    //     (response) => {
-    //       var students = response.data.data;
-    //       this.students = [students];
-
-    //       var squad_members = this.squad.members.data.map((item) => item.username);
-    //       var invites_sent = this.invites_sent.map((item) => item.username);
-
-    //       this.students = this.students.filter(
-    //         (item) => (!squad_members.includes(item.username) && !invites_sent.includes(item.username))
-    //       );
-    //       console.log("students");
-    //       console.log(students);
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-    // }
     
   },
 };
@@ -862,6 +829,11 @@ button.minus-symbol .button-icon {
 }
 .button-container {
   text-align: right; 
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
 }
 
 </style>

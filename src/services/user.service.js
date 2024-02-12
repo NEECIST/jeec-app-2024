@@ -77,7 +77,6 @@ class UserService {
   }
 
   getStudentsAll() {
-    console.log(authHeader());
     return axios.post(jeec_brain_url + "/student/studentsAll2", 
     {
       headers: authHeader()
@@ -223,7 +222,6 @@ class UserService {
   }
 
   getStudentsRanking() {
-    console.log(authHeader());
     return axios.get(jeec_brain_url + "/student/students-ranking", {
       headers: authHeader()
     });
