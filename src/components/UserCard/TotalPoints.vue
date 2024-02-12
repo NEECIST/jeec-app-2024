@@ -25,9 +25,9 @@ watch(() => userStore.milestones.final, () => {
   const progressPercentage = (userTotalPoints / milestone) * 100;
   
   if (progressPercentage > 100) {
-    progress.value = 100;
+    progress.value = 100
   } else {
-    progress.value = progressPercentage;
+    progress.value = progressPercentage.toFixed(2);
   }
 
 });
