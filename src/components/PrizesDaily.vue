@@ -1,44 +1,13 @@
 <template>
-  <div class="jeecpot-rewards" v-if="rewards">
-
-    <carousel :items-to-show="3">
-      <Slide v-for="(item, key) in rewards" :key="item" style="margin-bottom:15px; margin-top:15px; overflow:visible; flex-direction:column">
-        <!-- <div>
-          {{ currentSlide }}
-        </div> -->
-
-        <div class="reward-img">
-          <img :src="jeec_brain_url + item" class="activity-img">
-          <!-- <img :src="item" class="activity-img"> -->
+  <div class="daily-rewards" v-if="rewards">
+    <carousel :breakpoints="carousel_breakpoints" :items-to-show="4.8" :wrap-around="true" autoplay="2500">
+      <Slide v-for="(item, key) in rewards" :key="item" class="reward">
+        <div class="reward-img radient-border-passthrough">
+          <img :src="jeec_brain_url + item">
         </div>
-        <p v-if="key==0">
-          Monday
-        </p>
-        <p v-if="key==1">
-          Tuesday
-        </p>
-        <p v-if="key==2">
-          Wednesday
-        </p>
-        <p v-if="key==3">
-          Thursday
-        </p>
-        <p v-if="key==4">
-          Friday
-        </p>
+        <p>{{ weekDays[key] }}</p>
       </Slide>
-
-      <!-- <template #addons="{ currentSlide }">
-        {{ currentSlide }}
-      </template> -->
     </carousel>
-
-<!--    <div v-for="item in rewards" :key="item">
-      {{ item.date }}
-      <div class="reward-img">
-        <img :src="jeec_brain_url + item.img" class="activity-img">
-      </div>
-    </div>-->
   </div>
 </template>
 
@@ -60,6 +29,12 @@ export default {
   data() {
     return {
       jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
+      carousel_breakpoints: {
+        0: { itemsToShow: 2.8 },
+        640: { itemsToShow: 3.6 },
+        900: { itemsToShow: 4.8 }
+      },
+      weekDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     };
   },
   computed: {},
@@ -67,141 +42,63 @@ export default {
 </script>
 
 <style scoped>
-.jeecpot-rewards {
-  font-weight: 600;
-  width: 100vw;
+.carousel {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.title-container {
-  position: relative;
-  top: 2vh;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+.carousel__slide--sliding {
+  transition: 0.5s;
 }
 
-.individual-title {
-  width: 146px;
-  height: 34px;
-
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 28px;
-  line-height: 34px;
-
-  color: #03618C;
+.carousel__slide {
+  transform: scale(0.8);
 }
 
-.squads-title {
-  width: 94px;
-  height: 34px;
-
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 28px;
-  line-height: 34px;
-
-  color: #03618C;
+.carousel__slide--active ~ .carousel__slide {
+  transform: scale(0.9);
 }
 
-.winner-container {
-  height: 85vh;
+.carousel__slide--prev {
+  transform: scale(1);
+}
+
+.carousel__slide--next {
+  transform: scale(1);
+}
+
+.carousel__slide--active {
+  transform: scale(1.1);
+}
+
+.reward {
+  padding: 2rem 0 1rem 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-}
-
-.winner-box {
-  position: relative;
-  align-self: center;
-  width: 90vw;
-  height: 20vh;
-  border-radius: 35px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
   align-items: center;
-}
-
-.prize {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.reward-info {
-  position: relative;
-  margin-top: 3vw;
-  width: 80px;
-  height: 24px;
-
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 24px;
-
-  color: #000000;
-}
-
-.image {
-  border-radius: 50%;
-
-  position: relative;
-  width: 12.5vh;
-  height: 12.5vh;
-  background-color: #FFFFFF;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
-
-.placements {
-  position: relative;
-  margin-left: -5vw;
-  width: 19px;
-  height: 59px;
-
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 48px;
-  line-height: 59px;
-  /* identical to box height */
-
-  letter-spacing: 0.01em;
 }
 
 .reward-img {
-  /*align-self: center;*/
-  position: relative;
-  height: 13vh;
-  width: 13vh;
-  background-size: 105%;
-  background-repeat: no-repeat;
-  background-position: center;
-  margin-left: auto;
-  margin-right: auto;
-  overflow:visible;
-  margin-bottom:10px;
+  width: 110px;
+  aspect-ratio: 1;
+  box-shadow: 0px 0px 10px #4c99f0;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  --border-radius: 50%;
+  --border-background: linear-gradient(135deg, #605ED0, #4CC9F0 40%, #7209B7);
 }
 
-.activity-img {
-  align-self: right;
-  position: relative;
-  height: 13vh;
-  width: 13vh;
-  border: 0.1vh solid white;
+.reward-img::before {
+  content: "";
+}
+
+.reward-img img {
+  height: 97%;
+  width: 97%;
   border-radius: 50%;
   background-color: white;
-  background-size: 105%;
-  background-repeat: no-repeat;
-  background-position: center;
-  margin-left: auto;
-  margin-right: auto;
-  object-fit: contain;
-  box-shadow: 0px 0px 15px #4CC9F0;
 }
 </style>

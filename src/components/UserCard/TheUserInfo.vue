@@ -22,13 +22,10 @@ import QrCodeButton from './QrCodeButton.vue';
 import DailyTickets from './DailyTickets.vue';
 import TotalPoints from './TotalPoints.vue';
 import UserImage from './UserImage.vue';
-import { usePrizeStore } from "@/stores/PrizeStore";
 
 import { useUserStore } from '@/stores/UserStore';
-
-const prizeStore = usePrizeStore();
 const userStore = useUserStore();
-prizeStore.getRewards();
+
 userStore.getMilestones();
 
 import { defineProps } from 'vue';
