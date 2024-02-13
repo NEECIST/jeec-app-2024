@@ -5,7 +5,8 @@
               <div class="img-wrapper radient-border-passthrough">
                 <img :src="ProcessImg(other_rankingdata[1].photo, type)" class="podium-img">
               </div>            
-              <p class="podium-text">{{other_rankingdata[1].name}}</p>
+              <p v-if="other_rankingdata[1].name != identity" class="podium-text">{{other_rankingdata[1].name}}</p>
+              <p v-else class="you_name">{{ identity }}</p>
               <div class="pilar_2">
                 <span :id="'number-2'" class="number">2</span><sup :id="'super-2'" class="super">nd</sup>
               </div> 
@@ -15,7 +16,8 @@
               <div class="img-wrapper radient-border-passthrough">
                 <img :src="ProcessImg(other_rankingdata[0].photo, type)" class="podium-img">
               </div>
-              <p class="podium-text">{{other_rankingdata[0].name}}</p>
+              <p v-if="other_rankingdata[0].name != identity" class="podium-text">{{other_rankingdata[0].name}}</p>
+              <p v-else class="you_name">{{ identity }}</p>
               <div class="pilar_1">
                 <span :id="'number-1'" class="number">1</span><sup :id="'super-1'" class="super">st</sup>
               </div>
@@ -25,7 +27,8 @@
               <div class="img-wrapper radient-border-passthrough">
                 <img :src="ProcessImg(other_rankingdata[2].photo, type)" class="podium-img">
               </div>
-              <p class="podium-text">{{other_rankingdata[2].name}}</p>
+              <p v-if="other_rankingdata[2].name != identity" class="podium-text">{{other_rankingdata[2].name}}</p>
+              <p v-else class="you_name">{{ identity }}</p>
               <div class="pilar_3">
                 <span :id="'number-3'" class="number">3</span><sup :id="'super-3'" class="super">rd</sup>
               </div>
@@ -42,7 +45,7 @@
               </div>
             </div>
 
-            <div class="student_name">
+            <div class="you_name">
               <p>{{ identity }}</p> 
             </div>
 
@@ -65,11 +68,14 @@
                     </div>
                   </div>
                 
-
-                  <div class="student_name">
-                    <p>{{ other_rankingdata[index + 2].name }}</p>
-                  </div>
-
+                    <div v-if="other_rankingdata[index + 2].name != identity" class="student_name">
+                      <p>{{ other_rankingdata[index + 2].name }}</p>
+                    </div>
+                  
+                    <div v-else class="you_name">
+                      <p>{{ identity }}</p> 
+                    </div>
+                  
                   <div class="student_xp">
                     <p>{{ other_rankingdata[index + 2].points }} xp</p>
                   </div>
@@ -156,16 +162,36 @@ export default {
   content: "";
 }
 
+.you_name{
+  display: flex;
+  flex: 1;
+  justify-content: start;
+  align-items: center;
+  align-self: center;
+  height: 50%;
+  font-family: "Lexend Exa";
+  font-size: 100%;
+  font-weight: 600;
+  letter-spacing: 0.4vw;
+  color:#4CC9F0;
+  text-shadow: 0px 0px 15px #4CC9F0;
+}
+
 .student_name{
   display: flex;
   flex: 1;
   justify-content: start;
   align-items: center;
-  text-align: center;
+  align-self: center;
+  height: 50%;
   font-family: "Lexend Exa";
   font-size: 100%;
   font-weight: 600;
   letter-spacing: 0.4vw;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .student_ranking_number{
