@@ -41,7 +41,10 @@ export default {
   name: "FadeLoop",
   props: {
     image_list: Array,
-    index: String
+    index: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
