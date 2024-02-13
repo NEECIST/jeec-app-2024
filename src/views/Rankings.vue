@@ -1,16 +1,15 @@
 <template>
 
   <div class="rankings">
-    <div class="center">
       <div class="main-button-container">
-        <div @click.stop="click_daily()" id="main-button-left" class="main-button radient-border-passthrough">
-          SOLO
-        </div>
-        <div @click.stop="click_week()" id="main-button-right" class="main-button radient-border-passthrough">
-          SQUAD
-        </div>
-      </div>
+      <button  @click.stop="click_daily()" class="main-button radient-border-passthrough" :class="{active: daily}">
+        SOLO
+      </button>
+      <button @click.stop="click_week()" class="main-button radient-border-passthrough" :class="{active: !daily}">
+        SQUAD
+      </button>
     </div>
+   
     
 
     <div class="spacing"></div>
@@ -218,33 +217,34 @@ export default {
 .main-button-container{
   display:flex;
   justify-content:space-around;
-  width: 90%;
+  max-width: 500px;
+  margin: 0 auto;
+  gap: 10px;
 }
-
 .main-button{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 47%;
-  height: 2.7vh;
-  font-size: 90%;
-  font-weight: 600;
+  width: 100%;
+  font-size: 1.3rem;
+  padding: 0.3rem;
+  border: none;
+  cursor: pointer;
+  --background: none;
   --border-width: 2px 0 0 0;
-  background: none;
-  font-family: "Lexend Exa";
-  letter-spacing: 0.2vw;
 }
-
-.main-button::before{
+.main-button:first-of-type {
+  --border-background: linear-gradient(100deg, #4CC9F0, #7209B7);
+  --border-radius: 20px 0 0 0;
+}
+.main-button:last-of-type {
+  --border-background: linear-gradient(100deg, #7209B7, #F72585);
+  --border-radius: 0 20px 0 0;
+}
+.main-button.active {
+  font-size: 1.4rem;
+  font-weight: 700;
+  --background: radial-gradient(ellipse 60% 120% at 50% 0, #4ccaf032, #7109b70e 90%, #7109b700);
+}
+.main-button::before {
   content: "";
-}
-
-#main-button-left{
-  --border-radius: 20px 0px 0px 0px;
-}
-
-#main-button-right{
-  --border-radius: 0px 20px 0px 0px;
 }
 
 .prize-title{

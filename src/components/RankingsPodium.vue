@@ -7,7 +7,7 @@
               </div>            
               <p v-if="other_rankingdata[1].name != identity" class="podium-text">{{other_rankingdata[1].name}}</p>
               <p v-else class="you_name">{{ identity }}</p>
-              <div class="pilar_2">
+              <div :id="'pilar-2'" class="pilar">
                 <span :id="'number-2'" class="number">2</span><sup :id="'super-2'" class="super">nd</sup>
               </div> 
               <div :id="'line-silver'" class="line"></div>
@@ -18,7 +18,7 @@
               </div>
               <p v-if="other_rankingdata[0].name != identity" class="podium-text">{{other_rankingdata[0].name}}</p>
               <p v-else class="you_name">{{ identity }}</p>
-              <div class="pilar_1">
+              <div :id="'pilar-1'" class="pilar">
                 <span :id="'number-1'" class="number">1</span><sup :id="'super-1'" class="super">st</sup>
               </div>
               <div :id="'line-gold'" class="line"></div>
@@ -29,7 +29,7 @@
               </div>
               <p v-if="other_rankingdata[2].name != identity" class="podium-text">{{other_rankingdata[2].name}}</p>
               <p v-else class="you_name">{{ identity }}</p>
-              <div class="pilar_3">
+              <div :id="'pilar-3'" class="pilar">
                 <span :id="'number-3'" class="number">3</span><sup :id="'super-3'" class="super">rd</sup>
               </div>
               <div :id="'line-bronze'" class="line"></div>
@@ -149,6 +149,7 @@ export default {
 
 .top_10{
   width: 90%;
+  max-width: 500px;
   height: 4.5vh;
   display: flex;
   font-family: "Lexend Exa";
@@ -199,9 +200,10 @@ export default {
   justify-content: center;
   align-items: center;
   align-self: center;
-  width: 3.5vh;
-  height: 3.5vh;
-  font-size: 70%;
+  width: 4.2vh;
+  height: 4.2vh;
+  font-size: 60%;
+  font-weight: 800;
   background-color: #6D3F0B;
   border-radius: 100%;
 }
@@ -215,11 +217,12 @@ export default {
   font-family: "Lexend Exa";
   font-size: 80%;
   font-weight: 600;
-  width: 20vw;
+  width: 20%;
 }
 
 .dropdown{
-  width: 40vw;
+  width: 40%;
+  max-width: 200px;
   height: 3.5vh;
   display: flex;
   position: relative;
@@ -238,8 +241,8 @@ export default {
   display: flex;
   justify-content: start;
   align-items: center;
-  width: 15vw;
-  margin-left: 3vw;
+  width: 15%;
+  margin-left: 4%;
 }
 
 .line {
@@ -374,34 +377,30 @@ export default {
 
 .podium{
   width: 90%;
+  max-width: 500px;
   display:flex;
   justify-content: space-between;
   align-items: end;
 }
 
-.pilar_1{
+.pilar{
   text-align: center;
   color:white;
   vertical-align: middle;
-  width:27vw;
+  width:100%;
+}
+
+#pilar-1{
   font-size: 7vh;
 }
-.pilar_2{
-  text-align: center;
-  color:white;
-  vertical-align: middle;
-  width:27vw;
+
+#pilar-2{
   font-size: 6vh;
 }
 
-.pilar_3{
-  text-align: center;
-  color:white;
-  vertical-align: middle;
-  width:27vw;
+#pilar-3{
   font-size: 4vh;
 }
-
 
 .podium-text{
   color: var(--Greyish-White, #E7E7E7);
