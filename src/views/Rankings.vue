@@ -1,15 +1,17 @@
 <template>
 
   <div class="rankings">
-
-    <div class="main-button-container">
-      <div @click.stop="click_daily()" id="main-button-left" class="main-button radient-border-passthrough">
-        SOLO
-      </div>
-      <div @click.stop="click_week()" id="main-button-right" class="main-button radient-border-passthrough">
-        SQUAD
+    <div class="center">
+      <div class="main-button-container">
+        <div @click.stop="click_daily()" id="main-button-left" class="main-button radient-border-passthrough">
+          SOLO
+        </div>
+        <div @click.stop="click_week()" id="main-button-right" class="main-button radient-border-passthrough">
+          SQUAD
+        </div>
       </div>
     </div>
+    
 
     <div class="spacing"></div>
 
@@ -206,19 +208,27 @@ export default {
 
 <style scoped>
 .spacing{
-  height: 3vh;
+  height: 5vh;
+}
+
+.center{
+  display: flex;
+  justify-content: center;
 }
 .main-button-container{
   display:flex;
   justify-content:space-around;
+  width: 90%;
 }
 
 .main-button{
   display: flex;
   justify-content: center;
-  width:45vw;
+  align-items: center;
+  width: 47%;
   height: 2.7vh;
-  font-size:20px;
+  font-size: 90%;
+  font-weight: 600;
   --border-width: 2px 0 0 0;
   background: none;
   font-family: "Lexend Exa";
