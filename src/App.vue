@@ -20,8 +20,19 @@ import { usePrizeStore } from '@/stores/PrizeStore';
 
 const stateStore = useStateStore();
 const userStore = useUserStore();
+const prizeStore = usePrizeStore();
 
-userStore.getPoints()
+if (userStore.loggedIn) {
+  prizeStore.getRewards();
+  userStore.getPoints()
+} else {
+  watch(() => userStore.loggedIn, () => {
+    if (userStore.loggedIn) {
+      prizeStore.getRewards();
+      userStore.getPoints()
+    }
+  });
+}
 
 import { ref, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; 
