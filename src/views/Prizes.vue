@@ -15,13 +15,13 @@
       <div>
         <p class="prize-title daily">SOLO PRIZES</p>
 
-        <PrizesDaily :rewards="images.individual_daily_rewards" v-if="ready" />
+        <PrizesDaily :rewards="images.individual_daily_rewards" />
       </div>
       <!-- {{ weekly }} -->
       <div>
         <p class="prize-title daily">SQUAD PRIZES</p>
 
-        <PrizesDaily :rewards="images.squad_daily_rewards" v-if="ready"/>
+        <PrizesDaily :rewards="images.squad_daily_rewards"/>
       </div>
     </div>
     <div v-else>
@@ -29,18 +29,18 @@
       <div>
         <p class="prize-title weekly">JEECPOT</p>
 
-        <PrizesWeekly :rewards="images.jeecpot" v-if="ready"/>
+        <PrizesWeekly :rewards="images.jeecpot"/>
       </div>
       <!-- {{ weekly }} -->
       <div>
         <p class="prize-title weekly">SOLO PRIZES</p>
 
-        <PrizesWeekly :rewards="images.individual_weekly_rewards" v-if="ready"/>
+        <PrizesWeekly :rewards="images.individual_weekly_rewards"/>
       </div>
       <div>
         <p class="prize-title weekly">SQUAD PRIZES</p>
 
-        <PrizesWeekly :rewards="images.squad_weekly_rewards" v-if="ready"/>
+        <PrizesWeekly :rewards="images.squad_weekly_rewards"/>
       </div>
     </div>
 
@@ -65,7 +65,6 @@ export default {
   data: function () {
     return {
       daily: true,
-      ready:false,
       // images:{
       //     solo_daily_prizes: [image,image,image,image,image],
       //     squad_daily_prizes: [image,image,image,image,image],
@@ -85,13 +84,7 @@ export default {
     click_week() {
       this.daily = false;
     },
-  },
-  watch:{
-    images(){
-      this.ready=true;
-      console.log(this.images);
-    }
-  },
+  }
 };
 </script>
 
