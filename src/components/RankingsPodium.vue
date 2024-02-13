@@ -54,29 +54,30 @@
         </div>
       </div>
         
-      <div class="center">
+      
         <div v-if="show">
           <div v-for="index in other_rankingdata.length - 3" :key="index">
-            <div class="top_10 radient-border-passthrough">
-              <div class="box">
-                <div class="student_ranking_number">
-                  <p>{{ index + 3 }}th</p>
+            <div class="center">
+                <div class="top_10 radient-border-passthrough">
+                  <div class="box">
+                    <div class="student_ranking_number">
+                      <p>{{ index + 3 }}th</p>
+                    </div>
+                  </div>
+                
+
+                  <div class="student_name">
+                    <p>{{ other_rankingdata[index + 2].name }}</p>
+                  </div>
+
+                  <div class="student_xp">
+                    <p>{{ other_rankingdata[index + 2].points }} xp</p>
+                  </div>
                 </div>
-              </div>
-              
-
-              <div class="student_name">
-                <p>{{ other_rankingdata[index + 2].name }}</p>
-              </div>
-
-              <div class="student_xp">
-                <p>{{ other_rankingdata[index + 2].points }} xp</p>
-              </div>
             </div>
           </div>
-
         </div>
-      </div>
+      
         
       <div class="center">
         <div @click="show = !show" class="dropdown radient-border-passthrough">
@@ -141,7 +142,7 @@ export default {
 }
 
 .top_10{
-  width: 85vw;
+  width: 90%;
   height: 4.5vh;
   display: flex;
   font-family: "Lexend Exa";
@@ -162,7 +163,7 @@ export default {
   align-items: center;
   text-align: center;
   font-family: "Lexend Exa";
-  font-size: 1.7vh;
+  font-size: 100%;
   font-weight: 600;
   letter-spacing: 0.4vw;
 }
@@ -172,9 +173,9 @@ export default {
   justify-content: center;
   align-items: center;
   align-self: center;
-  width: 6vw;
-  height: 6vw;
-  font-size: 2.1vw;
+  width: 3.5vh;
+  height: 3.5vh;
+  font-size: 70%;
   background-color: #6D3F0B;
   border-radius: 100%;
 }
@@ -186,7 +187,7 @@ export default {
   align-items: center;
   text-align: center;
   font-family: "Lexend Exa";
-  font-size: 1.3vh;
+  font-size: 80%;
   font-weight: 600;
   width: 20vw;
 }
@@ -346,7 +347,7 @@ export default {
 
 
 .podium{
-  width: 85vw;
+  width: 90%;
   display:flex;
   justify-content: space-between;
   align-items: end;
@@ -380,7 +381,7 @@ export default {
   color: var(--Greyish-White, #E7E7E7);
   text-align: center;
   font-family: "Lexend Exa";
-  font-size: 1.7vh;
+  font-size: 90%;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -393,7 +394,7 @@ export default {
 .img-wrapper {
   --border-radius: 50%;
   overflow: hidden;
-  width: 80%;
+  width: 60%;
   aspect-ratio: 1;
   margin: 0 auto;
 }
@@ -409,21 +410,21 @@ export default {
 
 
 .stand{
-  width:27vw;
+  width:32.5%;
   --border-radius: 0;
   --background: radial-gradient(ellipse 100% 100% at 50% 100%, #4ccaf03e, #4ccaf021 45%, #4ccaf000);
 }
 
 #stand-1{
-  height: 25vh;
+  height: 115%;
 }
 
 #stand-2{
-  height: 21vh;
+  height: 105%;
 }
 
 #stand-3{
-  height: 18vh;
+  height: 95%;
 }
 
 
