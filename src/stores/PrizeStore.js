@@ -26,10 +26,12 @@ export const usePrizeStore = defineStore("PrizeStore", {
         )
         .then((response) => {
           this.images = response.data
+          let temporary = this.images.individual_weekly_rewards[0]
           this.images.individual_weekly_rewards[0] = response.data.individual_weekly_rewards[1]
-          this.images.individual_weekly_rewards[1] = response.data.individual_weekly_rewards[0]
-          this.images.squad_weekly_rewards[0] = response.data.individual_weekly_rewards[1]
-          this.images.squad_weekly_rewards[1] = response.data.individual_weekly_rewards[0]
+          this.images.individual_weekly_rewards[1] = temporary
+          temporary = this.images.squad_weekly_rewards[0]
+          this.images.squad_weekly_rewards[0] = response.data.squad_weekly_rewards[1]
+          this.images.squad_weekly_rewards[1] = temporary
           console.log(response.data)
         })
     },
