@@ -6,7 +6,7 @@
                 <img :src="ProcessImg(other_rankingdata[1].photo, type)" class="podium-img">
               </div>            
               <p v-if="other_rankingdata[1].name != identity" class="podium-text">{{other_rankingdata[1].name}}</p>
-              <p v-else class="you_name">{{ identity }}</p>
+              <p v-else class="you_name_podium">{{ identity }}</p>
               <div :id="'pilar-2'" class="pilar">
                 <span :id="'number-2'" class="number">2</span><sup :id="'super-2'" class="super">nd</sup>
               </div> 
@@ -17,7 +17,7 @@
                 <img :src="ProcessImg(other_rankingdata[0].photo, type)" class="podium-img">
               </div>
               <p v-if="other_rankingdata[0].name != identity" class="podium-text">{{other_rankingdata[0].name}}</p>
-              <p v-else class="you_name">{{ identity }}</p>
+              <p v-else class="you_name_podium">{{ identity }}</p>
               <div :id="'pilar-1'" class="pilar">
                 <span :id="'number-1'" class="number">1</span><sup :id="'super-1'" class="super">st</sup>
               </div>
@@ -28,7 +28,7 @@
                 <img :src="ProcessImg(other_rankingdata[2].photo, type)" class="podium-img">
               </div>
               <p v-if="other_rankingdata[2].name != identity" class="podium-text">{{other_rankingdata[2].name}}</p>
-              <p v-else class="you_name">{{ identity }}</p>
+              <p v-else class="you_name_podium">{{ identity }}</p>
               <div :id="'pilar-3'" class="pilar">
                 <span :id="'number-3'" class="number">3</span><sup :id="'super-3'" class="super">rd</sup>
               </div>
@@ -36,29 +36,36 @@
             </div>
     </div>
   </div>
-    
+
       <div class="center">
-        <div v-if="!show && flag" class="top_10 radient-border-passthrough">
-            <div class="box">
-              <div class="student_ranking_number">
-                <p>{{ user_ranking }}th</p>
+        <Transition name="show-you" appear>
+            <div v-if="!show && flag" class="top_10 radient-border-passthrough show-you-transition">
+              <div class="box">
+                <div class="student_ranking_number">
+                  <p v-if="user_ranking == 1">{{ user_ranking }}st</p>
+                  <p v-if="user_ranking == 2">{{ user_ranking }}nd</p>
+                  <p v-if="user_ranking == 3">{{ user_ranking }}rd</p>
+                  <p v-if="user_ranking > 3">{{ user_ranking }}th</p>
+                </div>
               </div>
-            </div>
 
-            <div class="you_name">
-              <p>{{ identity }}</p> 
-            </div>
+              <div class="you_name">
+                <p>{{ identity }}</p> 
+              </div>
 
-            <div class="student_xp">
-              <p>{{ user_points }} xp</p>
-            </div>
-          
+              <div class="student_xp">
+                <p>{{ user_points }} xp</p>
+              </div>
+            
 
-        </div>
+            </div>
+        </Transition>
+
       </div>
+   
         
-      
-        <div v-if="show">
+      <Transition name="show" appear>
+        <div class="show-transition" v-if="show">
           <div v-for="index in other_rankingdata.length - 3" :key="index">
             <div class="center">
                 <div class="top_10 radient-border-passthrough">
@@ -83,8 +90,8 @@
             </div>
           </div>
         </div>
-      
-        
+      </Transition>
+
       <div class="center">
         <div @click="show = !show" class="dropdown radient-border-passthrough">
           <div><img :src="arrow" class="arrow" :class="{open: show}"></div>
@@ -138,6 +145,43 @@ export default {
   --color-dark: #1F1F1F;
 }
 
+.show-you-transition{
+  max-height: 45px;
+  overflow: hidden;
+}
+
+.show-you-enter-active{
+  transition: all 1s ease;
+}
+.show-you-leave-active {
+  transition: all 0.5s ease;
+}
+
+.show-you-enter-from,
+.show-you-leave-to {
+  max-height: 0;
+} 
+
+.show-transition{
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.show-enter-active,
+.show-leave-active {
+  transition: all 1s ease;
+}
+
+.show-enter-from,
+.show-leave-to {
+  max-height: 0;
+} 
+
+.arrow{
+  transform: rotateX(0deg);
+  transition: 1s;
+}
+
 .arrow.open{
   transform: rotateX(180deg);
   transition: 1s;
@@ -151,7 +195,7 @@ export default {
 .top_10{
   width: 90%;
   max-width: 500px;
-  height: 4.5vh;
+  height: 45px;
   display: flex;
   font-family: "Lexend Exa";
   color: white;
@@ -179,6 +223,21 @@ export default {
   text-shadow: 0px 0px 15px #4CC9F0;
 }
 
+.you_name_podium{
+  text-align: center;
+  font-family: "Lexend Exa";
+  font-size: 90%;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color:#4CC9F0;
+  text-shadow: 0px 0px 5px #4CC9F0;
+}
+
 .student_name{
   display: flex;
   flex: 1;
@@ -201,10 +260,11 @@ export default {
   justify-content: center;
   align-items: center;
   align-self: center;
-  width: 4.2vh;
-  height: 4.2vh;
+  width: 35px;
+  height: 35px;
   font-size: 60%;
   font-weight: 800;
+  border: #39250E 2px solid;
   background-color: #6D3F0B;
   border-radius: 100%;
 }
@@ -316,24 +376,21 @@ export default {
 }
 
 #number-1 {
-  font-size: 5.5vh;
   background-color: #C1A875;
 }
 
 #number-2 {
-  font-size: 4.5vh;
   background-color: #CDC9C2;
 }
 
 #number-3 {
-  font-size: 3.5vh;
   background-color: #C9705C;
 }
 
 .super{
   text-align: center;
   font-family: "Russo One";
-  font-size: 2vh;
+  font-size: 1rem;
   font-style: normal;
   font-weight: 400;
   line-height: 45px; 
@@ -392,22 +449,23 @@ export default {
 }
 
 #pilar-1{
-  font-size: 7vh;
+  font-size: 3rem;
 }
 
 #pilar-2{
-  font-size: 6vh;
+  font-size: 2.5rem;
 }
 
 #pilar-3{
-  font-size: 4vh;
+  font-size: 2rem;
 }
 
 .podium-text{
   color: var(--Greyish-White, #E7E7E7);
   text-align: center;
   font-family: "Lexend Exa";
-  font-size: 90%;
+  font-size: 0.9rem;
+  height: 2.5rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
