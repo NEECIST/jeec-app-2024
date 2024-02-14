@@ -37,6 +37,12 @@
         </button>
       </div>
 
+      <div class="linkedin" @click="redirectToform">
+        <button>
+          <p> Ordem dos engenheiros form</p>
+        </button>
+      </div>
+
       <a
         style="display: none"
         ref="see_cv"
@@ -130,6 +136,10 @@ export default {
     ...mapState(useUserStore, ['user'])
   },
   methods: {
+
+    redirectToform() {
+      window.location.href = 'https://www.google.com';
+    },
 
     showNotification(message, type) {
       this.toastMessage = message;
