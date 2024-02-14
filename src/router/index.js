@@ -42,8 +42,8 @@ const routes = [
     component: () => import("@/views/Rankings.vue"),
   },
   {
-    path: "/rules",
-    name: "Rules",
+    path: "/help",
+    name: "Help",
     component: () => import("@/views/Rules.vue"),
   },  
   {
