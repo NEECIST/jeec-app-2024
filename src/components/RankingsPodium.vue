@@ -5,8 +5,9 @@
               <div class="img-wrapper radient-border-passthrough">
                 <img :src="ProcessImg(other_rankingdata[1].photo, type)" class="podium-img">
               </div>            
-              <p class="podium-text">{{other_rankingdata[1].name}}</p>
-              <div class="pilar_2">
+              <p v-if="other_rankingdata[1].name != identity" class="podium-text">{{other_rankingdata[1].name}}</p>
+              <p v-else class="you_name_podium">{{ identity }}</p>
+              <div :id="'pilar-2'" class="pilar">
                 <span :id="'number-2'" class="number">2</span><sup :id="'super-2'" class="super">nd</sup>
               </div> 
               <div :id="'line-silver'" class="line"></div>
@@ -15,8 +16,9 @@
               <div class="img-wrapper radient-border-passthrough">
                 <img :src="ProcessImg(other_rankingdata[0].photo, type)" class="podium-img">
               </div>
-              <p class="podium-text">{{other_rankingdata[0].name}}</p>
-              <div class="pilar_1">
+              <p v-if="other_rankingdata[0].name != identity" class="podium-text">{{other_rankingdata[0].name}}</p>
+              <p v-else class="you_name_podium">{{ identity }}</p>
+              <div :id="'pilar-1'" class="pilar">
                 <span :id="'number-1'" class="number">1</span><sup :id="'super-1'" class="super">st</sup>
               </div>
               <div :id="'line-gold'" class="line"></div>
@@ -25,59 +27,71 @@
               <div class="img-wrapper radient-border-passthrough">
                 <img :src="ProcessImg(other_rankingdata[2].photo, type)" class="podium-img">
               </div>
-              <p class="podium-text">{{other_rankingdata[2].name}}</p>
-              <div class="pilar_3">
+              <p v-if="other_rankingdata[2].name != identity" class="podium-text">{{other_rankingdata[2].name}}</p>
+              <p v-else class="you_name_podium">{{ identity }}</p>
+              <div :id="'pilar-3'" class="pilar">
                 <span :id="'number-3'" class="number">3</span><sup :id="'super-3'" class="super">rd</sup>
               </div>
               <div :id="'line-bronze'" class="line"></div>
             </div>
     </div>
   </div>
-    
+
       <div class="center">
-        <div v-if="!show && flag" class="top_10 radient-border-passthrough">
-            <div class="box">
-              <div class="student_ranking_number">
-                <p>{{ user_ranking }}th</p>
-              </div>
-            </div>
-
-            <div class="student_name">
-              <p>{{ identity }}</p> 
-            </div>
-
-            <div class="student_xp">
-              <p>{{ user_points }} xp</p>
-            </div>
-          
-
-        </div>
-      </div>
-        
-      <div class="center">
-        <div v-if="show">
-          <div v-for="index in other_rankingdata.length - 3" :key="index">
-            <div class="top_10 radient-border-passthrough">
+        <Transition name="show-you" appear>
+            <div v-if="!show && flag" class="top_10 radient-border-passthrough show-you-transition">
               <div class="box">
                 <div class="student_ranking_number">
-                  <p>{{ index + 3 }}th</p>
+                  <p v-if="user_ranking == 1">{{ user_ranking }}st</p>
+                  <p v-if="user_ranking == 2">{{ user_ranking }}nd</p>
+                  <p v-if="user_ranking == 3">{{ user_ranking }}rd</p>
+                  <p v-if="user_ranking > 3">{{ user_ranking }}th</p>
                 </div>
               </div>
-              
 
-              <div class="student_name">
-                <p>{{ other_rankingdata[index + 2].name }}</p>
+              <div class="you_name">
+                <p>{{ identity }}</p> 
               </div>
 
               <div class="student_xp">
-                <p>{{ other_rankingdata[index + 2].points }} xp</p>
+                <p>{{ user_points }} xp</p>
               </div>
+            
+
+            </div>
+        </Transition>
+
+      </div>
+   
+        
+      <Transition name="show" appear>
+        <div class="show-transition" v-if="show">
+          <div v-for="index in other_rankingdata.length - 3" :key="index">
+            <div class="center">
+                <div class="top_10 radient-border-passthrough">
+                  <div class="box">
+                    <div class="student_ranking_number">
+                      <p>{{ index + 3 }}th</p>
+                    </div>
+                  </div>
+                
+                    <div v-if="other_rankingdata[index + 2].name != identity" class="student_name">
+                      <p>{{ other_rankingdata[index + 2].name }}</p>
+                    </div>
+                  
+                    <div v-else class="you_name">
+                      <p>{{ identity }}</p> 
+                    </div>
+                  
+                  <div class="student_xp">
+                    <p>{{ other_rankingdata[index + 2].points }} xp</p>
+                  </div>
+                </div>
             </div>
           </div>
-
         </div>
-      </div>
-        
+      </Transition>
+
       <div class="center">
         <div @click="show = !show" class="dropdown radient-border-passthrough">
           <div><img :src="arrow" class="arrow" :class="{open: show}"></div>
@@ -131,8 +145,46 @@ export default {
   --color-dark: #1F1F1F;
 }
 
+.show-you-transition{
+  max-height: 45px;
+  overflow: hidden;
+}
+
+.show-you-enter-active{
+  transition: all 1s ease;
+}
+.show-you-leave-active {
+  transition: all 0.5s ease;
+}
+
+.show-you-enter-from,
+.show-you-leave-to {
+  max-height: 0;
+} 
+
+.show-transition{
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.show-enter-active,
+.show-leave-active {
+  transition: all 1s ease;
+}
+
+.show-enter-from,
+.show-leave-to {
+  max-height: 0;
+} 
+
+.arrow{
+  transform: rotateX(0deg);
+  transition: 1s;
+}
+
 .arrow.open{
-  rotate: 180deg;
+  transform: rotateX(180deg);
+  transition: 1s;
 }
 
 .center{
@@ -141,8 +193,9 @@ export default {
 }
 
 .top_10{
-  width: 85vw;
-  height: 4.5vh;
+  width: 90%;
+  max-width: 500px;
+  height: 45px;
   display: flex;
   font-family: "Lexend Exa";
   color: white;
@@ -155,16 +208,51 @@ export default {
   content: "";
 }
 
+.you_name{
+  display: flex;
+  flex: 1;
+  justify-content: start;
+  align-items: center;
+  align-self: center;
+  height: 50%;
+  font-family: "Lexend Exa";
+  font-size: 100%;
+  font-weight: 600;
+  letter-spacing: 0.4vw;
+  color:#4CC9F0;
+  text-shadow: 0px 0px 15px #4CC9F0;
+}
+
+.you_name_podium{
+  text-align: center;
+  font-family: "Lexend Exa";
+  font-size: 90%;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color:#4CC9F0;
+  text-shadow: 0px 0px 5px #4CC9F0;
+}
+
 .student_name{
   display: flex;
   flex: 1;
   justify-content: start;
   align-items: center;
-  text-align: center;
+  align-self: center;
+  height: 50%;
   font-family: "Lexend Exa";
-  font-size: 1.7vh;
+  font-size: 100%;
   font-weight: 600;
   letter-spacing: 0.4vw;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .student_ranking_number{
@@ -172,9 +260,11 @@ export default {
   justify-content: center;
   align-items: center;
   align-self: center;
-  width: 6vw;
-  height: 6vw;
-  font-size: 2.1vw;
+  width: 35px;
+  height: 35px;
+  font-size: 60%;
+  font-weight: 800;
+  border: #39250E 2px solid;
   background-color: #6D3F0B;
   border-radius: 100%;
 }
@@ -186,13 +276,14 @@ export default {
   align-items: center;
   text-align: center;
   font-family: "Lexend Exa";
-  font-size: 1.3vh;
+  font-size: 80%;
   font-weight: 600;
-  width: 20vw;
+  width: 20%;
 }
 
 .dropdown{
-  width: 40vw;
+  width: 40%;
+  max-width: 200px;
   height: 3.5vh;
   display: flex;
   position: relative;
@@ -211,8 +302,8 @@ export default {
   display: flex;
   justify-content: start;
   align-items: center;
-  width: 15vw;
-  margin-left: 3vw;
+  width: 15%;
+  margin-left: 4%;
 }
 
 .line {
@@ -285,24 +376,21 @@ export default {
 }
 
 #number-1 {
-  font-size: 5.5vh;
   background-color: #C1A875;
 }
 
 #number-2 {
-  font-size: 4.5vh;
   background-color: #CDC9C2;
 }
 
 #number-3 {
-  font-size: 3.5vh;
   background-color: #C9705C;
 }
 
 .super{
   text-align: center;
   font-family: "Russo One";
-  font-size: 2vh;
+  font-size: 1rem;
   font-style: normal;
   font-weight: 400;
   line-height: 45px; 
@@ -346,41 +434,38 @@ export default {
 
 
 .podium{
-  width: 85vw;
+  width: 90%;
+  max-width: 500px;
   display:flex;
   justify-content: space-between;
   align-items: end;
 }
 
-.pilar_1{
+.pilar{
   text-align: center;
   color:white;
   vertical-align: middle;
-  width:27vw;
-  font-size: 7vh;
-}
-.pilar_2{
-  text-align: center;
-  color:white;
-  vertical-align: middle;
-  width:27vw;
-  font-size: 6vh;
+  width:100%;
 }
 
-.pilar_3{
-  text-align: center;
-  color:white;
-  vertical-align: middle;
-  width:27vw;
-  font-size: 4vh;
+#pilar-1{
+  font-size: 3rem;
 }
 
+#pilar-2{
+  font-size: 2.5rem;
+}
+
+#pilar-3{
+  font-size: 2rem;
+}
 
 .podium-text{
   color: var(--Greyish-White, #E7E7E7);
   text-align: center;
   font-family: "Lexend Exa";
-  font-size: 1.7vh;
+  font-size: 0.9rem;
+  height: 2.5rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -393,7 +478,7 @@ export default {
 .img-wrapper {
   --border-radius: 50%;
   overflow: hidden;
-  width: 80%;
+  width: 60%;
   aspect-ratio: 1;
   margin: 0 auto;
 }
@@ -409,21 +494,21 @@ export default {
 
 
 .stand{
-  width:27vw;
+  width:32.5%;
   --border-radius: 0;
   --background: radial-gradient(ellipse 100% 100% at 50% 100%, #4ccaf03e, #4ccaf021 45%, #4ccaf000);
 }
 
 #stand-1{
-  height: 25vh;
+  height: 115%;
 }
 
 #stand-2{
-  height: 21vh;
+  height: 105%;
 }
 
 #stand-3{
-  height: 18vh;
+  height: 95%;
 }
 
 

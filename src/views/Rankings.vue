@@ -1,15 +1,16 @@
 <template>
 
-  <div class="rankings">
-
-    <div class="main-button-container">
-      <div @click.stop="click_daily()" id="main-button-left" class="main-button radient-border-passthrough">
+  <div v-if="ready" class="rankings">
+      <div class="main-button-container">
+      <button  @click.stop="click_daily()" class="main-button radient-border-passthrough" :class="{active: daily}">
         SOLO
-      </div>
-      <div @click.stop="click_week()" id="main-button-right" class="main-button radient-border-passthrough">
+      </button>
+      <button @click.stop="click_week()" class="main-button radient-border-passthrough" :class="{active: !daily}">
         SQUAD
-      </div>
+      </button>
     </div>
+   
+    
 
     <div class="spacing"></div>
 
@@ -116,6 +117,8 @@ export default {
       identityy: String,
       rankingdata: [],
       user_squad_flag: true,
+      ready: false,
+
     };
   },
   methods: {
@@ -164,10 +167,11 @@ export default {
 
         if(this.rankingdata.squad_ranking == null){
           this.user_squad_flag = false;
+          this.identityy = "merda";
         }else{
           this.user_squad_flag = true;
           this.userdata_squad = this.rankingdata.squad_ranking;
-
+          this.identityy = "Your Squad";
           //Already have a condition in endpoint that dont let two squads have the same name
 
           for(let i=0;i<this.squads_weekly.length;i++){
@@ -185,15 +189,17 @@ export default {
 
         for(let i=0;i<this.students_weekly.length;i++){
           if (this.students_weekly[i].username == this.user.username){
-            this.students_weekly[i].name = "you";
+            this.students_weekly[i].name = "You";
           }
         }
 
         for(let i=0;i<this.students_daily.length;i++){
           if (this.students_daily[i].username == this.user.username){
-            this.students_daily[i].name = "you";
+            this.students_daily[i].name = "You";
           }
         }
+
+        this.ready = true;
       },
     );
 
@@ -206,35 +212,45 @@ export default {
 
 <style scoped>
 .spacing{
-  height: 3vh;
+  height: 5vh;
+}
+
+.center{
+  display: flex;
+  justify-content: center;
 }
 .main-button-container{
   display:flex;
   justify-content:space-around;
+  width: 90%;
+  max-width: 500px;
+  margin: 0 auto;
+  gap: 10px;
 }
-
 .main-button{
-  display: flex;
-  justify-content: center;
-  width:45vw;
-  height: 2.7vh;
-  font-size:20px;
+  width: 100%;
+  font-size: 1.3rem;
+  padding: 0.3rem;
+  border: none;
+  cursor: pointer;
+  --background: none;
   --border-width: 2px 0 0 0;
-  background: none;
-  font-family: "Lexend Exa";
-  letter-spacing: 0.2vw;
 }
-
-.main-button::before{
+.main-button:first-of-type {
+  --border-background: linear-gradient(100deg, #4CC9F0, #7209B7);
+  --border-radius: 20px 0 0 0;
+}
+.main-button:last-of-type {
+  --border-background: linear-gradient(100deg, #7209B7, #F72585);
+  --border-radius: 0 20px 0 0;
+}
+.main-button.active {
+  font-size: 1.4rem;
+  font-weight: 700;
+  --background: radial-gradient(ellipse 60% 120% at 50% 0, #4ccaf032, #7109b70e 90%, #7109b700);
+}
+.main-button::before {
   content: "";
-}
-
-#main-button-left{
-  --border-radius: 20px 0px 0px 0px;
-}
-
-#main-button-right{
-  --border-radius: 0px 20px 0px 0px;
 }
 
 .prize-title{

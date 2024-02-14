@@ -3,16 +3,16 @@
     <TheUserInfo variant="nav"></TheUserInfo>
     <div class="cv-linkedin">
       <div class="cv">
-        <button v-if="this.student.uploaded_cv == false" @click.stop="cv_click">
+        <button v-if="this.student.uploaded_cv == false" @click.stop="toggleModal2">
           <img :src="cv_img" alt="">
           <p>Upload your CV</p>
         </button>
         <!-- <button v-else-if="this.student.approved_cv == false && this.student.rejected_cv == false"></button> -->
-        <button v-else-if="this.student.approved_cv == false">
+        <button v-else-if="this.student.approved_cv == false" @click.stop="toggleModal2">
           <img :src="cv_img" alt="">
           <p>Waiting for approval</p>
         </button>
-        <button v-else-if="this.student.approved_cv == true">
+        <button v-else-if="this.student.approved_cv == true" @click.stop="toggleModal2">
           <img :src="cv_img" alt="">
           <p>CV Approved</p>
         </button>
@@ -20,7 +20,47 @@
           <img :src="cv_img" alt="">
           <p>Loading</p>
         </button>
-        <input hidden type="file" accept="application/pdf" ref="cv" @change="add_cv_novo" />
+      </div>
+
+
+      <div class="modal" v-if="modalVisible2 == true">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 style="text-align: center;">Add CV</h4>
+            <button class="close-button" @click="toggleModal2">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="validateAndUploadCV">
+              <p> Are you from Técnico?</p>
+              <label>
+                <input type="radio" v-model="isFromTecnico" :value="true" >
+                Yes
+              </label>
+              <label>
+                <input type="radio" v-model="isFromTecnico" :value="false">
+                No
+              </label>
+              <br />
+              <p> Your level of education:</p>
+              <select class="input-field" v-model="educationLevel" placeholder="Your level of education" required>
+                <option value="BSc">BSc</option>
+                <option value="MSc">MSc</option>
+                <option value="Other">Other</option>
+              </select>
+              <br />
+              <p> Your CV:</p>
+              <button  @click.stop="cv_click" type="button">
+                <img :src="cv_img" alt="">
+                <p>Upload your CV</p>
+              </button>
+              <input hidden type="file" accept="application/pdf" ref="cv" @change="add_cv_novo"/>
+              <br />
+              <div class="center-container">
+                <button class="submit-button" type="submit">Confirm</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
 
       <div class="linkedin">
@@ -34,6 +74,12 @@
         <button @click="see_cv">
           <img :src="cv_img" alt="">
           <p>See CV</p>
+        </button>
+      </div>
+
+      <div class="linkedin" @click="redirectToform">
+        <button>
+          <p> Ordem dos engenheiros form</p>
         </button>
       </div>
 
@@ -96,6 +142,8 @@ import UserService from "../services/user.service";
 import ToastNotification from "@/components/Squads/ToastNotification.vue";
 import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia';
+import axios from "axios";
+import authHeader from "../services/auth-header";
 
 
 export default {
@@ -107,6 +155,7 @@ export default {
     return {
       loading_linkedin: false,
       modalVisible: false,
+      modalVisible2: false,
       cv_img: require("../assets/cv_button_img.svg"),
       link_img: require("../assets/linkedin_button_img.svg"),
       code: "",
@@ -124,6 +173,10 @@ export default {
       showToast: false,
       toastMessage: '',
       toastType: 'success',
+      isFromTecnico: false,
+      educationLevel: "Other",
+      get_cv_files: '',
+      formData: null,
     };
   },
   computed: {
@@ -131,14 +184,59 @@ export default {
   },
   methods: {
 
+    redirectToform() {
+      window.location.href = 'https://www.google.com';
+    },
+
     showNotification(message, type) {
       this.toastMessage = message;
       this.toastType = type;
       this.showToast = true;
     },
 
+    validateAndUploadCV() {
+      if(this.formData == null) {
+        console.log('aquiiii')
+      }
+      if (this.educationLevel != "" && (this.isFromTecnico == true || this.isFromTecnico == false) && this.formData != null) {
+        this.modalVisible2 = false;
+        axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/updateIsfromTecnico",{
+            student_username: this.student.username, 
+            tecnico: this.isFromTecnico,
+            educationLevel: this.educationLevel
+          }, {
+            headers: authHeader()
+          }, ).then(response => {
+                  UserService.addCVNOVO(this.formData).then(
+                    () => {
+                      if (!this.student.uploaded_cv) {
+                        this.showNotification("Added CV points", "points");
+                        this.student.uploaded_cv = true;
+                      } else {
+                        this.showNotification("CV and other fields updated", "success");
+                      }
+                    },
+                    (error) => {
+                      console.log(error);
+                      this.showNotification("Failed to upload CV", "error");
+                    }
+                  );
+              }).catch(error => {
+                  console.error("Error updating ", error);
+                  this.showNotification("Something bad occurred", "error");
+              });
+              
+      } else {
+        this.showNotification("Please fill all the fields and upload your CV.", "error");
+      }
+    },
+
     toggleModal() {
       this.modalVisible = !this.modalVisible;
+    },
+
+    toggleModal2() {
+      this.modalVisible2 = !this.modalVisible2;
     },
 
     change_Create() {
@@ -176,22 +274,27 @@ export default {
       this.$refs.cv.click();
     },
     add_cv_novo() {
-      UserService.addCVNOVO(this.$refs.cv).then(
-        (response) => {
-          if (!this.student.uploaded_cv) {
-            this.showNotification("Added CV points", "points");
-            this.student.uploaded_cv = true;
-          } else {
-            this.showNotification("CV uploaded successfully If approved you will receive a reward", "success");
-          }
-        },
-        (error) => {
-          console.log(error);
-          this.showNotification("Fail to upload CV", "error");
-        }
-      );
+      
+      if (!this.$refs.cv.files.length) return;
+      
+      this.formData = new FormData(); // Re-initialize to ensure it's fresh
+      this.formData.append('cv', this.$refs.cv.files[0]);
 
-      this.$refs.cv.value = "";
+      // UserService.addCVNOVO(formData).then(
+      //   (response) => {
+      //     if (!this.student.uploaded_cv) {
+      //       this.showNotification("Added CV points", "points");
+      //       this.student.uploaded_cv = true;
+      //     } else {
+      //       this.showNotification("CV uploaded successfully. If approved, you will receive a reward", "success");
+      //     }
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //     this.showNotification("Failed to upload CV", "error");
+      //   }
+      // );
+      // this.$refs.cv.value = ""; 
     },
 
     see_cv() {
