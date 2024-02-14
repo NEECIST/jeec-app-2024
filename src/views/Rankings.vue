@@ -167,10 +167,11 @@ export default {
 
         if(this.rankingdata.squad_ranking == null){
           this.user_squad_flag = false;
+          this.identityy = "merda";
         }else{
           this.user_squad_flag = true;
           this.userdata_squad = this.rankingdata.squad_ranking;
-
+          this.identityy = "Your Squad";
           //Already have a condition in endpoint that dont let two squads have the same name
 
           for(let i=0;i<this.squads_weekly.length;i++){
@@ -188,13 +189,13 @@ export default {
 
         for(let i=0;i<this.students_weekly.length;i++){
           if (this.students_weekly[i].username == this.user.username){
-            this.students_weekly[i].name = "you";
+            this.students_weekly[i].name = "You";
           }
         }
 
         for(let i=0;i<this.students_daily.length;i++){
           if (this.students_daily[i].username == this.user.username){
-            this.students_daily[i].name = "you";
+            this.students_daily[i].name = "You";
           }
         }
 
