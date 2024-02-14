@@ -4,7 +4,7 @@
     <div class="hour-info">
       <div id="circle"></div>
       <div class="hour">
-        {{ event.time }}
+        <p>{{ event.time }}</p>
       </div>
     </div>
 
@@ -75,9 +75,8 @@
     </div>
     <div class="hour-info">
       <div id="circle"></div>
-
       <div class="hour">
-        {{ event.end_time }}
+        <p>{{ event.end_time }}</p>
       </div>
     </div>
   </div>

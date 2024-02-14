@@ -142,23 +142,26 @@
     <div style="margin-top: 4vh">
         <div class="carousel" style="margin-bottom: 110px;">
           <Carousel ref="schedule_carousel" :mouseDrag="false" :touchDrag="false" :itemsToShow="2.5" :wrapAround="true" :transition="500">
-            <Slide v-for="weekday in weekdays" :key="weekday" style="flex-direction: column;">
+            <Slide v-for="(weekday, index) in weekdays" :key="index">
+              <!-- <div style="flex-direction: column;">
+                <button  class="carousel__item" style="cursor: pointer; margin-bottom: 10px;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
+                  <div class="weekday" >
+                    <p style="pointer-events: none;">{{ weekday }}</p>
+                  </div>
+                </button> -->
 
-              <a  class="carousel__item" style="cursor: pointer; margin-bottom: 10px;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
-                <div class="weekday" >
-                  <p style="pointer-events: none;">{{ weekday }}</p>
+                <h2>ola</h2>
+  
+                <!-- Weekday's Schedule -->
+                <!-- <div class="carousel_item">
+                  <div class="schedule">
+                    <div class="line"></div>
+                    <div v-for="(event, index) in activities" :key="event" class="event">
+                      <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" :index="weekday+index" link="/home"></Event>
+                    </div>
+                  </div> 
                 </div>
-              </a>
-
-              <!-- Weekday's Schedule -->
-              <div class="carousel_item">
-                <div class="schedule">
-                  <div class="line"></div>
-                  <!-- <div v-for="(event, index) in activities" :key="event" class="event">
-                    <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" :index="weekday+index" link="/home"></Event>
-                  </div> -->
-                </div> 
-              </div>
+              </div> -->
             </Slide>
             <div class="spacer"></div>
           </Carousel> 
@@ -280,14 +283,10 @@ export default {
       this.$router.push("/");
     }
 
-    
-
-
     // make active slide non pointer
     const active_slide = document.querySelector(".carousel__slide--active");
     if (active_slide) {
       active_slide.firstChild.style.pointerEvents = "none";
-      
     }
 
     // workaround to make add-to-calendar icon pointable
@@ -322,7 +321,6 @@ export default {
       activities.classList.remove('invisible');
       activities.classList.add('visible');
     })
-
   },
 };
 </script>
