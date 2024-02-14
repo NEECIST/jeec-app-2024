@@ -28,9 +28,9 @@ const tips = [
     tip: "Check the help and info page to see how you can gain points and interact with the event!",
     link: "/help",
   },
-  // {
-  //   tip: "idkman",
-  // },
+  {
+    tip: "Show your QRCode at the job fair and activities to go STONKS 📈📈",
+  },
   // {
   //   tip: "yeyecool who knows",
   // },
