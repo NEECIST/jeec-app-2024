@@ -155,7 +155,6 @@
                   <div class="schedule">
                     <div class="line"></div>
                     <div v-for="(event, index) in activities" :key="event" class="event">
-                      <h2>ola</h2>
                       <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" :index="weekday+index" link="/home"></Event>
                     </div>
                   </div> 
@@ -219,7 +218,6 @@ export default {
     },
     // onClick weekday element event
     carouselSlideEvent(target) {
-      console.log("click bitch")
       // if clicked element is "next"
       if(target.classList.contains("carousel__slide--next")){
         // go to next slide
