@@ -130,13 +130,12 @@
 </style>
 
 
-
 <template>
-  <HollowDotsSpinner class="loading-spinner"
+  <!-- <HollowDotsSpinner class="loading-spinner"
   :animation-duration="1250"
   :size="65"
   :color="'white'"
-  />
+  /> -->
 
   <div class="activities invisible">
     <div style="margin-top: 4vh">
@@ -318,10 +317,10 @@ export default {
     ).finally(() => {
       this.loading_activities = false;
       const activities = document.querySelector('.activities');
-      const loading_spinner = document.querySelector('.loading-spinner');
+      // const loading_spinner = document.querySelector('.loading-spinner');
       const active_slide = document.querySelector(".carousel__slide--active");
 
-      loading_spinner.classList.add('invisible');
+      // loading_spinner.classList.add('invisible');
       activities.classList.remove('invisible');
       activities.classList.add('visible');
     })

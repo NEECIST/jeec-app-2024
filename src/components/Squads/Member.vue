@@ -41,7 +41,7 @@ export default {
   data: function () {
     return {
       loading_kick: false,
-      kick_img: require("../../assets/icons/recycle-icon.svg"),
+      kick_img: require("@/assets/icons/recycle-icon.svg"),
     };
   },
   computed: {
