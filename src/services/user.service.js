@@ -16,6 +16,12 @@ class UserService {
     });
   }
 
+  // updateIsfromTecnico() {
+  //   return axios.get(jeec_brain_url + "/student/updateIsfromTecnico", {
+  //     headers: authHeader()
+  //   });
+  // }
+
   redeemCode(code) {
     return axios.post(
       jeec_brain_url + "/student/redeem-code",
@@ -32,9 +38,7 @@ class UserService {
     );
   }
 
-  addCVNOVO(cv) {
-    var formData = new FormData();
-    formData.append("cv", cv.files[0]);
+  addCVNOVO(formData) {
 
     return axios.post(jeec_brain_url + "/student/add-cv-novo", formData, {
       headers: {
