@@ -139,7 +139,8 @@ export default {
 }
 
 .arrow.open{
-  rotate: 180deg;
+  transform: rotateX(180deg);
+  transition: 1s;
 }
 
 .center{

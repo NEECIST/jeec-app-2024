@@ -1,6 +1,6 @@
 <template>
 
-  <div class="rankings">
+  <div v-if="ready" class="rankings">
       <div class="main-button-container">
       <button  @click.stop="click_daily()" class="main-button radient-border-passthrough" :class="{active: daily}">
         SOLO
@@ -117,6 +117,8 @@ export default {
       identityy: String,
       rankingdata: [],
       user_squad_flag: true,
+      ready: false,
+
     };
   },
   methods: {
@@ -195,6 +197,8 @@ export default {
             this.students_daily[i].name = "you";
           }
         }
+
+        this.ready = true;
       },
     );
 
@@ -217,6 +221,7 @@ export default {
 .main-button-container{
   display:flex;
   justify-content:space-around;
+  width: 90%;
   max-width: 500px;
   margin: 0 auto;
   gap: 10px;
