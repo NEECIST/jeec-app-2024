@@ -13,8 +13,6 @@ export const usePrizeStore = defineStore("PrizeStore", {
           squad_prizes: [],
           solo_prizes: [],
         },
-      
-      
     };
   },
   actions: {

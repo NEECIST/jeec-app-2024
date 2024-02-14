@@ -51,6 +51,7 @@ h2:first-of-type {
 li, p {
   font-family: "Lexend Exa", sans-serif;
   color: var(--clr-dark-font);
+  font-size: 1.1rem;
   line-height: 1.4;
 }
 
