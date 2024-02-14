@@ -130,19 +130,20 @@
 </style>
 
 
+
 <template>
-  <!-- <HollowDotsSpinner class="loading-spinner"
+  <HollowDotsSpinner class="loading-spinner"
   :animation-duration="1250"
   :size="65"
   :color="'white'"
-  /> -->
+  />
 
   <div class="activities invisible">
     <div style="margin-top: 4vh">
         <div class="carousel" style="margin-bottom: 110px;">
           <Carousel ref="schedule_carousel" :mouseDrag="false" :touchDrag="false" :itemsToShow="2.5" :wrapAround="true" :transition="500">
             <Slide v-for="weekday in weekdays" :key="weekday" style="flex-direction: column;">
-              
+
               <a  class="carousel__item" style="cursor: pointer; margin-bottom: 10px;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
                 <div class="weekday" >
                   <p style="pointer-events: none;">{{ weekday }}</p>
@@ -151,15 +152,12 @@
 
               <!-- Weekday's Schedule -->
               <div class="carousel_item">
-                
                 <div class="schedule">
                   <div class="line"></div>
-                  <div v-for="(event, index) in activities" :key="event" class="event">
+                  <!-- <div v-for="(event, index) in activities" :key="event" class="event">
                     <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" :index="weekday+index" link="/home"></Event>
-                  </div>
+                  </div> -->
                 </div> 
-                
-                
               </div>
             </Slide>
             <div class="spacer"></div>
@@ -317,10 +315,10 @@ export default {
     ).finally(() => {
       this.loading_activities = false;
       const activities = document.querySelector('.activities');
-      // const loading_spinner = document.querySelector('.loading-spinner');
+      const loading_spinner = document.querySelector('.loading-spinner');
       const active_slide = document.querySelector(".carousel__slide--active");
 
-      // loading_spinner.classList.add('invisible');
+      loading_spinner.classList.add('invisible');
       activities.classList.remove('invisible');
       activities.classList.add('visible');
     })
