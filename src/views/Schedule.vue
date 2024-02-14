@@ -143,7 +143,6 @@
         <div class="carousel" style="margin-bottom: 110px;">
           <Carousel ref="schedule_carousel" :mouseDrag="false" :touchDrag="false" :itemsToShow="2.5" :wrapAround="true" :transition="500">
             <Slide v-for="(weekday, index) in weekdays" :key="index">
-              <div style="flex-direction: column;">
                 <button  class="carousel__item" style="cursor: pointer; margin-bottom: 10px;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
                   <div class="weekday" >
                     <p style="pointer-events: none;">{{ weekday }}</p>
@@ -153,15 +152,14 @@
                 
                 <!-- Weekday's Schedule -->
                 <div class="carousel_item">
-                  <h2>ola</h2>
-                  <!-- <div class="schedule">
+                  <div class="schedule">
                     <div class="line"></div>
                     <div v-for="(event, index) in activities" :key="event" class="event">
+                      <h2>ola</h2>
                       <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" :index="weekday+index" link="/home"></Event>
                     </div>
-                  </div>  -->
+                  </div> 
                 </div>
-              </div>
             </Slide>
             <div class="spacer"></div>
           </Carousel> 
