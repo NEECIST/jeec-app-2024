@@ -219,6 +219,7 @@ export default {
     },
     // onClick weekday element event
     carouselSlideEvent(target) {
+      console.log("click bitch")
       // if clicked element is "next"
       if(target.classList.contains("carousel__slide--next")){
         // go to next slide
