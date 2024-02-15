@@ -259,6 +259,7 @@ export default {
   justify-content: start;
   display: flex;
   flex-direction: column;;
+  transform: rotateY(0);
 
 }
 .carousel__track{
@@ -270,15 +271,15 @@ export default {
   fill: none;
 }
 
-.carousel__prev svg,
-.carousel__next svg{
-  box-sizing: content-box;
-  border: 5px solid white;
-  fill: none;
-  width: 200%;
-  height: 200%;
-  position: absolute;
+.carousel__slide--prev {
+  transform: rotateY(0);
 }
+
+.carousel__slide--next {
+  transform: rotateY(0);
+}
+
+
 
 .carousel__track {
   transform-style: preserve-3d;
