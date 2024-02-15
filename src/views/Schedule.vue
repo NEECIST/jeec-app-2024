@@ -1,134 +1,3 @@
-<style>
-.loading-spinner {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 1;
-}
-
-.loading-spinner.invisible{
-  opacity: 0;
-  transition: 0.01s;
-}
-
-.carousel{
-  /* height: 90vh; */
-  width: 100%;
-  overflow-y: hidden;
-}
-
-.carousel__item {
-  min-height: 30px;
-  width: 100%;
-  background-color: var(--vc-clr-primary);
-  color: var(--vc-clr-white);
-  font-size: 14px;
-  border-radius: 0px;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  .schedule{
-    position: relative;
-  }
-}
-
-.line {
-  height: 100%;
-  width: 2px;
-  position: fixed;
-  background-color: white;
-  margin-left: 4px;
-  margin-top: 1vh;
-  opacity: 0;
-}
-
-.carousel__slide {
-  padding: 0px;
-  align-items: start;
-  justify-content: start;
-  display: flex;
-  flex-direction: column;;
-
-}
-.carousel__track{
-  justify-content:safe center;
-
-}
-
-.carousel__icon{
-  fill: none;
-}
-
-.carousel__prev svg,
-.carousel__next svg{
-  box-sizing: content-box;
-  border: 5px solid white;
-  fill: none;
-  width: 200%;
-  height: 200%;
-  position: absolute;
-}
-
-.carousel__track {
-  transform-style: preserve-3d;
-}
-
-.carousel__slide--sliding {
-  transition: 0.5s;
-}
-
-/*  */
-.weekday{
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
-.schedule{
-  opacity: 0;
-
-}
-
-.carousel__slide{
-  height: 0;
-}
-
-.carousel__slide--active {
-  opacity: 1;
-  transform: rotateY(0) scale(1);
-  transition: 0.5s;
-  align-items: center;
-  height: auto;
-
-  .schedule {
-    transition: 0.5s;
-    opacity: 1;
-    width: 85vw;
-    /* height: 65vh; */
-    overflow-x: hidden;
-    overflow: visible;
-  }
-
-  .line{
-    opacity: 1;
-  }
-  
-  .spacer{
-    height: 100px;
-    flex-direction: column;
-    flex: 1;
-  }
-  
-}
-
-</style>
-
 
 
 <template>
@@ -150,7 +19,6 @@
                 </button>
 
                 
-                <!-- Weekday's Schedule -->
                 <div class="carousel_item">
                   <div class="schedule">
                     <div class="line"></div>
@@ -165,13 +33,6 @@
           
         </div>
         
-
-
-        <div class="no-activities-warning" style="display: none">
-          <span class="warning-msg">Go to your</span>
-          <span class="warning-msg profile"> Profile </span>
-          <span class="warning-msg">to add Interests!</span>
-        </div>
     </div>
 
   </div>
@@ -238,9 +99,14 @@ export default {
             const next_slide = document.querySelector(".carousel__slide--next");
             if (next_slide) {
               next_slide.style.pointerEvents = "none";
-              if(next_slide.innerText != "Monday"){
-                next_slide.firstChild.style.pointerEvents = "all";
-              }
+              next_slide.firstChild.style.pointerEvents = "all";
+            }
+
+            const weekday = new_active_slide.firstChild.innerText;
+            console.log(weekday)
+            if (weekday.includes("Friday")) {
+              console.log("Friday")
+              next_slide.firstChild.style.pointerEvents = "none";
             }
           }
         }, 550);
@@ -296,7 +162,7 @@ export default {
     // make non loopable slides
     const slide_clones = document.querySelectorAll(".carousel__slide--clone");
     for (let i = 0; i < slide_clones.length; i++) {
-      if (slide_clones[i].innerText == "Friday" || slide_clones[i].innerText == "Monday") {
+      if (slide_clones[i].innerText.includes( "Friday" ) || slide_clones[i].innerText.includes("Monday")) {
         slide_clones[i].style.opacity = 0;
         slide_clones[i].style.pointerEvents = "none";
       }
@@ -338,19 +204,134 @@ export default {
   opacity: 1;
   transition: 1s;
 }
-.no-activities-warning {
-  margin-top: 16vh;
+
+.loading-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
 }
 
-.warning-msg {
-  font-size: 2.7vh;
-  font-weight: 500;
+.loading-spinner.invisible{
+  opacity: 0;
+  transition: 0.01s;
 }
 
-.profile {
-  color: #27ade4;
-  font-weight: 600;
+.carousel{
+  /* height: 90vh; */
+  width: 100%;
+  overflow-y: hidden;
 }
 
+.carousel__item {
+  min-height: 30px;
+  width: 100%;
+  background-color: var(--vc-clr-primary);
+  color: var(--vc-clr-white);
+  font-size: 14px;
+  border-radius: 0px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .schedule{
+    position: relative;
+  }
+}
+
+.line {
+  height: 100%;
+  width: 2px;
+  position: fixed;
+  background-color: white;
+  margin-left: 4px;
+  margin-top: 1vh;
+  opacity: 0;
+}
+
+.carousel__slide {
+  padding: 0px;
+  align-items: start;
+  justify-content: start;
+  display: flex;
+  flex-direction: column;;
+  transform: rotateY(0);
+
+}
+.carousel__track{
+  justify-content:safe center;
+
+}
+
+.carousel__icon{
+  fill: none;
+}
+
+.carousel__slide--prev {
+  transform: rotateY(0);
+}
+
+.carousel__slide--next {
+  transform: rotateY(0);
+}
+
+
+
+.carousel__track {
+  transform-style: preserve-3d;
+}
+
+.carousel__slide--sliding {
+  transition: 0.5s;
+}
+
+/*  */
+.weekday{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.schedule{
+  opacity: 0;
+
+}
+
+.carousel__slide{
+  height: 0;
+}
+
+.carousel__slide--active {
+  opacity: 1;
+  transform: rotateY(0) scale(1);
+  transition: 0.5s;
+  align-items: center;
+  height: auto;
+
+  .schedule {
+    transition: 0.5s;
+    opacity: 1;
+    width: 85vw;
+    /* height: 65vh; */
+    overflow-x: hidden;
+    overflow: visible;
+  }
+
+  .line{
+    opacity: 1;
+  }
+  
+  .spacer{
+    height: 100px;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+}
 
 </style>
