@@ -37,34 +37,7 @@
     </div>
   </div>
 
-      <div class="center">
-        <Transition name="show-you" appear>
-            <div v-if="!show && flag" class="top_10 radient-border-passthrough show-you-transition">
-              <div class="box">
-                <div class="student_ranking_number">
-                  <p v-if="user_ranking == 1">{{ user_ranking }}st</p>
-                  <p v-if="user_ranking == 2">{{ user_ranking }}nd</p>
-                  <p v-if="user_ranking == 3">{{ user_ranking }}rd</p>
-                  <p v-if="user_ranking > 3">{{ user_ranking }}th</p>
-                </div>
-              </div>
-
-              <div class="you_name">
-                <p>{{ identity }}</p> 
-              </div>
-
-              <div class="student_xp">
-                <p>{{ user_points }} xp</p>
-              </div>
-            
-
-            </div>
-        </Transition>
-
-      </div>
-   
-        
-      <Transition name="show" appear>
+  <Transition name="show" appear>
         <div class="show-transition" v-if="show">
           <div v-for="index in other_rankingdata.length - 3" :key="index">
             <div class="center">
@@ -91,6 +64,37 @@
           </div>
         </div>
       </Transition>
+
+
+
+      <div class="center">
+        <Transition name="show-you" appear>
+            <div v-if="!show && flag" class="top_10 radient-border-passthrough show-you-transition">
+              <div class="box">
+                <div class="student_ranking_number">
+                  <p v-if="(user_ranking % 10) == 1">{{ user_ranking }}st</p>
+                  <p v-if="(user_ranking % 10) == 2">{{ user_ranking }}nd</p>
+                  <p v-if="(user_ranking % 10) == 3">{{ user_ranking }}rd</p>
+                  <p v-if="(user_ranking % 10) > 3">{{ user_ranking }}th</p>
+                </div>
+              </div>
+
+              <div class="you_name">
+                <p>{{ identity }}</p> 
+              </div>
+
+              <div class="student_xp">
+                <p>{{ user_points }} xp</p>
+              </div>
+            
+
+            </div>
+        </Transition>
+
+      </div>
+   
+        
+
 
       <div class="center">
         <div @click="show = !show" class="dropdown radient-border-passthrough">
