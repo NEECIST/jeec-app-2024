@@ -9,7 +9,8 @@
               <p v-else class="you_name_podium">{{ identity }}</p>
               <div :id="'pilar-2'" class="pilar">
                 <span :id="'number-2'" class="number">2</span><sup :id="'super-2'" class="super">nd</sup>
-              </div> 
+              </div>
+              <div :id="'student_xp-podium'" class="student_xp">{{ other_rankingdata[1].points }} xp</div> 
               <div :id="'line-silver'" class="line"></div>
             </div>
             <div :id="'stand-1'" class="stand radient-border-passthrough" v-if="other_rankingdata.length>0">
@@ -21,6 +22,7 @@
               <div :id="'pilar-1'" class="pilar">
                 <span :id="'number-1'" class="number">1</span><sup :id="'super-1'" class="super">st</sup>
               </div>
+              <div :id="'student_xp-podium'" class="student_xp">{{ other_rankingdata[0].points }} xp</div> 
               <div :id="'line-gold'" class="line"></div>
             </div>
             <div :id="'stand-3'" class="stand radient-border-passthrough" v-if="other_rankingdata.length>2">
@@ -32,6 +34,7 @@
               <div :id="'pilar-3'" class="pilar">
                 <span :id="'number-3'" class="number">3</span><sup :id="'super-3'" class="super">rd</sup>
               </div>
+              <div :id="'student_xp-podium'" class="student_xp">{{ other_rankingdata[2].points }} xp</div> 
               <div :id="'line-bronze'" class="line"></div>
             </div>
     </div>
@@ -63,7 +66,7 @@
             </div>
           </div>
         </div>
-      </Transition>
+  </Transition>
 
 
 
@@ -229,10 +232,12 @@ export default {
 
 .you_name_podium{
   text-align: center;
+  padding-top: 10px;
   font-family: "Lexend Exa";
   font-size: 90%;
   font-style: normal;
   font-weight: 600;
+  height: 3rem;
   line-height: normal;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -283,6 +288,14 @@ export default {
   font-size: 80%;
   font-weight: 600;
   width: 20%;
+}
+
+#student_xp-podium{
+  width: 100%;
+  justify-content: center;
+  height: 35px;
+  position: absolute;
+  bottom: 0px;
 }
 
 .dropdown{
@@ -353,7 +366,6 @@ export default {
 
 .number {
   position: relative;
-  text-align: center;
   font-family: "Russo One";
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -448,8 +460,8 @@ export default {
 .pilar{
   text-align: center;
   color:white;
-  vertical-align: middle;
-  width:100%;
+  width: 100%;
+  height: 85px;
 }
 
 #pilar-1{
@@ -466,10 +478,11 @@ export default {
 
 .podium-text{
   color: var(--Greyish-White, #E7E7E7);
+  padding-top: 10px;
   text-align: center;
   font-family: "Lexend Exa";
   font-size: 0.9rem;
-  height: 2.5rem;
+  height: 3rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
