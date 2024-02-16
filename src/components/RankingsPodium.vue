@@ -359,7 +359,7 @@ export default {
 }
 
 #line-silver {
-  background-color: #CDC9C2;
+  background-color: #a8a8a8;
 }
 
 #line-bronze {
@@ -398,7 +398,7 @@ export default {
 }
 
 #number-2 {
-  background-color: #CDC9C2;
+  background-color: #a8a8a8;
 }
 
 #number-3 {
@@ -443,7 +443,7 @@ export default {
 }
 
 #super-2{
-  background-color: #CDC9C2;
+  background-color: #a8a8a8;
 }
 
 #super-3{
