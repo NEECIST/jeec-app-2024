@@ -104,7 +104,7 @@ const userStore = useUserStore();
 
 .nav-logout {
   position: absolute;
-  top: 16px;
+  top: 19px;
   left: 5%;
   border: 3px solid #F72585;
   cursor: pointer;

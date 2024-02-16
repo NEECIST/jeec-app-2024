@@ -1,138 +1,117 @@
 <template>
   <div class="profile">
-    <TheUserInfo variant="nav"></TheUserInfo>
-    <div class="cv-linkedin">
-      <div class="cv">
-        <button v-if="this.student.uploaded_cv == false" @click.stop="toggleModal2">
-          <img :src="cv_img" alt="">
-          <p>Upload your CV</p>
-        </button>
-        <!-- <button v-else-if="this.student.approved_cv == false && this.student.rejected_cv == false"></button> -->
-        <button v-else-if="this.student.approved_cv == false" @click.stop="toggleModal2">
-          <img :src="cv_img" alt="">
-          <p>Waiting for approval</p>
-        </button>
-        <button v-else-if="this.student.approved_cv == true" @click.stop="toggleModal2">
-          <img :src="cv_img" alt="">
-          <p>CV Approved</p>
-        </button>
-        <button v-else>
-          <img :src="cv_img" alt="">
-          <p>Loading</p>
-        </button>
-      </div>
+    <TheUserInfo variant="profile"></TheUserInfo>
 
+    <div class="profile-buttons">
+      <button v-if="this.student.uploaded_cv == false" @click.stop="toggleModal2">
+        <img :src="cv_img" alt="">
+        <p>Upload your CV</p>
+      </button>
+      <!-- <button v-else-if="this.student.approved_cv == false && this.student.rejected_cv == false"></button> -->
+      <button v-else-if="this.student.approved_cv == false" @click.stop="toggleModal2">
+        <img :src="cv_img" alt="">
+        <p>Waiting for approval</p>
+      </button>
+      <button v-else-if="this.student.approved_cv == true" @click.stop="toggleModal2">
+        <img :src="cv_img" alt="">
+        <p>CV Approved</p>
+      </button>
+      <button v-else>
+        <img :src="cv_img" alt="">
+        <p>Loading</p>
+      </button>
 
-      <div class="modal" v-if="modalVisible2 == true">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 style="text-align: center;">Add CV</h4>
-            <button class="close-button" @click="toggleModal2">&times;</button>
-          </div>
-          <div class="modal-body">
-            <form @submit.prevent="validateAndUploadCV">
-              <p> Are you from Técnico?</p>
-              <label>
-                <input type="radio" v-model="isFromTecnico" :value="true" >
-                Yes
-              </label>
-              <label>
-                <input type="radio" v-model="isFromTecnico" :value="false">
-                No
-              </label>
-              <br />
-              <p> Your level of education:</p>
-              <select class="input-field" v-model="educationLevel" placeholder="Your level of education" required>
-                <option value="BSc">BSc</option>
-                <option value="MSc">MSc</option>
-                <option value="Other">Other</option>
-              </select>
-              <br />
-              <p> Your CV:</p>
-              <button  @click.stop="cv_click" type="button">
-                <img :src="cv_img" alt="">
-                <p>Upload your CV</p>
-              </button>
-              <input hidden type="file" accept="application/pdf" ref="cv" @change="add_cv_novo"/>
-              <br />
-              <div class="center-container">
-                <button class="submit-button" type="submit">Confirm</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+      <!-- <button v-if="this.student.uploaded_cv == true" @click="see_cv">
+        <img :src="cv_img" alt="">
+        <p>See CV</p>
+      </button> -->
 
-      <div class="linkedin">
-        <button @click="toggleModal">
-          <img :src="link_img" alt="">
-          <p>{{ student.linkedin_url === null ? 'Submit your LinkedIn' : 'LinkedIn Submitted' }}</p>
-        </button>
-      </div>
+      <button @click="toggleModal">
+        <img :src="link_img" alt="">
+        <p>{{ student.linkedin_url === null ? 'Submit your LinkedIn' : 'LinkedIn Submitted' }}</p>
+      </button>
 
-      <div v-if="this.student.uploaded_cv == true" class="linkedin">
-        <button @click="see_cv">
-          <img :src="cv_img" alt="">
-          <p>See CV</p>
-        </button>
-      </div>
+      <a href="https://www.ordemengenheiros.pt/pt/admissao-a-ordem/membro-estudante/" target="_blank">
+        <p> Ordem dos engenheiros form</p>
+      </a>
 
-      <div class="linkedin" @click="redirectToform">
-        <button>
-          <p> Ordem dos engenheiros form</p>
-        </button>
-      </div>
+      <div style="position: absolute;">
+        <a style="display: none" ref="see_cv" :href="cv_url" :download="this.student.username + '_cv.pdf'">CV</a>
 
-      <a
-        style="display: none"
-        ref="see_cv"
-        :href="cv_url"
-        :download="this.student.username + '_cv.pdf'"
-        >CV</a
-      >
-    
-      <div class="modal" v-if="modalVisible == true">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 style="text-align: center;">Add LinkedIn</h4>
-            <button class="close-button" @click="toggleModal">&times;</button>
-          </div>
-          <div class="modal-body">
+        <div class="modal" v-if="modalVisible == true">
+          <div class="modal-backdrop" @click="toggleModal"></div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Add LinkedIn</h2>
+              <button class="modal-close" @click="toggleModal">&times;</button>
+            </div>
             <form @submit="add_linkedin">
-              <input
-                type="url"
-                ref="linkedin_url"
-                class="input-field"
-                placeholder="https://www.linkedin.com/in/XXXXX/"
-                pattern="^https?://((www|\w\w)\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\w|\d)+/?){3}))$"
-                autofocus
-                :value="this.student.linkedin_url"
-                required
-              />
-              <br />
-              <div class="center-container">
-                <button class="submit-button"  type="submit">Confirm</button>
+              <div class="modal-body">
+                <input type="url" ref="linkedin_url" class="input-field" placeholder="https://www.linkedin.com/in/XXXXX/"
+                  pattern="^https?://((www|\w\w)\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\w|\d)+/?){3}))$" autofocus
+                  :value="this.student.linkedin_url" required />
+              </div>
+              <div class="modal-submit">
+                <button type="submit">Confirm</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="modal" v-if="modalVisible2 == true">
+          <div class="modal-backdrop" @click="toggleModal2"></div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Add CV</h2>
+              <button class="modal-close" @click="toggleModal2">&times;</button>
+            </div>
+            <form @submit.prevent="validateAndUploadCV">
+              <div class="modal-body">
+                <p> Are you from Técnico?</p>
+                <label>
+                  <input type="radio" v-model="isFromTecnico" :value="true">
+                  <p>Yes</p>
+                </label>
+                <label>
+                  <input type="radio" v-model="isFromTecnico" :value="false">
+                  <p>No</p>
+                </label>
+                <div class="modal-spacer"></div>
+                <p> Your level of education:</p>
+                <select class="input-field" v-model="educationLevel" placeholder="Your level of education" required>
+                  <option value="BSc">
+                    <p>BSc</p>
+                  </option>
+                  <option value="MSc">
+                    <p>MSc</p>
+                  </option>
+                  <option value="Other">
+                    <p>Other</p>
+                  </option>
+                </select>
+                <div class="modal-spacer"></div>
+                <p> Your CV:</p>
+                <button class="cv-button" @click.stop="cv_click" type="button">
+                  <p>Upload your CV</p>
+                </button>
+                <input hidden type="file" accept="application/pdf" ref="cv" @change="add_cv_novo" />
+              </div>
+              <div class="modal-submit">
+                <button type="submit">Confirm</button>
               </div>
             </form>
           </div>
         </div>
       </div>
-
-
     </div>
   </div>
 
   <div>
-    <ToastNotification
-      :message="toastMessage"
-      :type="toastType"
-      :visible="showToast"
-      @close="showToast = false"
-    ></ToastNotification>
+    <ToastNotification :message="toastMessage" :type="toastType" :visible="showToast" @close="showToast = false">
+    </ToastNotification>
   </div>
 
   <Squad></Squad>
-  
 </template>
 
 <script>
@@ -141,10 +120,9 @@ import Squad from "@/components/Squads/Squad.vue";
 import UserService from "../services/user.service";
 import ToastNotification from "@/components/Squads/ToastNotification.vue";
 import { useUserStore } from '@/stores/UserStore';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 import axios from "axios";
 import authHeader from "../services/auth-header";
-
 
 export default {
   name: "Profile",
@@ -183,10 +161,7 @@ export default {
     ...mapState(useUserStore, ['user'])
   },
   methods: {
-
-    redirectToform() {
-      window.location.href = 'https://www.google.com';
-    },
+    ...mapActions(useUserStore, ['getPoints']),
 
     showNotification(message, type) {
       this.toastMessage = message;
@@ -195,37 +170,35 @@ export default {
     },
 
     validateAndUploadCV() {
-      if(this.formData == null) {
-        console.log('aquiiii')
-      }
       if (this.educationLevel != "" && (this.isFromTecnico == true || this.isFromTecnico == false) && this.formData != null) {
         this.modalVisible2 = false;
-        axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/updateIsfromTecnico",{
-            student_username: this.student.username, 
-            tecnico: this.isFromTecnico,
-            educationLevel: this.educationLevel
-          }, {
-            headers: authHeader()
-          }, ).then(response => {
-                  UserService.addCVNOVO(this.formData).then(
-                    () => {
-                      if (!this.student.uploaded_cv) {
-                        this.showNotification("Added CV points", "points");
-                        this.student.uploaded_cv = true;
-                      } else {
-                        this.showNotification("CV and other fields updated", "success");
-                      }
-                    },
-                    (error) => {
-                      console.log(error);
-                      this.showNotification("Failed to upload CV", "error");
-                    }
-                  );
-              }).catch(error => {
-                  console.error("Error updating ", error);
-                  this.showNotification("Something bad occurred", "error");
-              });
-              
+        axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/updateIsfromTecnico", {
+          student_username: this.student.username,
+          tecnico: this.isFromTecnico,
+          educationLevel: this.educationLevel
+        }, {
+          headers: authHeader()
+        },).then(response => {
+          UserService.addCVNOVO(this.formData).then(
+            () => {
+              this.formData = null;
+              if (!this.student.uploaded_cv) {
+                this.showNotification("Added CV points", "points");
+                this.student.uploaded_cv = true;
+              } else {
+                this.showNotification("CV and other fields updated", "success");
+              }
+            },
+            (error) => {
+              console.log(response.statusCode, error);
+              this.showNotification("Failed to upload, file size may be too large. Try uploading less than 600kb", "error");
+            }
+          );
+        }).catch(error => {
+          console.error("Error updating ", error);
+          this.showNotification("Something bad occurred", "error");
+        });
+
       } else {
         this.showNotification("Please fill all the fields and upload your CV.", "error");
       }
@@ -256,10 +229,13 @@ export default {
           if (!this.student.linkedin_url) {
             this.showNotification("Added LinkedIn points", "points");
             this.student.linkedin_url = url;
+            setTimeout(() => {
+              this.getPoints();
+            }, 1000);
           } else {
             this.showNotification("LinkedIn updated successfully", "success");
           }
-          
+
           this.loading_linkedin = false;
         },
         (error) => {
@@ -274,9 +250,9 @@ export default {
       this.$refs.cv.click();
     },
     add_cv_novo() {
-      
+
       if (!this.$refs.cv.files.length) return;
-      
+
       this.formData = new FormData(); // Re-initialize to ensure it's fresh
       this.formData.append('cv', this.$refs.cv.files[0]);
 
@@ -326,7 +302,7 @@ export default {
   created() {
     UserService.getUserStudent().then(
       (response) => {
-        
+
         this.student = response.data.data;
       },
       (error) => {
@@ -338,36 +314,47 @@ export default {
 </script>
 
 <style scoped>
-.cv-linkedin {
+.profile-buttons {
   display: flex;
   width: 100%;
   justify-content: center;
-  gap: 20px;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin: 2rem auto;
 }
-.cv-linkedin > div > button {
+
+.profile-buttons> :is(button, a) {
   display: flex;
   height: 50px;
   border: none;
   background: none;
-  flex-grow: 1;
-  min-width: 0;
-  width: 220px;
-  background: rgb(35, 49, 54);
+  background: linear-gradient(165deg, #605ED0 -100%, #4CC9F0 20%, #7209B7 130%);
   border-radius: 25px;
   align-items: center;
   justify-content: space-between;
   padding: 0 2ch;
   gap: 2ch;
+  flex-basis: 200px;
+  min-width: 200px;
+  flex-grow: 0.6;
   cursor: pointer;
+  font-family: "Lexend Exa";
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
-.cv-linkedin > div > button > img {
-  height: 80%;
+.profile-buttons> :is(button, a)>img {
+  height: 70%;
+  flex-shrink: 0;
 }
-.cv-linkedin > div > button > p {
-  flex-grow: 1;
-  text-align: left;
+
+.profile-buttons> :is(button, a)>p {
+  text-align: center;
+  margin: 0 auto;
+  font-size: clamp(0.8rem, 4vw, 1rem);
 }
+
 .linkedin-input {
   position: absolute;
   visibility: hidden;
@@ -379,50 +366,85 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
 
 .modal-content {
-  background: #2c3e50;
-  padding: 20px;
+  background: var(--color-background-sec);
+  padding: 1.5rem;
   border-radius: 8px;
-  width: 30%;
+  width: 90%;
+  max-width: 800px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 .modal-header {
-  border-bottom: 1px solid #34495e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   padding-bottom: 10px;
   margin-bottom: 20px;
-  color: #ecf0f1;
+  position: relative;
 }
 
-.modal-body {
-  color: #ecf0f1;
+.modal-header h2 {
+  text-align: center;
 }
 
-.close-button {
+.modal-header .modal-close {
   background: none;
   border: none;
-  color: #ecf0f1;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  line-height: 0.5;
+  position: absolute;
+  top: 0;
+  right: 0;
   cursor: pointer;
+}
+
+.modal-header .modal-close:hover {
+  scale: 1.1;
+}
+
+.modal-body>p {
+  padding-bottom: 0.1rem;
+}
+
+.modal-body .modal-spacer {
+  padding-bottom: 1rem;
+}
+
+.modal-body label {
+  display: flex;
+  gap: 1ch;
+}
+
+.modal-body > button {
+  color: var(--color-background-sec);
+  padding: 0.5rem 2ch;
 }
 
 .input-field {
   width: 100%;
   padding: 10px;
-  margin-bottom: 20px;
   border-radius: 5px;
   border: 1px solid #7f8c8d;
-  box-sizing: border-box;
 }
 
-.submit-button {
+.modal-submit button {
+  margin-top: 1rem;
   background-color: #2980b9;
   color: white;
   padding: 10px 20px;
@@ -430,15 +452,8 @@ export default {
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
+  float: right;
 }
-
-.submit-button:hover {
+.modal-submit button:hover {
   background-color: #3498db;
-}
-
-.center-container {
-  display: flex;
-  justify-content: center;
-}
-
-</style>
+}</style>

@@ -39,6 +39,7 @@ export const useUserStore = defineStore("UserStore", {
 
     logOut(){
       localStorage.clear()
+      this.loggedInState = false;
       window.location.reload()
     },
 

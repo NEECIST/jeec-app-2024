@@ -2,7 +2,7 @@
   <div class="squad-creation">
     <div class="squad-create">
       <div>
-        <h1> SQUAD </h1>
+        <h2> SQUAD </h2>
         <input
           type="text"
           placeholder="Squad Name"
@@ -43,16 +43,6 @@
       <button @click.stop="create_squad" class="button" v-if="!loading">
         Create Squad
       </button> 
-      
-      <!-- <v-progress-circular
-        v-else
-        style="margin-top: 3vh"
-        indeterminate
-        color="#27ade4"
-        :size="80"
-        :width="8"
-        class="loading-bar"
-      ></v-progress-circular> -->
       <p class="error-msg">{{ error }}</p>
     </div>
   </div>

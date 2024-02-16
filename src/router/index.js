@@ -66,12 +66,16 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   const userStore = useUserStore();
 
-  if(userStore.loggedInState != true) {
+  if (userStore.loggedInState != true) {
     userStore.isLoggedIn();
     userStore.loggedInState = true;
-    
-    if (userStore.loggedIn != true) {
+
+    if (userStore.loggedIn !== true) {
       router.push("/")
+    }
+  } else {
+    if (userStore.loggedIn == true) {
+      userStore.getPoints();
     }
   }
   

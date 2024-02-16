@@ -1,19 +1,23 @@
 <template>
-  <div :class="variant, {'radient-border-passthrough': variant === 'home'}" class="user-card">
-    <div :class="variant" class="name-wrapper" v-if="variant != 'home'">
+  <div :class="variant, { 'radient-border-passthrough': variant != 'nav' }" class="user-card">
+    <div class="name-wrapper" v-if="variant != 'home'">
       <p>{{ userStore.user.name }}</p>
     </div>
-    <div :class="variant" class="qr-wrapper" v-if="variant == 'home'">
+    <div class="qr-wrapper" v-if="variant == 'home'">
       <QrCodeButton></QrCodeButton>
     </div>
-    <div :class="variant" class="tickets-wrapper">
+    <div class="tickets-wrapper">
       <DailyTickets :variant="variant"></DailyTickets>
     </div>
-    <div :class="variant" class="points-wrapper">
+    <div class="points-wrapper">
       <TotalPoints :variant="variant"></TotalPoints>
     </div>
-    <div :class="variant" class="user-wrapper">
-      <UserImage :image="userStore.user.picture"></UserImage>
+    <div class="user-wrapper">
+      <UserImage :image="userStore.user.picture" :variant="variant"></UserImage>
+    </div>
+    <div class="text-points-wrapper" v-if="variant == 'profile'">
+      <p>Total Points: {{ userStore.userPoints.total_points }}</p>
+      <p>Total Tickets: {{ userStore.userPoints.tickets }}</p>
     </div>
   </div>
 </template>
@@ -26,8 +30,6 @@ import UserImage from './UserImage.vue';
 import { useUserStore } from '@/stores/UserStore';
 const userStore = useUserStore();
 
-userStore.getMilestones();
-
 import { defineProps } from 'vue';
 
 const props = defineProps({
@@ -37,106 +39,179 @@ const props = defineProps({
 });
 </script>
 <style scoped>
-  .user-card.home {
-    --height: 90px;
-    
-    --border-radius: 45px;
-    --border-width: 2px;
+.user-card.home {
+  --height: 90px;
 
-    grid-template-areas:
+  --border-radius: 45px;
+  --border-width: 2px;
+
+  grid-template-areas:
     "qr tickets user"
     "qr points user";
-    grid-template-rows: min-content 1fr;
-    grid-template-columns: var(--height) 1fr var(--height);
-    position: fixed;
-    bottom: 10px;
-    width: calc(100% - 20px);
-    right: 10px;
-    height: 90px;
-    max-width: 450px;
-    z-index: 50;
-  }
-  .user-card.home::before {
-    content: "";
-  }
-  .qr-wrapper.home {
-    padding: 17px;
-  }
-  .tickets-wrapper.home {
-    padding-right: 5px;
-    margin-left: -5px;
-  }
-  .points-wrapper.home {
-    padding-right: 5px;
-    margin-left: -5px;
-  }
-  .user-wrapper.home {
-    padding: 8px;
-  }
+  grid-template-rows: min-content 1fr;
+  grid-template-columns: var(--height) 1fr var(--height);
+  position: fixed;
+  bottom: 10px;
+  width: calc(100% - 20px);
+  right: 10px;
+  height: var(--height);
+  max-width: 450px;
+  z-index: 50;
+}
 
-  .user-card.nav {
-    grid-template-areas:
+.user-card.home::before {
+  content: "";
+}
+
+.user-card.home>.qr-wrapper {
+  padding: 17px;
+}
+
+.user-card.home>.tickets-wrapper {
+  padding-right: 5px;
+  margin-left: -5px;
+}
+
+.user-card.home>.points-wrapper {
+  padding-right: 5px;
+  margin-left: -5px;
+}
+
+.user-card.home>.user-wrapper {
+  padding: 8px;
+}
+
+.user-card.nav {
+  grid-template-areas:
     "name name"
     "tickets user"
     "points user";
-    grid-template-rows: min-content 1fr 1fr;
-    grid-template-columns: 1fr max-content;
-    width: 100%;
-    height: 150px;
-    padding-right: 1rem;
-    padding-left: clamp(10px, 5vw, 70px);
-  }
-  .name-wrapper.nav > p{
-    font-family: "Lexend Exa";
-    font-weight: 500;
-    font-size: 1.6rem;
-    padding-bottom: 0.5rem;
-  }
-  .qr-wrapper.nav {
-    padding: 17px;
-  }
-  .tickets-wrapper.nav {
-    padding-right: 5px;
-    padding-left: 10%;
-  }
-  .points-wrapper.nav {
-    padding-right: 5px;
-  }
-  .user-wrapper.nav {
-    padding: 8px;
-  }
-  .user-card.profile {
-    grid-template-areas:
+  grid-template-rows: min-content 1fr 1fr;
+  grid-template-columns: 1fr 80px;
+  width: 100%;
+  height: 150px;
+  padding-right: 1rem;
+  padding-left: clamp(10px, 5vw, 70px);
+}
+
+.user-card.nav>.name-wrapper p {
+  font-family: "Lexend Exa";
+  font-weight: 500;
+  font-size: 1.6rem;
+  padding-bottom: 0.5rem;
+}
+
+.user-card.nav>.qr-wrapper {
+  padding: 17px;
+}
+
+.user-card.nav>.tickets-wrapper {
+  padding-right: 5px;
+  padding-left: 10%;
+}
+
+.user-card.nav>.points-wrapper {
+  padding-right: 5px;
+}
+
+.user-card.nav>.user-wrapper {
+  padding: 8px;
+}
+
+.user-card.profile {
+  --border-radius: 45px;
+  --border-width: 2px;
+
+  grid-template-areas:
     "name user"
     "tickets user"
-    "points points";
-    grid-template-rows: 50px 50px 50px;
-    grid-template-columns: 1fr 70px;
-  }
-  .user-card {
-    display: grid;
-  }
-  .name-wrapper {
-    grid-area: name;
-    text-align: right;
-  }
-  .qr-wrapper {
-    grid-area: qr;
-  }
-  .tickets-wrapper {
-    grid-area: tickets;
-  }
-  .points-wrapper {
-    grid-area: points;
-  }
-  .user-wrapper {
-    grid-area: user;
-  }
+    "points points"
+    "tpoints tpoints";
+  grid-template-rows: min-content min-content min-content 1fr;
+  grid-template-columns: 1fr min-content;
 
-  @media screen and (max-width: 850px) {
-    .user-card.home {
-      left: 50%;
-      translate: -50% 0;
-    }
+  padding: 1rem 0 1rem 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.user-card.profile::before {
+  content: "";
+}
+
+.user-card.profile>.name-wrapper {
+  height: 100%;
+}
+
+.user-card.profile>.name-wrapper p {
+  font-family: "Lexend Exa";
+  letter-spacing: 2px;
+  font-size: clamp(1.2rem, 6vw, 2rem);
+  text-align: start;
+  padding-right: 2ch;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.user-card.profile>.tickets-wrapper {
+  margin-right: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.user-card.profile>.user-wrapper {
+  position: relative;
+  margin-right: 1rem;
+  width: max-content;
+  aspect-ratio: 1;
+}
+
+.user-card.profile>.points-wrapper {
+  margin-right: 3rem;
+  margin-bottom: 0.2rem;
+}
+
+.user-card.profile>.text-points-wrapper p {
+  padding-top: 0.3rem;
+  font-family: "Lexend Exa";
+  letter-spacing: 1px;
+  padding-left: 1ch;
+  font-size: clamp(1rem, 4.5vw, 1.2rem);
+}
+
+.user-card {
+  display: grid;
+}
+
+.name-wrapper {
+  grid-area: name;
+  text-align: right;
+}
+
+.qr-wrapper {
+  grid-area: qr;
+}
+
+.tickets-wrapper {
+  grid-area: tickets;
+}
+
+.points-wrapper {
+  grid-area: points;
+}
+
+.user-wrapper {
+  grid-area: user;
+}
+
+.text-points-wrapper {
+  grid-area: tpoints;
+}
+
+@media screen and (max-width: 850px) {
+  .user-card.home {
+    left: 50%;
+    translate: -50% 0;
   }
-</style>
+}</style>

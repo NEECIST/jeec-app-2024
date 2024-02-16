@@ -4,8 +4,8 @@
       width="200" 
       height="200" 
       :value="userStore.user.student_external_id"
-      :image="require('@/assets/jeec_logo_mobile.svg')"
-      :imageOptions="{imageSize: 0.7, margin: 2}"
+      :image="require('@/assets/jeec_mobile_white.svg')"
+      :imageOptions="{imageSize: 0.6, margin: 5}"
       imgclass="qrcode-image"
       :dotsOptions="{
           type: 'extra-rounded',
@@ -18,7 +18,7 @@
               ],
             },
       }"
-      :backgroundOptions="{color: 'white'}"
+      :backgroundOptions="{color: '#2b2b2b'}"
       :cornersSquareOptions="{type: 'extra-rounded', color: '#6741c8'}"
       :cornersDotOptions="{type: 'square', color: '#6741c8'}"
       alt="Show this QR Code"
@@ -48,6 +48,6 @@ const userStore = useUserStore();
 
 <style>
 .qrcode-image {
-  border-radius: 18px;
+  border-radius: 16px;
 }
 </style>

@@ -16,14 +16,6 @@
       alt="kick"
       class="kick"
     />
-    <v-progress-circular
-      v-else-if="can_kick && loading_kick"
-      indeterminate
-      color="#27ade4"
-      :size="60"
-      :width="6"
-      class="loading"
-    ></v-progress-circular>
   </div>
 </template>
 

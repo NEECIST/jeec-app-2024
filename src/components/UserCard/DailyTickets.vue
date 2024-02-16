@@ -4,7 +4,7 @@
       <img :src="require('@/assets/tickets-' + tickets + '.svg')" aria-hidden="true">
     </div> -->
     <div class="bar">
-      <p>Tickets</p>
+      <p>Daily Tickets</p>
       <!-- <div class="tickets radient-border-passthrough">
         <div class="slot radient-border-passthrough_child"></div>
         <div class="slot radient-border-passthrough_child"></div>
@@ -40,13 +40,14 @@ const progress = ref(0);
 const milestonesRef = ref([]);
 const milestonePercentages = ref([])
 
-watch(() => userStore.milestones.daily, async () => {
+async function getProgress() {
   const userDailyPoints = userStore.userPoints.daily_points;
 
   const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
   const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
 
   const progressPercentage = (userDailyPoints / milestones[milestones.length - 1]) * 100;
+
   if (progressPercentage >= 100) {
     progress.value = 100;
   } else {
@@ -73,8 +74,17 @@ watch(() => userStore.milestones.daily, async () => {
   
     milestonePercentages.value.push(width.toString());  
   }
-});
+}
 
+watch(() => userStore.userPoints, () => {
+  if (userStore.milestones.daily !== undefined && userStore.milestones.daily.length != 0) {
+    getProgress();
+  } else {
+    setTimeout(() => {
+      getProgress();
+    }, 2000);
+  }
+});
 </script>
 <style scoped>
   .wrapper {
@@ -101,9 +111,16 @@ watch(() => userStore.milestones.daily, async () => {
   .wrapper.nav > .bar > p {
     font-size: 1.4rem;
   }
+  .wrapper.profile > .bar > p {
+    font-size: clamp(1rem, 4.5vw, 1.2rem);
+    padding-bottom: 0.1rem;
+  }
   p {
     font-family: "Lexend Exa";
     font-size: 0.95rem;
+  }
+  .wrapper.profile .tickets-progress {
+    height: 23px;
   }
   .tickets-progress {
     width: 100%;
@@ -142,6 +159,9 @@ watch(() => userStore.milestones.daily, async () => {
   }
   .ticket:nth-child(3){
     flex-grow: 1;
+  }
+  .wrapper.profile .tickets img {
+    height: 140%;
   }
   .tickets img {
     height: 160%;

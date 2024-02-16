@@ -22,20 +22,20 @@ const stateStore = useStateStore();
 const userStore = useUserStore();
 const prizeStore = usePrizeStore();
 
-if (userStore.loggedIn) {
+function gettersStatic() {
   prizeStore.getRewards();
-  userStore.getPoints()
-} else {
-  watch(() => userStore.loggedIn, () => {
-    if (userStore.loggedIn) {
-      prizeStore.getRewards();
-      userStore.getPoints()
-    }
-  });
+  userStore.getPoints();
+  userStore.getMilestones();
 }
 
+watch(() => userStore.loggedIn, () => {
+  if (userStore.loggedIn) {
+    gettersStatic();
+  }
+});
+
 import { ref, watch, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router'; 
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();

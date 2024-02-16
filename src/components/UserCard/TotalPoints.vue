@@ -9,7 +9,7 @@
   </div>
 </template>
 <script setup>
-import { ref, watch, defineProps, useSSRContext } from 'vue';
+import { ref, watch, defineProps } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 const userStore = useUserStore();
 
@@ -17,7 +17,7 @@ const props = defineProps(["variant"]);
 
 const progress = ref(0);
 
-watch(() => userStore.milestones.final, () => {
+function getProgress() {
   const userTotalPoints = userStore.userPoints.total_points;
 
   const milestone = userStore.milestones.final;
@@ -29,7 +29,16 @@ watch(() => userStore.milestones.final, () => {
   } else {
     progress.value = progressPercentage.toFixed(2);
   }
+};
 
+watch(() => userStore.userPoints, () => {
+  if (userStore.milestones.final != 0) {
+    getProgress();
+  } else {
+    setTimeout(() => {
+      getProgress();
+    }, 2000);
+  }
 });
 </script>
 <style scoped>
@@ -44,9 +53,16 @@ watch(() => userStore.milestones.final, () => {
   .wrapper.nav > p {
     font-size: 1.4rem;
   }
+  .wrapper.profile > p {
+    font-size: clamp(1rem, 4.5vw, 1.2rem);
+    padding-bottom: 0.1rem;
+  }
   p {
     font-family: 'Lexend Exa';
     font-size: 0.95rem;
+  }
+  .wrapper.profile > .points {
+    height: 23px;
   }
   .points {
     width: 100%;
@@ -66,7 +82,9 @@ watch(() => userStore.milestones.final, () => {
   }
 
   .points-total {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
     text-align: left;
     padding-left: 1ch;
     z-index: 2;
