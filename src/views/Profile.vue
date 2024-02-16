@@ -181,6 +181,7 @@ export default {
         },).then(response => {
           UserService.addCVNOVO(this.formData).then(
             () => {
+              this.student.approved_cv = false;
               this.formData = null;
               if (!this.student.uploaded_cv) {
                 this.showNotification("Added CV points", "points");
