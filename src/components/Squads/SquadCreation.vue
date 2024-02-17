@@ -123,6 +123,7 @@ export default {
           this.error = error.response.data.error;
           console.log(error);
           this.loading = false;
+          this.error = "";
           this.showNotification("Squad already exists", "error");
         });
     },
