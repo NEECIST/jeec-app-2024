@@ -14,7 +14,7 @@
       if (this.visible) {
         setTimeout(() => {
           this.$emit('close');
-        }, 3000); 
+        }, 6000); 
       }
     },
     watch: {
@@ -22,7 +22,7 @@
         if (newValue) {
           setTimeout(() => {
             this.$emit('close');
-          }, 3000);
+          }, 6000);
         }
       }
     }
@@ -34,23 +34,25 @@
     position: fixed;
     bottom: 20px; 
     left: 50%; 
-    transform: translateX(-50%) translateY(100%);
-    padding: 20px 40px; 
-    color: #fff;
+    translate: -50% 0;
+    transform: translateY(100%);
+    padding: 20px 40px;
     border-radius: 8px; 
     font-size: 1.5rem; 
     animation: slide-up 0.5s ease-out forwards; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
-    z-index: 1000; 
+    z-index: 1000;
+    width: calc(100% - 20px);
+    max-width: 400px;
   }
   
   @keyframes slide-up {
     from {
-      transform: translateX(-50%) translateY(100%);
+      transform: translateY(100%);
       opacity: 0;
     }
     to {
-      transform: translateX(-50%) translateY(0);
+      transform: translateY(0);
       opacity: 1;
     }
   }

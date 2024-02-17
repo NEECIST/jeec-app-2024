@@ -32,7 +32,6 @@ export const usePrizeStore = defineStore("PrizeStore", {
           temporary = this.images.squad_weekly_rewards[0]
           this.images.squad_weekly_rewards[0] = response.data.squad_weekly_rewards[1]
           this.images.squad_weekly_rewards[1] = temporary
-          console.log(response.data)
         })
     },
   },

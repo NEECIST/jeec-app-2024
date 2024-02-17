@@ -5,9 +5,9 @@
     :aria-hidden="!stateStore.qrCodeOpen"
     :inert="!stateStore.qrCodeOpen"
   >
-    <div class="qrcode-backdrop" @click="stateStore.qrCodeOpen = false"></div>
+    <div class="qrcode-backdrop" @click="exitQRCode()"></div>
     <div id="qrcode" class="qrcode-card">
-      <button @click="stateStore.qrCodeOpen = false" aria-label="Close the QR Code">
+      <button @click="exitQRCode()" aria-label="Close the QR Code">
         <div></div>
         <div></div>
       </button>
@@ -22,7 +22,14 @@
 import TheQrCode from "./TheQrCode.vue"
 
 import { useStateStore } from "@/stores/StateStore";
+import { useUserStore } from "@/stores/UserStore";
 const stateStore = useStateStore();
+const userStore = useUserStore();
+
+function exitQRCode() {
+  stateStore.qrCodeOpen = false;
+  userStore.getPoints();
+}
 
 </script>
 <style scoped>
@@ -113,9 +120,11 @@ const stateStore = useStateStore();
     justify-content: center;
     align-items: center;
     background-color: #404040;
+    border-radius: 20px;
   }
   .qrcode {
     position: relative;
     top: 1.35px;
+    scale: 1;
   }
 </style>
