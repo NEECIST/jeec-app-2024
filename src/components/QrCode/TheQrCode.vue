@@ -13,14 +13,14 @@
               type: 'linear',
               rotation: 2,
               colorStops: [
-                { offset: 0, color: '#295dc6' },
-                { offset: 1, color: '#550988' },
+                { offset: 0, color: '#1a9cd8' },
+                { offset: 1, color: 'black' },
               ],
             },
       }"
       :backgroundOptions="{color: 'white'}"
-      :cornersSquareOptions="{type: 'extra-rounded', color: '#3a3cad'}"
-      :cornersDotOptions="{type: 'square', color: '#3a3cad'}"
+      :cornersSquareOptions="{type: 'extra-rounded', color: '#072a3a'}"
+      :cornersDotOptions="{type: 'square', color: '#1476a3'}"
       alt="Show this QR Code"
     ></QRCodeVue3>
     <!-- <QRCodeVue3 
