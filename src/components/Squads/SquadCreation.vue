@@ -34,9 +34,13 @@
 
 <script>
 import UserService from "../../services/user.service";
+import ToastNotification from "@/components/Squads/ToastNotification.vue";
 
 export default {
   name: "SquadCreation",
+  components: {
+    ToastNotification
+  },
   data: function () {
     return {
       files: [],
@@ -48,11 +52,18 @@ export default {
       loading: false,
       locked: true,
       expanded: false,
+      showToast: false,
+      toastMessage: '',
+      toastType: 'success',
     };
   },
   // other computed properties...
   methods: {
-
+    showNotification(message, type) {
+      this.toastMessage = message;
+      this.toastType = type;
+      this.showToast = true;
+    },
     input_click() {
       this.$refs.image_input.click();
     },
@@ -105,14 +116,15 @@ export default {
           this.$emit("create", response.data.data);
           this.error = "";
           this.loading = false;
+          this.$router.go()
         })
         .catch((error) => {
           // handle error
           this.error = error.response.data.error;
           console.log(error);
           this.loading = false;
+          this.showNotification("Squad already exists", "error");
         });
-      this.$router.go()
     },
   },
   computed: {
