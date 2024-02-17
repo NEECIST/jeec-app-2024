@@ -42,6 +42,7 @@ h2 {
   letter-spacing: 0.3ch;
   padding: 4rem 0 2rem 0;
   font-size: 2rem;
+  text-align: center;
 }
 
 h2:first-of-type {

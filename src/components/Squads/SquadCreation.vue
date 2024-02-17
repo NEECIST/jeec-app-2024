@@ -1,61 +1,35 @@
 <template>
-  <div class="squad-creation">
-    <div class="squad-create">
-      <div>
-        <h2> SQUAD </h2>
-        <input
-          type="text"
-          placeholder="Squad Name"
-          v-model="name"
-          class="squad-input"
-          :class="{ input_exists: name.length }"
-          @input="validateInput"
-        />
-        <br>
-        <input
-          type="text"
-          placeholder="Motto"
-          v-model="cry"
-          class="squad-input"
-          :class="{ input_exists: cry.length }"
-          />
+  <div class="create-squad radient-border-passthrough" :class="{ expanded: expanded }">
+    <button @click="expanded = !expanded">Create Squad</button>
+    <div class="create-modal" :aria-hidden="expanded" :inert="!expanded">
+      <div class="name-image">
+        <input class="create-name" :class="{ input_exists: name.length }" type="text" placeholder="Name for the squad..."
+          v-model="name" @input="validateInput" maxlength="25" minlength="4"/>
+
+        <button class="create-image radient-border-passthrough" @click.stop="input_click">
+          <p v-if="!image_uploaded">add picture</p>
+          <img v-if="image_uploaded" :src="currentImage" alt="uploaded-image" ref="uploaded_image">
+          <div class="plus-symbol">&plus;</div>
+          <input type="file" accept="image/*" ref="image_input" @change="input_file" style="display: none" />
+        </button>
       </div>
-     
-      <div v-if="!image_uploaded" class="image-input disabled" @click.stop="input_click">
-        <p>Add<br />Photo</p>
+      <div class="motto">
+        <p>Motto</p>
+        <div class="create-motto radient-border-passthrough">
+          <input :class="{ input_exists: cry.length }" type="text" placeholder="Your Squad Motto..." v-model="cry" maxlength="60"/>
+        </div>
       </div>
-      <input
-        type="file"
-        accept="image/*"
-        ref="image_input"
-        @change="input_file"
-        style="display: none"
-      />
-      <img
-        v-if="image_uploaded"
-        @click.stop="input_click"
-        class="squad-image"
-        :src="currentImage"  
-        alt="uploaded-image"
-        ref="uploaded_image"
-      />
-     
-      <button @click.stop="create_squad" class="button" v-if="!loading">
-        Create Squad
-      </button> 
+
+      <button class="create-submit" @click.stop="create_squad" v-if="!loading">Create</button>
+
       <p class="error-msg">{{ error }}</p>
     </div>
   </div>
 
   <div>
-    <ToastNotification
-      :message="toastMessage"
-      :type="toastType"
-      :visible="showToast"
-      @close="showToast = false"
-    ></ToastNotification>
+    <ToastNotification :message="toastMessage" :type="toastType" :visible="showToast" @close="showToast = false">
+    </ToastNotification>
   </div>
-
 </template>
 
 <script>
@@ -66,18 +40,19 @@ export default {
   data: function () {
     return {
       files: [],
-      image_uploaded: true,
-      currentImage: require('../../assets/jeec_colour_no_edition_transparent.svg'),  
+      image_uploaded: false,
+      currentImage: require('../../assets/jeec_colour_no_edition_transparent.svg'),
       name: "",
       cry: "",
       error: "",
       loading: false,
       locked: true,
+      expanded: false,
     };
   },
   // other computed properties...
   methods: {
-    
+
     input_click() {
       this.$refs.image_input.click();
     },
@@ -88,7 +63,7 @@ export default {
         var reader = new FileReader();
 
         reader.onload = (e) => {
-          this.currentImage = e.target.result; 
+          this.currentImage = e.target.result;
           this.image_uploaded = true;
         };
 
@@ -97,14 +72,17 @@ export default {
     },
     // Method to convert image URL to Blob
     async getDefaultImageBlob() {
-      const response = await fetch(require('../../assets/logo.png')); 
-      const data = await response.blob(); 
+      const response = await fetch(require('../../assets/logo.png'));
+      const data = await response.blob();
       return new File([data], "default-image.png", { type: 'image/png' });
     },
-    
+
     async create_squad() {
-      if (!this.nameExists){
+      if (!this.nameExists) {
         this.error = "Invalid information for new squad - Name cannot be left blank";
+        return;
+      } else if (!this.cryExists) {
+        this.error = "Invalid information for new squad - Motto cannot be left blank";
         return;
       }
       this.loading = true;
@@ -117,7 +95,7 @@ export default {
       }
 
       const formData = new FormData();
-      formData.append('file', imageData); 
+      formData.append('file', imageData);
       formData.append('name', this.name);
       formData.append('cry', this.cry);
 
@@ -134,12 +112,15 @@ export default {
           console.log(error);
           this.loading = false;
         });
-        this.$router.go()
+      this.$router.go()
     },
   },
   computed: {
     nameExists() {
       return this.name.trim().length > 0;
+    },
+    cryExists() {
+      return this.cry.trim().length > 0;
     }
   },
 };
@@ -147,116 +128,176 @@ export default {
 
 
 <style scoped>
-
-
-.squad-creation-title{
-  text-align:center;
-  font-size:8vw;
-  font-weight: 600;
+.create-squad {
+  max-height: 70px;
+  max-width: 600px;
+  overflow: hidden;
+  margin: 0 auto;
+  margin-top: 2rem;
+  transition: max-height 0.8s ease;
+  
+  --border-radius: 35px;
+}
+.create-squad.expanded {
+  max-height: 600px;
+  transition: max-height 0.8s ease;
+}
+.create-squad::before {
+  content: "";
 }
 
-.n-squad-header {
-  background-color: #FFFCF8;
-  padding: 2vh;
-  text-align: center;
-  font-size: 2.5vh;
-  font-weight: 600;
-  margin-bottom: 0.5vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.create-squad > button {
+  height: 70px;
+  width: 100%;
+  font-family: "Lexend Exa";
+  font-size: clamp(1.6rem, 6vw, 2rem);
+  letter-spacing: 3px;
+  color: #4CC9F0;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
-
-.n-squad-header p {
-  margin: 0;
-  padding-top: 0.8vh;
-  padding-bottom: 0.8vh;
+.create-squad > button:hover {
+  background: radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.14) 0%, rgba(76, 202, 240, 0.08) 70%, rgba(76, 202, 240, 0) 100%);
 }
-
-.squad-create {
-  background-color: #2c3e50; 
-  border-radius: 20px;
-  padding: 2vh;
+.create-modal {
   display: flex;
   flex-direction: column;
+  padding: 1rem 3rem;
+}
+.create-modal .name-image {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.create-name {
+  font-size: clamp(1.2rem, 6vw, 2rem);
+  background: none;
+  border: none;
+  color: var(--color-font);
+}
+.create-name::placeholder {
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.image-input {
-  background-color: white;
-  border-radius: 50%;
-  border: 5px solid #03618C;
-  height: 13vh;
-  width: 13vh;
+.create-image {
+  width: 120px;
+  min-width: 90px;
+  aspect-ratio: 1;
+  border: none;
+  display: flex;
   position: relative;
   cursor: pointer;
+
+  --border-radius: 50%;
 }
 
-.image-input p {
-  text-align: center;
-  vertical-align: middle;
-  margin: 0;
+.create-image::before {
+  content: "";
+}
+
+.create-image p {
   position: absolute;
-  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2.5vh;
+  top: 50%;
+  translate: -50% -50%;
+  text-transform: uppercase;
+  color: #1A9CD8;
   font-weight: 600;
 }
 
-.squad-image {
-  height: 13vh;
-  width: 13vh;
+.create-image .plus-symbol {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   border-radius: 50%;
-  border: 5px solid #03618C;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  font-size: 1.2rem;
+  aspect-ratio: 1;
+  border: #1A9CD8 2px solid;
+  background: linear-gradient(45deg, #1A9CD8, #60cdff);
+}
+
+.create-image img {
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
+  border-radius: 50%;
+}
+
+.motto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.motto p {
+  font-size: 1.2rem;
+  min-width: max-content;
+}
+
+.create-motto {
+  flex-grow: 1;
+  height: 50px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+
+  --border-radius: 25px;
+  --border-width: 1.5px;
+  --background: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(114, 9, 183, 0.14), rgba(114, 9, 183, 0.08) 60%, rgba(114, 9, 183, 0));
+  --border-background: linear-gradient(165deg, #7209B7, #A414A4 40%, #7209B7);
+}
+
+.create-motto::before {
+  content: "";
+}
+
+.create-motto input {
+  background: none;
+  border: none;
+  color: var(--color-font);
+  font-family: "Lexend Deca";
+  width: 100%;
+  font-size: 1.1rem;
+}
+
+.create-submit {
+  margin: 0 auto;
+  margin-top: 2.5rem;
+  max-width: 300px;
+  padding: 0.5rem 2ch;
+  font-size: 1.4rem;
+  background: linear-gradient(165deg, #605ED0 -100%, #4CC9F0 20%, #7209B7 130%);
+  border: none;
+  border-radius: 25px;
   cursor: pointer;
 }
 
-.squad-input {
-  background: #27ade4;
-  border: none;
-  border-radius: 5px;
-  margin: 1vh 0;
-  padding: 1vh;
-  width: 80%; 
-  color: white;
-  font-size: 3vh; 
-}
-
-.squad-input::placeholder {
-  color: rgba(255, 255, 255, 0.7); 
-}
-
-.input_exists {
-  border: 0.1vh solid #27ade4 !important;
-  box-shadow: 0 0.3vh 1.5vh 0.1vh #27ade4 !important;
-}
-
-.button {
-  background-color: #03618C; 
-  color: white; 
-  border: none;
-  border-radius: 5px;
-  padding: 2vh 4vh;
-  font-size: 3vh; 
-  cursor: pointer; 
-  margin-top: 2vh;
-}
-
-.button:hover {
-  background-color: #0272a4; 
-}
-
-.plus-symbol{
-  color:  #03618C;
-
-}
-
-.error-msg {
+.create-modal .error-msg {
   text-align: center;
-  font-size: 4vh;
+  font-size: 1.3rem;
   font-weight: 700;
   color: red;
-  margin-top: 2vh;
+  margin-top: 1rem;
+}
+
+@media screen and (max-width: 500px) {
+  .motto {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+
+  .motto p {
+    font-size: 1.4rem;
+  }
 }
 </style>

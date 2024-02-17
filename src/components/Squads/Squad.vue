@@ -5,11 +5,11 @@
 
     <template v-if="!loading_squad">
       <div v-if="squad === null">
-        <button class="create-squad-button" @click="change_Create"> Create Squad </button>
-        <SquadCreation v-if="create_squad_var" @create="create_squad" @notification="notification" />
+        <SquadCreation @create="create_squad" @notification="notification" />
 
         <Invite @accept="accept_invite" @reject="reject_invite" v-for="invite in invites" :key="invite.sender_username"
           :invite="invite" />
+
       </div>
 
       <div v-else-if="squad != null" class="squad-container">
@@ -124,7 +124,6 @@ export default {
       hover: false,
       members_with_squad: null,
       invited_members: null,
-      create_squad_var: false,
       leave_squad_button: require("../../assets/leave_squad.png"),
       plus_squad_button: require("../../assets/plus_sign.png"),
       showToast: false,
@@ -140,10 +139,6 @@ export default {
       this.toastMessage = message;
       this.toastType = type;
       this.showToast = true;
-    },
-
-    change_Create() {
-      this.create_squad_var = !this.create_squad_var;
     },
 
     filterStudents() {
@@ -467,325 +462,15 @@ export default {
 </script>
 
 <style scoped>
-.squad-rank {
-  margin-top: 5vh;
-  margin-bottom: 5vh;
-  width: 50vw;
+.squad-section {
+  padding-bottom: 120px;
+}
+.squad-section h2 {
   text-align: center;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.squad-rank h1 {
-  border-top-right-radius: 15px;
-  border-top-left-radius: 15px;
-  font-family: Montserrat;
-  font-size: 24px;
-  font-weight: 600;
-  color: white;
-}
-
-.squad-rank h2 {
-  border-bottom-right-radius: 15px;
-  border-bottom-left-radius: 15px;
-  font-family: Montserrat;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.squad {
-  background-color: none;
-  height: auto;
-}
-
-.loading {
-  text-align: center;
-  margin-top: 35vh;
-}
-
-.squad-text {
-  font-family: Montserrat;
-  font-size: 40px;
-  font-weight: 600;
-  margin-bottom: 0;
-}
-
-.plus-symbol {
-  background: none;
-  color: blueviolet;
-  font-weight: 10;
-  font-size: 40px;
-}
-
-.minus-symbol {
-  background: none;
-  color: #D93046;
-  font-weight: 10;
-  font-size: 60px;
-}
-
-.squad-dialog {
-  text-align: center;
-  background-color: #1F2A47;
-  font-family: Montserrat;
-  font-size: 32px;
-  font-weight: 600;
-  border: 3px solid #03618C;
-}
-
-.hover {
-  color: red;
-}
-
-.hover-effect {
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.hover-effect:hover {
-  transform: scale(1.2);
-  color: red;
-}
-
-.dialog-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.squad-dialog {
-
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.dialog-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.search-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.chips-container {
-  background: none;
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.chip {
-  background-color: #8A9BAE;
-  padding: 5px 10px;
-  border-radius: 20px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-}
-
-.close-icon {
-  margin-left: 5px;
-  cursor: pointer;
-}
-
-.autocomplete {
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.autocomplete ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.autocomplete li {
-  padding: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-button.create-squad-button {
-  display: flex;
-  height: 50px;
-  border: none;
-  background: none;
-  width: 220px;
-  background: rgb(35, 49, 54);
-  border-radius: 25px;
-  align-items: center;
-  justify-content: center;
-  padding: 0 2ch;
-  gap: 1ch;
-  cursor: pointer;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-  margin: 20px auto;
-}
-
-button.create-squad-button:hover {
-  background-color: #3e5f67;
-}
-
-button.create-squad-button img {
-  height: 80%;
-}
-
-button.create-squad-button p {
-  flex-grow: 1;
-  text-align: left;
-  margin-left: 1ch;
-}
-
-.squad-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: none;
-  border-radius: 10px;
-  padding: 10px;
-  color: #C6C6C6;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.squad-image-placeholder {
-  position: relative;
-  width: 100%;
-  max-width: 200px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background-color: #1F2A47;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  order: 2;
-}
-
-.squad-texts {
-  display: flex;
-  flex-direction: column;
-  order: 1;
-}
-
-.squad-name {
-  font-size: 60px;
-  font-weight: bold;
-  color: #FFFFFF;
-  margin-bottom: 4px;
-}
-
-.squad-motto {
-  font-size: 48px;
-  font-weight: normal;
-  color: #8A9BAE;
-}
-
-.squad-image {
-  height: 100%;
-  width: 100%;
-  border-radius: 50%;
-  border: 3px solid #03618C;
-}
-
-.none_back {
-  cursor: pointer;
-  background: none;
-  border: none;
-  outline: none;
-}
-
-button.invite {
-
-  background: none;
-  border: none;
-  color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0;
-  margin: 0;
-  width: auto;
-  height: auto;
-  cursor: pointer;
-  text-align: center;
-  display: inline-block;
-  line-height: normal;
-  vertical-align: middle;
-  transition: none;
-}
-
-button.invite {
-  padding: 5px 10px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  background-color: #03618C;
-  color: #C6C6C6;
-}
-
-.border-container {
-  background-color: #34495e;
-  border: 1px solid #ffffff;
-  border-radius: 10px;
-  padding: 20px;
-}
-
-.button-plus-icon {
-  background: none;
-  width: 30px;
-  height: 30px;
-}
-
-button.minus-symbol .button-icon {
-  background: none;
-  vertical-align: right;
-  width: 20px;
-  height: 20px;
-}
-
-.leave_style {
-  background: none;
-  cursor: pointer;
-  border: none;
-  outline: none;
-}
-
-.leave_style .button-icon {
-  width: 40px;
-  height: 40px;
-}
-
-.button-container {
-  text-align: right;
-}
-
-.center-container {
-  display: flex;
-  justify-content: center;
+  font-family: "Lexend Exa";
+  font-size: 2rem;
+  letter-spacing: 3px;
+  margin-top: 3rem;
+  color: #4CC9F0;
 }
 </style>

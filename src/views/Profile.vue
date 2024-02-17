@@ -322,7 +322,8 @@ export default {
   gap: 0.6rem;
   flex-wrap: wrap;
   max-width: 800px;
-  margin: 2rem auto;
+  margin: 0 auto;
+  margin-top: 2rem;
 }
 
 .profile-buttons> :is(button, a) {

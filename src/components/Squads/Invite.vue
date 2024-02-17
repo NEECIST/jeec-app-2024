@@ -1,26 +1,26 @@
 <template>
-  <div >
-    <div  class="invitation-card">
-      <div class="card-content">
-        <img class="squad-image"
-          :src="jeec_brain_url + invite.squad_image"
-          alt="squad-image"
-        />
-        <div class="text-section">
-          <p class="invitation-text">You've been invited to</p>
-          <h3 class="squad-name">{{ invite.squad_name }}</h3>
-          <p lass="motto">{{ invite.squad_cry }}</p>
-          
-        </div>
-        <p>By {{ nameArray[0] }} {{ nameArray[nameArray.length-1] }}</p>
+  <div class="squad-invite radient-border-passthrough">
+    <h3>You've been invited to</h3>
 
-        <div v-if="!loading" class="button-section">
-          <button @click.stop="accept" class="join-button">Join</button>
-          <button @click.stop="reject" class="decline-button">Decline</button>
+    <div class="invite">
+      <div class="squad-header">
+        <div class="squad-image radient-border-passthrough">
+          <img :src="jeec_brain_url + invite.squad_image" alt="squad-image" />
+        </div>
+        <div class="squad-info">
+          <p>Squad {{ invite.squad_name }}</p>
+          <p>Motto {{ invite.squad_cry }}</p>
         </div>
       </div>
+      <div class="squad-sender">
+        <p>By {{ nameArray[0] }} {{ nameArray[nameArray.length - 1] }}</p>
+      </div>
     </div>
-     
+
+    <div v-if="!loading" class="join-decline">
+      <button class="join" @click.stop="accept">Join</button>
+      <button class="decline" @click.stop="reject">Decline</button>
+    </div>
   </div>
 </template>
 
@@ -37,10 +37,6 @@ export default {
     };
   },
   computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
-
     nameArray() {
       var names = this.invite.sender_name.split(" ");
 
@@ -58,115 +54,114 @@ export default {
       this.$emit("reject", this.invite.external_id);
     },
   },
+  mounted() {
+    console.log(this.invite);
+  },
 };
 </script>
 
 <style scoped>
+.squad-invite {
+  margin: 0 auto;
+  margin-top: 2rem;
+  max-width: 600px;
+  padding: 1rem 3ch;
 
-.invitation-card {
-  background: #2c3e50;
-  border-radius: 20px;
-  padding: 2em;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  position: relative;
-  color: white;
-  font-family: 'Arial', sans-serif;
-  width: 360px;
+  --border-radius: 35px;
 }
 
-.invitation-card::before {
-  content: '';
-  position: absolute;
-  top: -2px; right: -2px; bottom: -2px; left: -2px;
-  z-index: -1;
-  background: #00f;
-  border-radius: inherit;
-  background-image: linear-gradient(45deg, #6e8efb, #a777e3);
-  animation: glowing-border 2s infinite;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.squad-invite::before {
+  content: "";
 }
 
-@keyframes glowing-border {
-  0% { box-shadow: 0 0 5px #6e8efb; }
-  50% { box-shadow: 0 0 20px #a777e3; }
-  100% { box-shadow: 0 0 5px #6e8efb; }
-}
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.avatar-placeholder {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #333;
-  margin-bottom: 1rem;
-}
-
-.text-section {
+.squad-invite h3 {
+  font-family: "Lexend Exa";
+  letter-spacing: 3px;
   text-align: center;
+  font-size: clamp(1.1rem, 5vw, 1.4rem);
+  padding: 0 2ch;
+}
+
+.invite {
   display: flex;
   flex-direction: column;
 }
-
-.invitation-text {
-  margin: 0;
-}
-
-.squad-name {
-  margin: 0.5rem 0;
-}
-
-.motto {
-  margin: 0;
-  font-style: italic;
-}
-
-.button-section {
+.squad-header {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.join-button, .decline-button {
-  border: none;
-  padding: 0.5rem 1rem;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  outline: none;
-  transition: background-color 0.3s;
-}
-
-.join-button {
-  background: #3498db;
-}
-
-.join-button:hover {
-  background: #2980b9;
-}
-
-.decline-button {
-  background: #e74c3c;
-}
-
-.decline-button:hover {
-  background: #c0392b;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding-top: 1.4rem;
 }
 
 .squad-image {
-  border-radius: 50%;
-  width: 60px;
-  height: 60px; 
-  margin-right: 1rem; 
+  max-width: 100px;
+  min-width: 60px;
+  height: 100%;
+  aspect-ratio: 1;
+  
+  --border-radius: 50%;
 }
 
+.squad-image::before {
+  content: "";
+}
 
+.squad-image img {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+.squad-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.squad-info p {
+  font-family: "Lexend Exa";
+  letter-spacing: 3px;
+}
+
+.squad-info p:first-child {
+  font-weight: 600;
+  font-size: clamp(1rem, 5vw, 1.3rem);
+}
+
+.squad-info p:last-child {
+  font-size: clamp(0.8rem, 5vw, 1rem);
+}
+
+.squad-sender {
+  text-align: center;
+  font-family: "Lexend Exa";
+  letter-spacing: 3px;
+  padding-top: 0.5rem;
+}
+
+.join-decline {
+  padding-top: 1.5rem;
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.join-decline button {
+  width: 110px;
+  padding: 0.5rem 0;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.join-decline button.join {
+  background: linear-gradient(165deg, #605ED0 -100%, #4CC9F0 20%, #7209B7 130%);
+}
+
+.join-decline button.decline {
+  background: radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.14) 0%, rgba(76, 202, 240, 0.08) 70%, rgba(76, 202, 240, 0) 100%);
+}
 </style>
