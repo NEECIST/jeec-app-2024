@@ -1,11 +1,11 @@
 <template>
   <div>
-    <!-- <QRCodeVue3 
+    <QRCodeVue3 
       width="200" 
       height="200" 
       :value="userStore.user.student_external_id"
-      :image="require('@/assets/jeec_mobile_white.svg')"
-      :imageOptions="{imageSize: 0.6, margin: 5}"
+      :image="require('@/assets/jeec_logo_mobile.svg')"
+      :imageOptions="{imageSize: 0.4, margin: 2}"
       imgclass="qrcode-image"
       :dotsOptions="{
           type: 'extra-rounded',
@@ -13,17 +13,17 @@
               type: 'linear',
               rotation: 2,
               colorStops: [
-                { offset: 0, color: '#4cc9f0' },
-                { offset: 1, color: '#7209b7' },
+                { offset: 0, color: '#295dc6' },
+                { offset: 1, color: '#550988' },
               ],
             },
       }"
-      :backgroundOptions="{color: '#2b2b2b'}"
-      :cornersSquareOptions="{type: 'extra-rounded', color: '#6741c8'}"
-      :cornersDotOptions="{type: 'square', color: '#6741c8'}"
+      :backgroundOptions="{color: 'white'}"
+      :cornersSquareOptions="{type: 'extra-rounded', color: '#3a3cad'}"
+      :cornersDotOptions="{type: 'square', color: '#3a3cad'}"
       alt="Show this QR Code"
-    ></QRCodeVue3> -->
-    <QRCodeVue3 
+    ></QRCodeVue3>
+    <!-- <QRCodeVue3 
       width="200" 
       height="200" 
       :value="userStore.user.student_external_id"
@@ -35,7 +35,7 @@
       :cornersSquareOptions="{type: 'square', color: '#000000'}"
       :cornersDotOptions="{type: 'square', color: '#000000'}"
       alt="Show this QR Code"
-    ></QRCodeVue3>
+    ></QRCodeVue3> -->
   </div>
 </template>
 
