@@ -23,7 +23,7 @@ img {
 </style>
 
 <template>
-  <div :class="index" v-if="image_list.length > 0" class="loop-item">
+  <div :class="marker" v-if="image_list.length > 0" class="loop-item">
     <img v-bind:class="{ 'show': isShow, 'fade': isFade }" class="fadeloop-image" :src="image_list[i]" alt="">
   </div>
 </template>
@@ -33,16 +33,32 @@ export default {
   name: "FadeLoop",
   props: {
     image_list: Array,
-    index: {
+    marker: {
       type: String,
       default: "",
+    },
+    index: {
+      type: Number,
+      default: 0,
+    },
+    step: {
+      type: Number,
+      default: 1,
+    },
+    duration: {
+      type: Number,
+      default: 3000,
+    },
+    initial_duration: {
+      type: Number,
+      default: 3000,
     },
   },
   data() {
     return {
-      i: 0,
       isShow: true,
       isFade: false,
+      i: this.index
     }
   },
   methods: {
@@ -51,15 +67,25 @@ export default {
       this.isFade = true;
 
       setTimeout(() => {
-        if (this.i == this.image_list.length - 1) this.i = 0;
-        else ++this.i;
+
+
+        // tipo aqui faz o loop em steps mas caso  o index + step passar a length
+        // do array da lista de imagens, ele volta para o index correto
+
+        this.i = (this.i + this.step) % this.image_list.length;
+
+        // if (this.i >= this.image
+        // else this.i = this.i + this.step;
+
+        
+        console.log(this.i); 
 
         this.isShow = true;
         this.isFade = false;
 
         setTimeout(() => {
-          this.toNextImage();
-        }, 3000);
+          this.toNextImage(duration);
+        }, duration);
       }, 1000);
     }
   },
@@ -67,8 +93,8 @@ export default {
 
     if (this.image_list.length > 1) {
       setTimeout(() => {
-        this.toNextImage();
-      }, 3000);
+        this.toNextImage(this.duration);
+      }, this.initial_duration);
 
     }
   }

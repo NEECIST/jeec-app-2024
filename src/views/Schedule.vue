@@ -12,18 +12,29 @@
         <div class="carousel" style="margin-bottom: 110px;">
           <Carousel ref="schedule_carousel" :mouseDrag="false" :touchDrag="false" :itemsToShow="2.5" :wrapAround="true" :transition="500">
             <Slide v-for="(weekday, index) in weekdays" :key="index">
-                <button  class="carousel__item" style="cursor: pointer; margin-bottom: 10px;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
-                  <div class="weekday" >
+                <button class="main-button radient-border-passthrough" :class="weekday.toLowerCase()" style="cursor: pointer; margin-bottom: 10px;" @click="carouselSlideEvent($event.target.parentElement.parentElement)">
+                  <div class="weekday">
                     <p style="pointer-events: none;">{{ weekday }}</p>
                   </div>
                 </button>
-
                 
+                <div class="carousel__item" style="background-color: transparent;">
+                  <div v-if="!loading_jobfair"  class="jobfair radient-border-passthrough">
+                    <h2 style="font-family: 'Lexend Exa'; margin-bottom: 10px;">Job Fair</h2>
+                    <div class="showcase">
+                      <FadeLoop class="fadeloop" :image_list="getJobFairImages(weekday)" :index="0" :initial_duration="2200" :duration="2500" :step="3"></FadeLoop>
+                      <FadeLoop class="fadeloop" :image_list="getJobFairImages(weekday)" :index="1" :initial_duration="2400" :duration="2500" :step="3"></FadeLoop>
+                      <FadeLoop class="fadeloop" :image_list="getJobFairImages(weekday)" :index="2" :initial_duration="2600" :duration="2500" :step="3"></FadeLoop>
+                    </div>
+                  </div>
+                </div>
+                
+              
                 <div class="carousel_item">
                   <div class="schedule">
                     <div class="line"></div>
                     <div v-for="(event, index) in activities" :key="event" class="event">
-                      <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" :index="weekday+index" link="/home"></Event>
+                      <Event v-if="getWeekday(event.day) == weekday" color="aliceblue" :event="event" :index="weekday+index" ></Event>
                     </div>
                   </div> 
                 </div>
@@ -45,8 +56,10 @@ import { useUserStore } from '@/stores/UserStore';
 import { mapState } from 'pinia'
 import { Carousel,Slide } from 'vue3-carousel'
 import { HollowDotsSpinner } from 'epic-spinners'
+import FadeLoop from "@/components/FadeLoop.vue";
 
 import 'vue3-carousel/dist/carousel.css'
+import User from "@/models/user";
 
 export default {
   name: "Schedule",
@@ -54,13 +67,15 @@ export default {
     HollowDotsSpinner,
     Event,
     Carousel,
-    Slide
-  },
+    Slide,
+    FadeLoop
+},
   data: function () {
     return {
+      jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
       button: "all",
       model: 0,
-      event_dates: [],
+      jobfair_companies: [],
       activities: [],
       weekdays: [
         "Monday",
@@ -69,13 +84,32 @@ export default {
         "Thursday",
         "Friday"
       ],
+      carousel_breakpoints: {
+        0: { itemsToShow: 2.5 },
+        640: { itemsToShow: 3.0 },
+        900: { itemsToShow: 4.8 }
+      },
       loading_activities: true,
+      loading_jobfair: true,
     };
   },
   methods: {
     // get weekday from string format "dd mm yyyy, weekday"
     getWeekday(date) {
       return date.split(", ")[1];
+    },
+
+    getJobFairImages(weekday) {
+      // map jobfair_companies[weekday].logo to their respective weekdays
+      if (this.jobfair_companies[weekday] == undefined) {
+        return [];
+      }
+
+      var jobfair_images = this.jobfair_companies[weekday].map(company => process.env.VUE_APP_JEEC_BRAIN_URL + company.logo);
+
+      console.log(weekday)
+      console.log(jobfair_images)
+      return jobfair_images;
     },
     // onClick weekday element event
     carouselSlideEvent(target) {
@@ -103,9 +137,7 @@ export default {
             }
 
             const weekday = new_active_slide.firstChild.innerText;
-            console.log(weekday)
             if (weekday.includes("Friday")) {
-              console.log("Friday")
               next_slide.firstChild.style.pointerEvents = "none";
             }
           }
@@ -146,6 +178,8 @@ export default {
       this.$router.push("/");
     }
 
+    
+
     // make active slide non pointer
     const active_slide = document.querySelector(".carousel__slide--active");
     if (active_slide) {
@@ -167,7 +201,25 @@ export default {
         slide_clones[i].style.pointerEvents = "none";
       }
     }
-    
+
+
+    UserService.getJobFair().then(
+      (response) => {
+        this.jobfair_companies = response.data;
+        console.log(response.data)
+      }
+    ).finally(() => {
+      this.loading_jobfair = false;
+
+      if (this.loading_activities == false && this.loading_jobfair == false) {
+        const loading_spinner = document.querySelector('.loading-spinner');
+        const activities = document.querySelector('.activities');
+        loading_spinner.classList.add('invisible');
+        activities.classList.remove('invisible');
+        activities.classList.add('visible');
+      }
+    })
+
     // get activities
     UserService.getActivities().then(
       (response) => {
@@ -176,19 +228,58 @@ export default {
       }
     ).finally(() => {
       this.loading_activities = false;
-      const activities = document.querySelector('.activities');
-      const loading_spinner = document.querySelector('.loading-spinner');
-      const active_slide = document.querySelector(".carousel__slide--active");
 
-      loading_spinner.classList.add('invisible');
-      activities.classList.remove('invisible');
-      activities.classList.add('visible');
+      if (this.loading_activities == false && this.loading_jobfair == false) {
+        const loading_spinner = document.querySelector('.loading-spinner');
+        const activities = document.querySelector('.activities');
+        loading_spinner.classList.add('invisible');
+        activities.classList.remove('invisible');
+        activities.classList.add('visible');
+      }
     })
   },
 };
 </script>
 
 <style scoped>
+
+.main-button{
+  width: calc(100% - 10px);
+  margin-left: 5px;
+  font-size: 1.3rem;
+  padding: 0.3rem;
+  border: none;
+  cursor: pointer;
+  --background: none;
+  --border-width: 2px 0 0 0;
+  --border-radius: 0 0 0 0;
+  height: 40px;
+}
+.carousel__slide--active .main-button {
+  font-size: 1.4rem;
+  font-weight: 700;
+  --background: radial-gradient(ellipse 60% 120% at 50% 0, #4ccaf032, #7109b70e 90%, #7109b700);
+}
+.main-button::before {
+  content: "";
+}
+.main-button.monday {
+  --border-background: linear-gradient(100deg, #4CC9F0, #5B7EDA);
+  --border-radius: 20px 0 0 0;
+}
+.main-button.tuesday {
+  --border-background: linear-gradient(100deg, #5B7EDA, #6A33C3);
+}
+.main-button.wednesday {
+  --border-background: linear-gradient(100deg, #6A33C3, #890EAE);
+}
+.main-button.thursday {
+  --border-background: linear-gradient(100deg, #890EAE, #C11A99);
+}
+.main-button.friday {
+  --border-background: linear-gradient(100deg, #C11A99, #F72585);
+  --border-radius: 0 20px 0 0;
+}
 
 .activities {
   background-color: #e6e6e600;
@@ -241,6 +332,12 @@ export default {
   .schedule{
     position: relative;
   }
+
+  .jobfair{
+    position: relative;
+  }
+
+
 }
 
 .line {
@@ -299,8 +396,17 @@ export default {
 }
 .schedule{
   opacity: 0;
-
 }
+
+.jobfair{
+  opacity: 0;
+  height: 0;
+  h2{
+    opacity: 0;
+  }
+}
+
+
 
 .carousel__slide{
   height: 0;
@@ -320,6 +426,69 @@ export default {
     /* height: 65vh; */
     overflow-x: hidden;
     overflow: visible;
+  }
+
+  .jobfair {
+
+
+    --border-radius: 20px;
+    --border-width: 2px;
+    --background: var(--background_, radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.3) 0%, rgba(76, 202, 240, 0.2) 70%, rgba(76, 202, 240, 0.1) 100%));
+    --border-background: var(--border-background_, linear-gradient(165deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%));
+
+    --color: white;
+
+    
+
+    display: flex;
+    transition: 1s;
+    opacity: 1;
+    width: 80vw;
+    height: 22vh; 
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 5px;
+    padding-right: 5px;  
+    
+    h2{
+      opacity: 1;
+      transition: 2.5s;
+    }
+    
+    
+    .showcase{
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      width: 100%;
+      height: 13vh;
+    }
+
+    .fadeloop{
+      width: 30%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      background-color: white;
+      border-radius: 10px;
+      align-items: center;
+      position: relative;
+      transition: 0.5s;
+      padding: 10px;
+      opacity: 1;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;    
+    }
+  }
+
+  .jobfair::before {
+    content: "";
   }
 
   .line{

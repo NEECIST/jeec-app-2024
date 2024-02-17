@@ -163,6 +163,12 @@ class UserService {
     });
   }
 
+  async getJobFair() {
+    return axios.get(jeec_brain_url + "/student/job-fair", {
+      headers: authHeader()
+    });
+  }
+
   async getPastActivities(date){
     return axios.get(jeec_brain_url + "/student/past-activities?date=" + date, {
       headers: authHeader()
