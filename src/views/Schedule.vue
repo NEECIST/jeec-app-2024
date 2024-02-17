@@ -123,7 +123,7 @@ export default {
         return [];
       }
 
-      var jobfair_images = this.jobfair_companies[weekday].map(company => process.env.VUE_APP_JEEC_BRAIN_URL + company.logo);
+      var jobfair_images = this.jobfair_companies[weekday].filter(function(company){return company.logo}).map(company => process.env.VUE_APP_JEEC_BRAIN_URL + company.logo);
       return jobfair_images;
     },
     getJobFairLinks(weekday) {
@@ -132,7 +132,7 @@ export default {
         return [];
       }
 
-      var jobfair_links = this.jobfair_companies[weekday].map(company => company.link);
+      var jobfair_links = this.jobfair_companies[weekday].filter(function(company){return company.logo}).map(company => company.link);
       return jobfair_links;
     },
     getJobFairAlt(weekday) {
@@ -141,7 +141,7 @@ export default {
         return [];
       }
 
-      var jobfair_alt = this.jobfair_companies[weekday].map(company => company.name);
+      var jobfair_alt = this.jobfair_companies[weekday].filter(function(company){return company.logo}).map(company => company.name);
       return jobfair_alt;
     },
     // onClick weekday element event
