@@ -9,36 +9,56 @@
 
         <Invite @accept="accept_invite" @reject="reject_invite" v-for="invite in invites" :key="invite.sender_username"
           :invite="invite" />
-
       </div>
 
-      <div v-else-if="squad != null" class="squad-container">
+      <div v-else-if="squad != null" class="squad-container radient-border-passthrough">
         <div class="squad-header">
-          <img :src="jeec_brain_url + squad.image" alt="squad-image" />
           <div class="squad-texts">
             <p class="squad-name"> {{ squad.name }} </p>
-            <p class="squad-motto"> {{ squad.cry }} </p>
+            <div class="squad-motto radient-border-passthrough">
+              <p> {{ squad.cry }} </p>
+            </div>
+          </div>
+          <div class="squad-image radient-border-passthrough">
+            <img :src="jeec_brain_url + squad.image" alt="squad-image" />
           </div>
         </div>
-        <div class="squad-points">
-          <p> Daily points: {{ squad.daily_points }} </p>
-          <p> Total points: {{ squad.total_points }} </p>
+
+        <div class="squad-rankings">
+          <div class="squad-ranking">
+            <p> Daily </p>
+            <div>
+              <p class="squad-position"></p>
+              <p>{{ squad.daily_points }}</p>
+            </div>
+          </div>
+          <div class="squad-ranking">
+            <p> Total </p>
+            <div>
+              <p class="squad-position"></p>
+              <p>{{ squad.total_points }}</p>
+            </div>
+          </div>
         </div>
 
-        <div class="squad-members">
-          <h1>Members ({{ squad.members.data.length }}/4)</h1>
-          <Member v-for="member in squad.members.data" :key="member.username" :member="member"
-            :captain_ist_id="squad.captain_ist_id" @kick="kick_member" />
-          <button class="plus-symbol none_back" @click.stop="add_members_dialog = true"
-            v-if="squad.members.data.length < 4 && !loading_add">
-            <img :src=plus_squad_button alt="Plus Squad Icon" class="button-plus-icon" /> Add Members
-          </button>
-        </div>
+        <div>
+          <div class="squad-members">
+            <h3>Members ({{ squad.members.data.length }}/4)</h3>
+            <Member v-for="member in squad.members.data" :key="member.username" :member="member"
+              :captain_ist_id="squad.captain_ist_id" @kick="kick_member" />
 
-        <div class="squad-leave">
-          <button @click.stop="leave_squad" class="leave_style">
-            <img :src=leave_squad_button alt="Leave Squad Icon" class="button-icon" />
-          </button>
+            <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true"
+              class="squad-add_members">
+              <div class="plus-symbol">&plus;</div>
+              <p>Add Members</p>
+            </button>
+          </div>
+
+          <div class="squad-leave">
+            <button @click.stop="leave_squad" class="leave_style">
+              <img :src=leave_squad_button alt="Leave Squad Icon" class="button-icon" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -124,7 +144,7 @@ export default {
       hover: false,
       members_with_squad: null,
       invited_members: null,
-      leave_squad_button: require("../../assets/leave_squad.png"),
+      leave_squad_button: require("@/assets/squad-leave.svg"),
       plus_squad_button: require("../../assets/plus_sign.png"),
       showToast: false,
       toastMessage: '',
@@ -416,6 +436,7 @@ export default {
         } else {
           this.squad = response.data.data;
           var squad = this.squad;
+          console.log(this.squad  )
 
           squad.members.data.forEach(function (item, i) {
             if (item.name === squad.captain_ist_id) {
@@ -465,6 +486,7 @@ export default {
 .squad-section {
   padding-bottom: 120px;
 }
+
 .squad-section h2 {
   text-align: center;
   font-family: "Lexend Exa";
@@ -472,5 +494,92 @@ export default {
   letter-spacing: 3px;
   margin-top: 3rem;
   color: #4CC9F0;
+  margin-bottom: 2rem;
+}
+
+.squad-container {
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+
+  --border-radius: 35px;
+}
+
+.squad-container::before {
+  content: "";
+}
+
+.squad-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.squad-texts > p {
+  font-family: "Lexend Exa";
+  letter-spacing: 3px;
+  font-weight: 600;
+  font-size: 2rem;
+  padding-left: 1rem;
+  padding-bottom: 1rem;
+}
+
+.squad-motto {
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 25px;
+
+  --border-radius: 25px;
+  --border-width: 1.5px;
+  --background: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(114, 9, 183, 0.14), rgba(114, 9, 183, 0.08) 60%, rgba(114, 9, 183, 0));
+  --border-background: linear-gradient(165deg, #7209B7, #A414A4 40%, #7209B7);
+}
+
+.squad-motto::before {
+  content: "";
+}
+
+.squad-motto p {
+  font-size: 1.1rem;
+}
+
+.squad-image {
+  width: 50%;
+  max-width: 120px;
+  aspect-ratio: 1;
+
+  --border-radius: 50%;
+}
+
+.squad-image::before {
+  content: "";
+}
+
+.squad-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.squad-add_members {
+  display: flex;
+  background: none;
+  border: none;
+  align-items: center;
+}
+
+.squad-add_members .plus-symbol {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  font-size: 1.2rem;
+  aspect-ratio: 1;
+  border: #1A9CD8 2px solid;
+  background: linear-gradient(45deg, #1A9CD8, #60cdff);
 }
 </style>

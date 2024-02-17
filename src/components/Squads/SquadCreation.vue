@@ -133,7 +133,6 @@ export default {
   max-width: 600px;
   overflow: hidden;
   margin: 0 auto;
-  margin-top: 2rem;
   transition: max-height 0.8s ease;
   
   --border-radius: 35px;

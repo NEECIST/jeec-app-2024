@@ -22,7 +22,7 @@
 
     <h2>Prizes:</h2>
     <ol>
-      <li>Tickets: Tickets can be earned with daily points. Every day, up to 3 tickets can be earned. The first ticket is obtained at 50 points, the second at 550, and the third at 1100. Spend the tickets in the daily spin for a chance to win prizes.</li>
+      <li>Tickets: Tickets can be earned with daily points. Every day, up to 3 tickets can be earned. The first ticket is obtained at 50 points, the second at 550, and the third at 1100. Spend the tickets for a chance to win prizes.</li>
       <li>Daily Prizes: The individual and the squad with the highest number of daily points will receive, at the end of that day, the corresponding daily prize.</li>
       <li>Final Lottery: Every individual who reaches 3000 total points participates in the final lottery. These prizes will be randomly attributed to the participants. Every participant can only receive one prize, and having more points does not increase the chances of winning a prize.</li>
       <li>Weekly Prizes: The first, second and third individuals and squads with the highest total number of points at the end of the event will receive the corresponding weekly prizes.</li>
