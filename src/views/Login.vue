@@ -9,7 +9,7 @@
       <p>Login to our Webapp</p>
       <div class="button_wrapper">
         <GoogleLogin :callback="callback" />
-        <p>v2.1</p>
+        <p>v2.288</p>
       </div>
     </div>
   </div>
@@ -113,6 +113,10 @@ function decrypt(code) {
   top: 50%;
   left: 50%;
   translate: -50% -30%;
+}
+
+.button_wrapper p {
+  padding-top: 0.3rem;
 }
 .g-btn-wrapper {
   margin: 0 auto;

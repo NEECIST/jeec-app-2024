@@ -21,6 +21,7 @@
                 <div class="carousel__item" style="background-color: transparent;">
                   <div v-if="!loading_jobfair"  class="jobfair radient-border-passthrough">
                     <h2 style="font-family: 'Lexend Exa'; margin-bottom: 10px;">Job Fair</h2>
+                    <p>9:30 - 18:30</p>
                     <div class="showcase">
                       <FadeLoop class="fadeloop"  
                         :image_list="getJobFairImages(weekday)" 
@@ -77,7 +78,6 @@ import { HollowDotsSpinner } from 'epic-spinners'
 import FadeLoop from "@/components/FadeLoop.vue";
 
 import 'vue3-carousel/dist/carousel.css'
-import User from "@/models/user";
 
 export default {
   name: "Schedule",
@@ -427,6 +427,13 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
+.weekday p {
+  overflow-wrap: normal;
+  margin-left: -100%;
+    margin-right: -100%;
+    text-align: center;
+}
 .schedule{
   opacity: 0;
 }
@@ -439,6 +446,10 @@ export default {
   }
 }
 
+.carousel__slide--active .jobfair p {
+  font-size: 1.1rem;
+  padding: 0.5rem 0;
+}
 
 
 .carousel__slide{
@@ -459,6 +470,7 @@ export default {
     /* height: 65vh; */
     overflow-x: hidden;
     overflow: visible;
+    max-width: 800px;
   }
 
   .jobfair {
@@ -489,6 +501,8 @@ export default {
     padding-bottom: 20px;
     padding-left: 5px;
     padding-right: 5px;  
+
+    max-width: 700px;
     
     h2{
       opacity: 1;
