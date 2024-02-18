@@ -1,5 +1,5 @@
 <template>
-  <div class="member">
+  <div class="member" v-if="not_kick">
     <div class="member-image radient-border-passthrough">
       <img :src="member.photo" alt="profile photo" class="profile-photo" />
     </div>
@@ -31,6 +31,7 @@ export default {
     return {
       loading_kick: false,
       kick_img: require("@/assets/icons/recycle-icon.svg"),
+      not_kick: true
     };
   },
   computed: {
@@ -55,12 +56,14 @@ export default {
         return;
       }
 
+      this.not_kick = false;
+
       this.loading_kick = true;
 
       UserService.kickMember(this.member.username).then(
         (response) => {
           var squad = response.data.data;
-          // this.$emit("kick", squad);
+          this.$emit("kick", squad);
         },
         (error) => {
           console.log(error);
