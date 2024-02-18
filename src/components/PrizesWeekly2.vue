@@ -19,7 +19,7 @@
 //import 'vue3-carousel/dist/carousel.css'
 
 export default {
-  name: "WeeklyPrizes",
+  name: "WeeklyPrizes2",
   props: {
     rewards: Object,
   },
