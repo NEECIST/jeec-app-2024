@@ -133,7 +133,8 @@ export default {
 .kick-member {
   position: absolute;
   left: 10%;
-  translate: -50%;
+  top: 50%;
+  translate: -50% -50%;
   height: fit-content;
   cursor: pointer;
   background: none;
