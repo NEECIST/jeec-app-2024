@@ -112,9 +112,14 @@
   </div>
 
   <Squad></Squad>
+
+  <div class="qrcode-popup radient-border-passthrough">
+    <QrCodeButton class="drop-shadow"></QrCodeButton>
+  </div>
 </template>
 
 <script>
+import QrCodeButton from "@/components/UserCard/QrCodeButton.vue";
 import TheUserInfo from "@/components/UserCard/TheUserInfo.vue";
 import Squad from "@/components/Squads/Squad.vue";
 import UserService from "../services/user.service";
@@ -127,7 +132,7 @@ import authHeader from "../services/auth-header";
 export default {
   name: "Profile",
   components: {
-    TheUserInfo, Squad, ToastNotification
+    TheUserInfo, Squad, ToastNotification, QrCodeButton
   },
   data: function () {
     return {
@@ -458,4 +463,28 @@ export default {
 }
 .modal-submit button:hover {
   background-color: #3498db;
-}</style>
+}
+
+.qrcode-popup {
+  --border-radius: 50%;
+  --border-width: 2px;
+
+  padding: 17px;
+  height: 90px;
+  aspect-ratio: 1;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.qrcode-popup::before {
+  content: "";
+}
+
+.qrcode-popup .drop-shadow {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+}
+
+</style>
