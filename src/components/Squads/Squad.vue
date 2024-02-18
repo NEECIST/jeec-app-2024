@@ -53,7 +53,7 @@
 
         <div class="squad-members">
           <h3 class="squad-sub-title">Members ({{ squad.members.data.length }}/4)</h3>
-          <Member v-for="member in squad.members.data" :key="member.username" :member="member"
+          <Member v-for="member in orderedMembers" :key="member.username" :member="member"
             :captain_ist_id="squad.captain_ist_id" @kick="kick_member" />
 
           <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true"
@@ -78,7 +78,6 @@
             @input="filterStudents" />
           <div class="chips-container">
             <button v-for="(squadmate, index) in squadmates" :key="index" class="chip" @click="remove(squadmate, $event)">
-              <!-- Add a conditional check for squadmate -->
               <p v-if="squadmate">{{ squadmate }} <span class="close-icon">×</span> </p>
             </button>
           </div>
@@ -189,7 +188,8 @@ export default {
     addSquadmate(student) {
       if (student && student.username) {
         const username = student.username;
-        if (this.squadmates.length < 4 && !this.squadmates.includes(username)) {
+        console.log((this.squadmates.length + this.squad.members.data.length));
+        if ((this.squadmates.length + this.squad.members.data.length) < 4 && !this.squadmates.includes(username)) {
           this.squadmates.push(username);
           this.search = ''; // Clear the search input after adding a squadmate
         }
@@ -421,6 +421,16 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, ['user']),
+    orderedMembers() {
+      let members = [...this.squad.members.data];
+      let captainIndex = members.findIndex(member => member.is_captain);
+      if (captainIndex > 0) {
+        let [captain] = members.splice(captainIndex, 1);
+        members.unshift(captain);
+      }
+      console.log(members);
+      return members;
+    },
   },
 
   mounted() {

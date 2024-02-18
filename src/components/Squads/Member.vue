@@ -46,7 +46,6 @@ export default {
       return (
         this.user.username === this.captain_ist_id &&
         this.member.external_id !== this.user.student_external_id
-        // this.$route.name === "Squad"
       );
     },
   },
@@ -61,7 +60,7 @@ export default {
       UserService.kickMember(this.member.username).then(
         (response) => {
           var squad = response.data.data;
-          this.$emit("kick", squad);
+          // this.$emit("kick", squad);
         },
         (error) => {
           console.log(error);
