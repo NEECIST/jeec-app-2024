@@ -78,9 +78,10 @@ export default {
   grid-template-columns: 60px 1fr;
   grid-template-rows: 1fr;
   align-items: center;
-  padding-top: 0.6rem;
+  margin-top: 0.6rem;
   padding-left: 10%;
   gap: 1rem;
+  position: relative;
 }
 
 .member-image {
@@ -131,7 +132,7 @@ export default {
 
 .kick-member {
   position: absolute;
-  left: 10%;
+  left: 4%;
   top: 50%;
   translate: -50% -50%;
   height: fit-content;
