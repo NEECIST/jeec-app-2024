@@ -799,5 +799,6 @@ export default {
   border-radius: 40px;
   border: none;
   align-self: flex-end;
+  cursor: pointer;
 }
 </style>
