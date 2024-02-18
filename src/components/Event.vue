@@ -134,7 +134,6 @@ export default {
     },
 
     toggleDesc() {
-
       if (this.showDesc == false) {
         this.showDesc = true;
         this.hideDesc = false;

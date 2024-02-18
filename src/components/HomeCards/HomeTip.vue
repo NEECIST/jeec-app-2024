@@ -15,7 +15,7 @@ import { ref } from 'vue';
 
 const tips = [
   {
-    tip: "Add your CV so companies can get even closer to you, and get a surprise bonus! The CV is available to be sumitted thorough the profile",
+    tip: "Add your CV so companies can get even closer to you! The CV is available to be sumitted thorough the profile. Maybe you will get a surprise bonus",
     image: require("@/assets/cv_button_img.svg"),
     link: "/profile",
   },
@@ -29,14 +29,11 @@ const tips = [
     link: "/help",
   },
   {
-    tip: "Show your QRCode at the job fair and activities to go STONKS 📈📈",
+    tip: "Show your QRCode at the job fair and at the entrance to the activities to go STONKS 📈📈",
   },
   {
-    tip: "Did you know that Daniel, one of JEEC's coordinator, has had some fun experiences with some argentine dude"
+    tip: "There is in fact a non zero chance of you getting 100k points randomly. Maybe a cosmic ray bitflips some of your data in our server, so keep checking in everyday!"
   },
-  {
-    tip: "There is infact a non zero chance of you getting 100k points randomly. Maybe a cosmic ray bitflips some of your data in our server, so keep checking in everyday!"
-  }
 ];
 
 const randomTip = ref(Math.floor(Math.random() * (tips.length)));

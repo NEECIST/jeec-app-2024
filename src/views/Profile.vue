@@ -184,7 +184,7 @@ export default {
               this.student.approved_cv = false;
               this.formData = null;
               if (!this.student.uploaded_cv) {
-                this.showNotification("Added CV points", "points");
+                this.showNotification("CV Submitted", "points");
                 this.student.uploaded_cv = true;
               } else {
                 this.showNotification("CV and other fields updated", "success");

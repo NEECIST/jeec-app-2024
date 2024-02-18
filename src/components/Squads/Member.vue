@@ -1,21 +1,18 @@
 <template>
   <div class="member">
-    <img :src="member.photo" alt="profile photo" class="profile-photo" />
-    <div class="profile-info">
-      <p v-if="member.is_captain" class="captain">Captain</p>
-      <p class="name">
-        {{ nameArray[0] }} <br v-if="$route.name === 'Home'" />
-        {{ nameArray[nameArray.length - 1] }}
-      </p>
-      <p class="level">name: {{ member.name }}</p>
+    <div class="member-image radient-border-passthrough">
+      <img :src="member.photo" alt="profile photo" class="profile-photo" />
     </div>
-    <img
-      v-if="can_kick && !loading_kick && !member.is_captain"
-      @click.stop="kick"
-      :src=kick_img
-      alt="kick"
-      class="kick"
-    />
+    <div class="member-info">
+      <p v-if="member.is_captain" class="captain">Captain</p>
+      <p class="name">{{ member.name }}</p>
+      <p class="username">{{ member.username }}</p>
+    </div>
+    <button class="kick-member" v-if="can_kick && !loading_kick && !member.is_captain"
+      @click.stop="kick">
+      <div></div>
+      <div></div>
+    </button>
   </div>
 </template>
 
@@ -39,7 +36,7 @@ export default {
   computed: {
     ...mapState(useUserStore, ['user']),
     nameArray() {
-      var names = this.member.username.split(" ");
+      var names = this.member.username;
 
       if (names.length > 1) return names;
       else return [this.member.username, ""];
@@ -78,66 +75,92 @@ export default {
 
 <style scoped>
 .member {
-  display: flex;
-  margin-bottom: 1.5vh;
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+  padding-top: 0.6rem;
+  padding-left: 10%;
+  gap: 1rem;
 }
 
-.profile-photo {
-  height: 10vh;
-  width: 10vh;
+.member-image {
+  width: 100%;
+  aspect-ratio: 1;
   border-radius: 50%;
-  align-self: center;
-  border: 3px solid #03618C;
-  margin-left:5vw;
+  overflow: hidden;
+
+  --border-width: 1.5px;
 }
 
-.profile-info {
-  align-self: center;
-  margin-left: 3vw;
+.member-image::before {
+  content: "";
 }
 
-.profile-info * {
-  margin: 0;
+.member-image img {
+  height: 100%;
+  width: 100%;
 }
 
-.captain {
-  font-size: 1.8vh;
-  font-weight: 700;
-  color: #a1a1a1;
-  margin-bottom: -0.5vh;
+.member-info {
+  display: flex;
+  flex-direction: column;
 }
 
-.name {
-  font-size: 2.7vh;
-  font-weight: 600;
-  line-height: 3vh;
-  margin-top: 0.5vh;
-  margin-bottom: 0.5vh;
-  color: #03618C;
-
+.member-info p {
+  font-family: "Lexend Exa";
 }
 
-.level {
-  font-size: 1.8vh;
-  font-weight: 700;
-  color: #27ade4;
-  margin-top: -0.5vh;
+.member-info .captain {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
 }
 
-.kick {
-  height: 5vh;
-  align-self: center;
-  transform: scaleX(-1);
+.member-info .name {
+  font-size: 1.4rem;
+  /* display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;  
+  overflow: hidden; */
+}
+
+.member-info .username {
+  font-size: 0.9rem;
+  color: #1A9CD8;
+}
+
+.kick-member {
+  position: absolute;
+  left: 10%;
+  translate: -50%;
+  height: fit-content;
   cursor: pointer;
-  position:absolute;
-  right:10vw;
+  background: none;
+  border: none;
+  height: 30px;
+  width: 30px;
 }
 
-.loading {
-  align-self: center;
-  justify-self: flex-end;
-  transform: scaleX(-1);
-  margin-left: auto;
+.kick-member:hover {
+  scale: 1.1;
 }
 
+.kick-member div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  height: 5px;
+  width: 24px;
+  border-radius: 10px;
+  rotate: 45deg;
+  transform-origin: 50% 50%;
+  background-color: #F72585;
+  box-shadow: 0 0 3px #F72585;
+}
+
+.kick-member div:last-child {
+  rotate: -45deg;
+}
 </style>

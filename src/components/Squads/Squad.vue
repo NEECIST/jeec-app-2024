@@ -25,54 +25,62 @@
         </div>
 
         <div class="squad-rankings">
-          <div class="squad-ranking">
-            <p> Daily </p>
-            <div>
-              <p class="squad-position"></p>
-              <p>{{ squad.daily_points }}</p>
+          <div>
+            <h3 class="squad-sub-title"> Daily </h3>
+            <div class="squad-ranking">
+              <p class="squad-position" :class="'pos-' + squad.rank_daily">
+                <template v-if="(squad.rank_daily % 10) == 1">{{ squad.rank_daily }}st</template>
+                <template v-if="(squad.rank_daily % 10) == 2">{{ squad.rank_daily }}nd</template>
+                <template v-if="(squad.rank_daily % 10) == 3">{{ squad.rank_daily }}rd</template>
+                <template v-if="(squad.rank_daily % 10) > 3">{{ squad.rank_daily }}th</template>
+              </p>
+              <p>{{ squad.daily_points }} points</p>
             </div>
           </div>
-          <div class="squad-ranking">
-            <p> Total </p>
-            <div>
-              <p class="squad-position"></p>
-              <p>{{ squad.total_points }}</p>
+          <div>
+            <h3 class="squad-sub-title"> Total </h3>
+            <div class="squad-ranking">
+              <p class="squad-position" :class="'pos-' + squad.rank_weekly">
+                <template v-if="(squad.rank_weekly % 10) == 1">{{ squad.rank_weekly }}st</template>
+                <template v-if="(squad.rank_weekly % 10) == 2">{{ squad.rank_weekly }}nd</template>
+                <template v-if="(squad.rank_weekly % 10) == 3">{{ squad.rank_weekly }}rd</template>
+                <template v-if="(squad.rank_weekly % 10) > 3">{{ squad.rank_weekly }}th</template>
+              </p>
+              <p>{{ squad.total_points }} points</p>
             </div>
           </div>
         </div>
 
-        <div>
-          <div class="squad-members">
-            <h3>Members ({{ squad.members.data.length }}/4)</h3>
-            <Member v-for="member in squad.members.data" :key="member.username" :member="member"
-              :captain_ist_id="squad.captain_ist_id" @kick="kick_member" />
+        <div class="squad-members">
+          <h3 class="squad-sub-title">Members ({{ squad.members.data.length }}/4)</h3>
+          <Member v-for="member in squad.members.data" :key="member.username" :member="member"
+            :captain_ist_id="squad.captain_ist_id" @kick="kick_member" />
 
-            <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true"
-              class="squad-add_members">
-              <div class="plus-symbol">&plus;</div>
-              <p>Add Members</p>
-            </button>
-          </div>
-
-          <div class="squad-leave">
-            <button @click.stop="leave_squad" class="leave_style">
-              <img :src=leave_squad_button alt="Leave Squad Icon" class="button-icon" />
-            </button>
-          </div>
+          <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true"
+            class="squad-add_members">
+            <div class="plus-symbol">
+              <p>&plus;</p>
+            </div>
+            <p>Add Members</p>
+          </button>
         </div>
+
+        <button @click.stop="leave_squad" class="squad-leave radient-border-passthrough">
+          <img :src=leave_squad_button alt="Leave Squad Icon" />
+        </button>
       </div>
 
-      <div v-if="add_members_dialog" class="dialog-overlay" @keydown.esc="closeDialog">
-        <div class="squad-dialog" :style="{ width: (width > 1100 ? '50vw' : '') }" ref="dialog">
+      <div class="dialog-overlay" v-if="add_members_dialog" @keydown.esc="closeDialog">
+        <div class="squad-dialog-backdrop" @click="closeDialog"></div>
+        <div class="squad-dialog radient-border-passthrough" ref="dialog">
           <p class="dialog-title">Add Squadmates</p>
           <input v-model="search" type="text" placeholder="Search username..." class="search-input"
             @input="filterStudents" />
           <div class="chips-container">
-            <div v-for="(squadmate, index) in squadmates" :key="index" class="chip">
+            <button v-for="(squadmate, index) in squadmates" :key="index" class="chip" @click="remove(squadmate, $event)">
               <!-- Add a conditional check for squadmate -->
-              <span v-if="squadmate">{{ squadmate }}</span>
-              <span class="close-icon" @click="remove(squadmate, $event)">×</span>
-            </div>
+              <p v-if="squadmate">{{ squadmate }} <span class="close-icon">×</span> </p>
+            </button>
           </div>
           <div class="autocomplete">
             <div v-if="Array.isArray(this.students2) && this.students2.length > 0">
@@ -84,9 +92,7 @@
               </ul>
             </div>
           </div>
-          <div class="center-container">
-            <button @click.stop="invite" class="invite">Invite</button>
-          </div>
+          <button @click.stop="invite" class="invite">Invite</button>
         </div>
       </div>
     </template>
@@ -348,7 +354,7 @@ export default {
             string_notification_squads = string_notification_squads + " " + this.members_with_squad[i] + ","
           }
         }
-        this.showNotification(string_notification_invites + "\n" + string_notification_squads, "success");
+        this.showNotification(string_notification_invites + "\n" + string_notification_squads, "points");
 
       }
     },
@@ -436,7 +442,7 @@ export default {
         } else {
           this.squad = response.data.data;
           var squad = this.squad;
-          console.log(this.squad  )
+          console.log(this.squad)
 
           squad.members.data.forEach(function (item, i) {
             if (item.name === squad.captain_ist_id) {
@@ -464,7 +470,7 @@ export default {
       }
     );
 
-    UserService.getStudentsAll().then(
+    await UserService.getStudentsAll().then(
       (response) => {
         this.students2 = response.data.students;
       },
@@ -472,12 +478,6 @@ export default {
         console.log(error);
       }
     );
-
-    await UserService.getSquadsLength().then((response) => {
-      const data = response.data; this.length = data.length;
-    }
-    );
-
   },
 };
 </script>
@@ -485,6 +485,7 @@ export default {
 <style scoped>
 .squad-section {
   padding-bottom: 120px;
+  overflow: hidden;
 }
 
 .squad-section h2 {
@@ -498,11 +499,14 @@ export default {
 }
 
 .squad-container {
-  padding: 1rem;
+  padding: 1rem 2rem;
   max-width: 600px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 
-  --border-radius: 35px;
+  --border-radius: 45px;
 }
 
 .squad-container::before {
@@ -516,7 +520,11 @@ export default {
   justify-content: space-between;
 }
 
-.squad-texts > p {
+.squad-texts {
+  flex-grow: 1;
+}
+
+.squad-texts>p {
   font-family: "Lexend Exa";
   letter-spacing: 3px;
   font-weight: 600;
@@ -550,6 +558,7 @@ export default {
   width: 50%;
   max-width: 120px;
   aspect-ratio: 1;
+  flex-shrink: 0.3;
 
   --border-radius: 50%;
 }
@@ -564,11 +573,68 @@ export default {
   border-radius: 50%;
 }
 
+.squad-sub-title {
+  font-family: "Lexend Exa";
+  letter-spacing: 4px;
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+
+.squad-rankings {
+  display: flex;
+  gap: 2rem;
+}
+
+.squad-ranking {
+  display: flex;
+  align-items: center;
+  gap: 2ch;
+  padding-top: 0.4rem;
+  padding-left: 0.4rem;
+}
+
+.squad-ranking p {
+  overflow-wrap: normal;
+}
+
+.squad-position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  font-weight: 800;
+  border-radius: 100%;
+  border: #39250E 2px solid;
+  background-color: #6D3F0B;
+}
+
+.squad-position.pos-1 {
+  background-color: #C1A875;
+  border: #ddc695 2px solid;
+}
+
+.squad-position.pos-2 {
+  background-color: #a8a8a8;
+  border: #c4c2c2 2px solid;
+}
+
+.squad-position.pos-3 {
+  background-color: #C9705C;
+  border: #e18a77 2px solid;
+}
+
 .squad-add_members {
   display: flex;
   background: none;
   border: none;
   align-items: center;
+  padding-top: 0.6rem;
+  padding-left: 10%;
+  gap: 1rem;
+  cursor: pointer;
 }
 
 .squad-add_members .plus-symbol {
@@ -576,10 +642,162 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
-  font-size: 1.2rem;
+  width: 60px;
+  flex-shrink: 0;
   aspect-ratio: 1;
+  font-size: 2.4rem;
   border: #1A9CD8 2px solid;
   background: linear-gradient(45deg, #1A9CD8, #60cdff);
+}
+
+.squad-add_members .plus-symbol p {
+  position: relative;
+  top: -3px;
+  line-height: 1;
+}
+
+.squad-add_members>p {
+  font-size: 1.2rem;
+  font-family: "Lexend Exa";
+  text-transform: uppercase;
+  color: #1A9CD8;
+  text-align: start;
+}
+
+.squad-leave {
+  align-self: flex-end;
+  border: none;
+  padding: 2rem;
+  cursor: pointer;
+  margin-top: -1.5rem;
+}
+
+.squad-leave::before {
+  content: "";
+}
+
+.squad-leave:hover {
+  scale: 1.1;
+} 
+
+.squad-leave img {
+  position: absolute;
+  top: 50%;
+  left: 53%;
+  translate: -50% -50%;
+}
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.squad-dialog-backdrop {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.squad-dialog {
+  width: 90%;
+  max-width: 500px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+
+  --border-width: 2px;
+  --border-radius: 8px;
+}
+
+.squad-dialog::before {
+  content: "";
+}
+
+.dialog-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: "Lexend Deca";
+}
+
+.chips-container {
+  background: none;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.chip {
+  background-color: rgba(0, 0, 0, 0.4);
+  border: none;
+  border: 1px solid black;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.close-icon {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.autocomplete ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+.autocomplete li {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid black;
+  font-family: "Lexend Deca";
+}
+
+.autocomplete li:last-child {
+  border-bottom: none;
+}
+
+.squad-dialog .invite {
+  background: linear-gradient(165deg, #605ED0 -100%, #4CC9F0 20%, #7209B7 130%);
+  padding: 0.4rem 1.5ch;
+  font-size: 1rem;
+  margin-top: 0.8rem;
+  border-radius: 40px;
+  border: none;
+  align-self: flex-end;
 }
 </style>
