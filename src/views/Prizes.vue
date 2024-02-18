@@ -24,7 +24,7 @@
       <template v-else>
         <div>
           <h2 class="prize-title weekly main-prize">JEECPOT</h2>
-          <PrizesWeekly2 :rewards="images.jeecpot"/>
+          <PrizesJeecpot :rewards="images.jeecpot"/>
         </div>
         <div>
           <h2 class="prize-title weekly">SOLO PRIZES</h2>
