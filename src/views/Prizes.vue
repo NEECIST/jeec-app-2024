@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import PrizesJeecpot from "@/components/PrizesJeecpot.vue";
 import PrizesDaily from "@/components/PrizesDaily.vue";
 import PrizesWeekly from "@/components/PrizesWeekly.vue";
 import { mapState } from 'pinia'
@@ -51,6 +52,7 @@ export default {
   components: {
     PrizesDaily,
     PrizesWeekly,
+    PrizesJeecpot
   },
   data: function () {
     return {

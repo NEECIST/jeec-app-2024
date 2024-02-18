@@ -1,7 +1,7 @@
 <template>
   <div class="weekly-rewards" v-if="rewards">
     <div class="rewards-container">
-      <div v-for="(item, key) in rewards" :key="item.position" class="reward radient-border-passthrough" :class="{ 'big': key == 1 }">
+      <div v-for="(item, key) in rewards" :key="item.position" class="reward big radient-border-passthrough">
         <img :src="jeec_brain_url + item" class="reward-img">
       </div>
     </div>
