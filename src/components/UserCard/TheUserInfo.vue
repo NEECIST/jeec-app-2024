@@ -2,6 +2,7 @@
   <div :class="variant, { 'radient-border-passthrough': variant != 'nav' }" class="user-card">
     <div class="name-wrapper" v-if="variant != 'home'">
       <p>{{ userStore.user.name }}</p>
+      <p v-if="variant == 'profile'" class="username">{{ userStore.user.username }}</p>
     </div>
     <div class="qr-wrapper" v-if="variant == 'home'">
       <QrCodeButton></QrCodeButton>
@@ -143,7 +144,7 @@ const props = defineProps({
   height: 100%;
 }
 
-.user-card.profile>.name-wrapper p {
+.user-card.profile>.name-wrapper p:first-child {
   font-family: "Lexend Exa";
   letter-spacing: 2px;
   font-size: clamp(1.2rem, 6vw, 2rem);
@@ -153,6 +154,14 @@ const props = defineProps({
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.user-card.profile>.name-wrapper .username {
+  font-size: clamp(0.9rem, 4vw, 1.1rem);
+  text-align: left;
+  padding-left: 0.3rem;
+  color: #1A9CD8;
+  padding-bottom: .5rem;
 }
 
 .user-card.profile>.tickets-wrapper {

@@ -73,7 +73,7 @@
       <div class="dialog-overlay" v-if="add_members_dialog" @keydown.esc="closeDialog">
         <div class="squad-dialog-backdrop" @click="closeDialog"></div>
         <div class="squad-dialog radient-border-passthrough" ref="dialog">
-          <p class="dialog-title">Add Squadmates</p>
+          <p class="dialog-title">Add Members</p>
           <input v-model="search" type="text" placeholder="Search username..." class="search-input"
             @input="filterStudents" />
           <div class="chips-container">
