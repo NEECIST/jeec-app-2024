@@ -427,6 +427,13 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
+.weekday p {
+  overflow-wrap: normal;
+  margin-left: -100%;
+    margin-right: -100%;
+    text-align: center;
+}
 .schedule{
   opacity: 0;
 }
