@@ -1,4 +1,67 @@
+<style>
+.carousel__slide--active .jobfair {
 
+
+--border-radius: 20px;
+--border-width: 2px;
+--background: var(--background_, radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.3) 0%, rgba(76, 202, 240, 0.2) 70%, rgba(76, 202, 240, 0.1) 100%));
+--border-background: var(--border-background_, linear-gradient(165deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%));
+
+--color: white;
+
+
+display:-webkit-flex !important;
+display: flex;
+transition: 1s;
+opacity: 1;
+width: 80vw;
+height: 22vh; 
+justify-content: center;
+align-items: center;
+flex-direction: column;
+
+margin-top: 20px;
+margin-bottom: 20px;
+
+padding-top: 10px;
+padding-bottom: 20px;
+padding-left: 5px;
+padding-right: 5px;  
+
+max-width: 700px;
+
+}
+
+.carousel__slide--active .jobfair h2{
+  opacity: 1;
+  transition: 2.5s;
+}
+
+.carousel__slide--active .showcase{
+      display:-webkit-flex !important;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      width: 100%;
+      height: 13vh;
+}
+
+.carousel__slide--active .fadeloop{
+      width: 30%;
+      height: 100%;
+      display:-webkit-flex !important;
+      display: flex;
+      justify-content: center;
+      background-color: white;
+      border-radius: 10px;
+      align-items: center;
+      position: relative;
+      transition: 0.5s;
+      padding: 10px;
+      opacity: 1;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;    
+}
+</style>
 
 <template>
   <HollowDotsSpinner class="loading-spinner"
@@ -19,10 +82,10 @@
                 </button>
                 
                 <div class="carousel__item" style="background-color: transparent;">
-                  <div v-if="!loading_jobfair"  class="jobfair radient-border-passthrough">
+                  <div class="jobfair radient-border-passthrough">
                     <h3 style="font-family: 'Lexend Exa'; margin-bottom: 5px;">Job Fair</h3>
                     <p>9:30 - 18:30</p>
-                    <div class="showcase">
+                    <div class="showcase" style="display: flex;">
                       <FadeLoop class="fadeloop"  
                         :image_list="getJobFairImages(weekday)" 
                         :alt_list="getJobFairAlt(weekday)"
@@ -357,6 +420,7 @@ export default {
   border-radius: 0px;
   padding: 0;
   margin: 0;
+  display:-webkit-flex !important;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -387,6 +451,7 @@ export default {
   padding: 0px;
   align-items: start;
   justify-content: start;
+  display:-webkit-flex !important;
   display: flex;
   flex-direction: column;;
   transform: rotateY(0);
@@ -421,6 +486,7 @@ export default {
 
 /*  */
 .weekday{
+  display:-webkit-flex !important;
   display: flex;
   width: 100%;
   height: 100%;
@@ -484,7 +550,7 @@ export default {
     --color: white;
 
     
-
+    display:-webkit-flex !important;
     display: flex;
     transition: 1s;
     opacity: 1;
@@ -511,6 +577,7 @@ export default {
     
     
     .showcase{
+      display:-webkit-flex !important;
       display: flex;
       justify-content: space-evenly;
       align-items: center;
@@ -521,6 +588,7 @@ export default {
     .fadeloop{
       width: 30%;
       height: 100%;
+      display:-webkit-flex !important;
       display: flex;
       justify-content: center;
       background-color: white;
