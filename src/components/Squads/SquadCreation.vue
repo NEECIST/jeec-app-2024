@@ -83,7 +83,7 @@ export default {
     },
     // Method to convert image URL to Blob
     async getDefaultImageBlob() {
-      const response = await fetch(require('../../assets/jeec_mobile_white.png'));
+      const response = await fetch(require('../../assets/jeec_mobile_white.svg'));
       const data = await response.blob();
       return new File([data], "default-image.png", { type: 'image/png' });
     },
