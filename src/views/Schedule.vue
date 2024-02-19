@@ -517,7 +517,7 @@ export default {
     }
 
     .fadeloop{
-      width: 30%;
+      max-width: 30%;
       min-width: auto;
       flex-basis: 33;
       height: 100%;
