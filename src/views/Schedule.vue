@@ -19,7 +19,7 @@
                 </button>
                 
                 <div class="carousel__item" style="background-color: transparent;">
-                  <div v-if="!loading_jobfair"  class="jobfair radient-border-passthrough">
+                  <div  class="jobfair radient-border-passthrough">
                     <h3 style="font-family: 'Lexend Exa';">Job Fair</h3>
                     <p>9:30 - 18:30</p>
                     <div class="showcase">
@@ -518,6 +518,7 @@ export default {
 
     .fadeloop{
       width: 30%;
+      min-width: auto;
       flex-basis: 33;
       height: 100%;
       display: flex;
