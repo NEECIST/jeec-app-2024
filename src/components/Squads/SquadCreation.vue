@@ -85,7 +85,7 @@ export default {
     async getDefaultImageBlob() {
       const response = await fetch(require('../../assets/jeec_mobile_white.svg'));
       const data = await response.blob();
-      return new File([data], "default-image.png", { type: 'image/png' });
+      return new File([data], "default-image.svg", { type: 'image/svg' });
     },
 
     async create_squad() {
