@@ -20,7 +20,7 @@
                 
                 <div class="carousel__item" style="background-color: transparent;">
                   <div v-if="!loading_jobfair"  class="jobfair radient-border-passthrough">
-                    <h2 style="font-family: 'Lexend Exa'; margin-bottom: 10px;">Job Fair</h2>
+                    <h3 style="font-family: 'Lexend Exa';">Job Fair</h3>
                     <p>9:30 - 18:30</p>
                     <div class="showcase">
                       <FadeLoop class="fadeloop"  
@@ -447,8 +447,8 @@ export default {
 }
 
 .carousel__slide--active .jobfair p {
-  font-size: 1.1rem;
-  padding: 0.5rem 0;
+  font-size: 1rem;
+  padding: 0.2rem 0;
 }
 
 
@@ -489,18 +489,15 @@ export default {
     transition: 1s;
     opacity: 1;
     width: 80vw;
-    height: 22vh; 
-    justify-content: center;
+    height: 23vh; 
+    /* justify-content: center; */
     align-items: center;
     flex-direction: column;
 
     margin-top: 20px;
     margin-bottom: 20px;
 
-    padding-top: 10px;
-    padding-bottom: 20px;
-    padding-left: 5px;
-    padding-right: 5px;  
+    padding: 1rem 5px;
 
     max-width: 700px;
     
@@ -515,11 +512,13 @@ export default {
       justify-content: space-evenly;
       align-items: center;
       width: 100%;
-      height: 13vh;
+      height: 100%;
+      overflow: hidden;
     }
 
     .fadeloop{
       width: 30%;
+      flex-basis: 33;
       height: 100%;
       display: flex;
       justify-content: center;
@@ -531,6 +530,10 @@ export default {
       padding: 10px;
       opacity: 1;
       box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;    
+    }
+
+    h2{
+      line-height: 0;
     }
   }
 
