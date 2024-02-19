@@ -14,25 +14,25 @@
       <template v-if="daily">
         <div>
           <h2 class="prize-title daily">SOLO PRIZES</h2>
-          <PrizesDaily :rewards="images.individual_daily_rewards" />
+          <PrizesDaily :rewards="prizes.individual_daily_rewards" />
         </div>
         <div>
           <h2 class="prize-title daily">SQUAD PRIZES</h2>
-          <PrizesDaily :rewards="images.squad_daily_rewards"/>
+          <PrizesDaily :rewards="prizes.squad_daily_rewards"/>
         </div>
       </template>
       <template v-else>
         <div>
           <h2 class="prize-title weekly main-prize">JEECPOT</h2>
-          <PrizesJeecpot :rewards="images.jeecpot"/>
+          <PrizesJeecpot :rewards="prizes.jeecpot"/>
         </div>
         <div>
           <h2 class="prize-title weekly">SOLO PRIZES</h2>
-          <PrizesWeekly :rewards="images.individual_weekly_rewards"/>
+          <PrizesWeekly :rewards="prizes.individual_weekly_rewards"/>
         </div>
         <div>
           <h2 class="prize-title weekly">SQUAD PRIZES</h2>
-          <PrizesWeekly :rewards="images.squad_weekly_rewards"/>
+          <PrizesWeekly :rewards="prizes.squad_weekly_rewards"/>
         </div>
       </template>
     </section>
@@ -67,7 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(usePrizeStore, ['images']),
+    ...mapState(usePrizeStore, ['prizes']),
   },
   methods: {
     click_daily() {

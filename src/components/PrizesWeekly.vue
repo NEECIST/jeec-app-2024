@@ -1,8 +1,8 @@
 <template>
   <div class="weekly-rewards" v-if="rewards">
     <div class="rewards-container">
-      <div v-for="(item, key) in rewards" :key="item.position" class="reward radient-border-passthrough" :class="{ 'big': key == 1 }">
-        <img :src="jeec_brain_url + item" class="reward-img">
+      <div v-for="(reward, key) in rewards" :key="reward" class="reward radient-border-passthrough" :class="{ 'big': key == 1 }">
+        <img :src="jeec_brain_url + reward.image" class="reward-img">
         <p class="ranking first" v-if="key == 1">1<sub>st</sub></p>
         <p class="ranking second" v-if="key == 0">2<sub>nd</sub></p>
         <p class="ranking third" v-if="key == 2">3<sub>rd</sub></p>

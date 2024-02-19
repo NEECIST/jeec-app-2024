@@ -1,9 +1,9 @@
 <template>
   <div class="daily-rewards" v-if="rewards">
     <carousel :breakpoints="carousel_breakpoints" :items-to-show="4.8" :wrap-around="true" autoplay="2500">
-      <Slide v-for="(item, key) in rewards" :key="item" class="reward">
+      <Slide v-for="(reward, key) in rewards" :key="reward" class="reward">
         <div class="reward-img radient-border-passthrough">
-          <img :src="jeec_brain_url + item">
+          <img :src="jeec_brain_url + reward.image">
         </div>
         <p>{{ weekDays[key] }}</p>
       </Slide>

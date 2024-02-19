@@ -5,34 +5,44 @@ import authHeader from "../services/auth-header";
 export const usePrizeStore = defineStore("PrizeStore", {
   state: () => {
     return {
-        images:
-        {
-          solo_daily_prizes: [],
-          squad_daily_prizes: [],
-          jeecpot_prizes: [],
-          squad_prizes: [],
-          solo_prizes: [],
-        },
+      prizes: {
+        individual_daily_rewards: [],
+        individual_weekly_rewards: [],
+        squad_daily_rewards: [],
+        squad_weekly_rewards: [],
+        jeecpot_prizes: [],
+      },
     };
   },
   actions: {
     async getRewards() {
-        await axios
-        .get(
-          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/prizes_images",
-          {
-            headers: authHeader()
-          }
-        )
-        .then((response) => {
-          this.images = response.data
-          let temporary = this.images.individual_weekly_rewards[0]
-          this.images.individual_weekly_rewards[0] = response.data.individual_weekly_rewards[1]
-          this.images.individual_weekly_rewards[1] = temporary
-          temporary = this.images.squad_weekly_rewards[0]
-          this.images.squad_weekly_rewards[0] = response.data.squad_weekly_rewards[1]
-          this.images.squad_weekly_rewards[1] = temporary
+      await axios
+        .get(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/prizes_details", {
+          headers: authHeader(),
         })
+        .then((response) => {
+          this.prizes = response.data;
+        });
     },
+    // async getRewards() {
+    //     await axios
+    //     .get(
+    //       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/prizes_images",
+    //       {
+    //         headers: authHeader()
+    //       }
+    //     )
+    //     .then((response) => {
+    //       console.log(response.data)
+
+    //       this.images = response.data
+    //       let temporary = this.images.individual_weekly_rewards[0]
+    //       this.images.individual_weekly_rewards[0] = response.data.individual_weekly_rewards[1]
+    //       this.images.individual_weekly_rewards[1] = temporary
+    //       temporary = this.images.squad_weekly_rewards[0]
+    //       this.images.squad_weekly_rewards[0] = response.data.squad_weekly_rewards[1]
+    //       this.images.squad_weekly_rewards[1] = temporary
+    //     })
+    // },
   },
 });
