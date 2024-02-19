@@ -11,6 +11,7 @@ const props = defineProps(['image', 'variant']);
   a.profile {
     width: auto;
     height: 100%;
+    flex-grow: 1;
   }
   a {
     --border-background: linear-gradient(135deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%);

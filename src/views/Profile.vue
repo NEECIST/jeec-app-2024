@@ -471,7 +471,7 @@ export default {
 
   padding: 17px;
   height: 90px;
-  aspect-ratio: 1;
+  width: 90px;
   position: fixed;
   bottom: 10px;
   left: 50%;

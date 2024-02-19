@@ -136,6 +136,19 @@ const props = defineProps({
   margin: 0 auto;
 }
 
+@media screen and (max-width: 600px) {
+  .user-card.profile {
+    grid-template-areas:
+      "name user"
+      "tickets tickets"
+      "points points"
+      "tpoints tpoints";
+  }
+  .user-card.profile>.tickets-wrapper {
+    margin-right: 3rem !important;
+  }
+}
+
 .user-card.profile::before {
   content: "";
 }
@@ -174,6 +187,8 @@ const props = defineProps({
   margin-right: 1rem;
   width: max-content;
   aspect-ratio: 1;
+  max-width: calc(100% - 1rem);
+  display: flex;
 }
 
 .user-card.profile>.points-wrapper {
@@ -223,4 +238,5 @@ const props = defineProps({
     left: 50%;
     translate: -50% 0;
   }
-}</style>
+}
+</style>

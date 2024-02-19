@@ -16,6 +16,11 @@ button {
   aspect-ratio: 1;
   cursor: pointer;
 }
+button:before {
+  content: "";
+  float: left;
+  padding-top: 100%;
+}
 button > img {
   width: 100%;
   height: 100%;
