@@ -82,7 +82,7 @@ max-width: 700px;
                 </button>
                 
                 <div class="carousel__item" style="background-color: transparent;">
-                  <div class="jobfair radient-border-passthrough">
+                  <div v-if="!loading_jobfair" class="jobfair radient-border-passthrough">
                     <h3 style="font-family: 'Lexend Exa'; margin-bottom: 5px;">Job Fair</h3>
                     <p>9:30 - 18:30</p>
                     <div class="showcase" style="display: flex;">
