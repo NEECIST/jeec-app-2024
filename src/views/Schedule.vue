@@ -1,68 +1,3 @@
-<style>
-.carousel__slide--active .jobfair {
-
-
---border-radius: 20px;
---border-width: 2px;
---background: var(--background_, radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.3) 0%, rgba(76, 202, 240, 0.2) 70%, rgba(76, 202, 240, 0.1) 100%));
---border-background: var(--border-background_, linear-gradient(165deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%));
-
---color: white;
-
-
-display:-webkit-flex !important;
-display: flex;
-transition: 1s;
-opacity: 1;
-width: 80vw;
-height: 22vh; 
-justify-content: center;
-align-items: center;
-flex-direction: column;
-
-margin-top: 20px;
-margin-bottom: 20px;
-
-padding-top: 10px;
-padding-bottom: 20px;
-padding-left: 5px;
-padding-right: 5px;  
-
-max-width: 700px;
-
-}
-
-.carousel__slide--active .jobfair h2{
-  opacity: 1;
-  transition: 2.5s;
-}
-
-.carousel__slide--active .showcase{
-      display:-webkit-flex !important;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      width: 100%;
-      height: 13vh;
-}
-
-.carousel__slide--active .fadeloop{
-      width: 30%;
-      height: 100%;
-      display:-webkit-flex !important;
-      display: flex;
-      justify-content: center;
-      background-color: white;
-      border-radius: 10px;
-      align-items: center;
-      position: relative;
-      transition: 0.5s;
-      padding: 10px;
-      opacity: 1;
-      box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;    
-}
-</style>
-
 <template>
   <HollowDotsSpinner class="loading-spinner"
   :animation-duration="1250"
@@ -207,6 +142,14 @@ export default {
       var jobfair_alt = this.jobfair_companies[weekday].filter(function(company){return company.logo}).map(company => company.name);
       return jobfair_alt;
     },
+    goToCurrentDay(){
+      // get current day
+      var today = new Date();
+      var day = today.getDay();
+      var day_name = this.weekdays[day-1];
+      // go to current day
+      this.$refs.schedule_carousel.slideTo(this.weekdays.indexOf(day_name));
+    },
     // onClick weekday element event
     carouselSlideEvent(target) {
       // if clicked element is "next"
@@ -310,6 +253,7 @@ export default {
       if (this.loading_activities == false && this.loading_jobfair == false) {
         const loading_spinner = document.querySelector('.loading-spinner');
         const activities = document.querySelector('.activities');
+        this.go_to_current_day();
         loading_spinner.classList.add('invisible');
         activities.classList.remove('invisible');
         activities.classList.add('visible');
@@ -328,6 +272,7 @@ export default {
       if (this.loading_activities == false && this.loading_jobfair == false) {
         const loading_spinner = document.querySelector('.loading-spinner');
         const activities = document.querySelector('.activities');
+        this.goToCurrentDay()
         loading_spinner.classList.add('invisible');
         activities.classList.remove('invisible');
         activities.classList.add('visible');
@@ -425,16 +370,14 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
 
-  .schedule{
-    position: relative;
-  }
+.carousel__item .schedule{
+  position: relative;
+}
 
-  .jobfair{
-    position: relative;
-  }
-
-
+.carousel__item .jobfair{
+  position: relative;
 }
 
 .line {
@@ -528,64 +471,79 @@ export default {
   transition: 0.5s;
   align-items: center;
   height: auto;
+}
 
-  .schedule {
-    transition: 0.5s;
-    opacity: 1;
-    width: 85vw;
-    /* height: 65vh; */
-    overflow-x: hidden;
-    overflow: visible;
-    max-width: 800px;
-  }
+.carousel__slide--active .line{
+  opacity: 1;
+}
 
-  .jobfair {
-
-
-    --border-radius: 20px;
-    --border-width: 2px;
-    --background: var(--background_, radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.3) 0%, rgba(76, 202, 240, 0.2) 70%, rgba(76, 202, 240, 0.1) 100%));
-    --border-background: var(--border-background_, linear-gradient(165deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%));
-
-    --color: white;
-
-    
-    display:-webkit-flex !important;
-    display: flex;
-    transition: 1s;
-    opacity: 1;
-    width: 80vw;
-    height: 22vh; 
-    justify-content: center;
-    align-items: center;
+.carousel__slide--active .spacer{
+  height: 100px;
     flex-direction: column;
+    flex: 1;
+}
+.carousel__slide--active .schedule{
+  transition: 0.5s;
+  opacity: 1;
+  width: 85vw;
+  /* height: 65vh; */
+  overflow-x: hidden;
+  overflow: visible;
+  max-width: 800px;
+}
 
-    margin-top: 20px;
-    margin-bottom: 20px;
+.carousel__slide--active .jobfair::before{
+  content: "";
+}
 
-    padding-top: 10px;
-    padding-bottom: 20px;
-    padding-left: 5px;
-    padding-right: 5px;  
+.carousel__slide--active .jobfair {
 
-    max-width: 700px;
-    
-    h2{
-      opacity: 1;
-      transition: 2.5s;
-    }
-    
-    
-    .showcase{
+
+--border-radius: 20px;
+--border-width: 2px;
+--background: var(--background_, radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.3) 0%, rgba(76, 202, 240, 0.2) 70%, rgba(76, 202, 240, 0.1) 100%));
+--border-background: var(--border-background_, linear-gradient(165deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%));
+
+--color: white;
+
+
+display:-webkit-flex !important;
+display: flex;
+transition: 1s;
+opacity: 1;
+width: 80vw;
+height: 22vh; 
+justify-content: center;
+align-items: center;
+flex-direction: column;
+
+margin-top: 20px;
+margin-bottom: 20px;
+
+padding-top: 10px;
+padding-bottom: 20px;
+padding-left: 5px;
+padding-right: 5px;  
+
+max-width: 700px;
+
+}
+
+.carousel__slide--active .jobfair h3{
+  opacity: 1;
+  transition: 2.5s;
+}
+
+.carousel__slide--active .showcase{
       display:-webkit-flex !important;
       display: flex;
       justify-content: space-evenly;
       align-items: center;
       width: 100%;
       height: 13vh;
-    }
+}
 
-    .fadeloop{
+.carousel__slide--active .fadeloop{
       width: 30%;
       height: 100%;
       display:-webkit-flex !important;
@@ -599,23 +557,6 @@ export default {
       padding: 10px;
       opacity: 1;
       box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;    
-    }
-  }
-
-  .jobfair::before {
-    content: "";
-  }
-
-  .line{
-    opacity: 1;
-  }
-  
-  .spacer{
-    height: 100px;
-    flex-direction: column;
-    flex: 1;
-  }
-  
 }
 
 </style>
