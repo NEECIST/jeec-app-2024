@@ -6,15 +6,15 @@
           <div class="prizes-flex">
             <div v-if="prizes.individual_prize != null" class="prize">
               <h3>Solo</h3>
-              <div class="prize-img radient-border-passthrough">
+              <router-link to="prizes" class="prize-img radient-border-passthrough">
                 <img :src="jeec_brain_url + prizes.individual_prize" class="activity-img">
-              </div>
+              </router-link>
             </div>
             <div v-if="prizes.squad_prize != null" class="prize">
               <h3>Squad</h3>
-              <div class="prize-img radient-border-passthrough">
+              <router-link to="prizes" class="prize-img radient-border-passthrough">
                 <img :src="jeec_brain_url + prizes.squad_prize" class="activity-img"> 
-              </div>
+              </router-link>
             </div>
           </div>
         </div>
