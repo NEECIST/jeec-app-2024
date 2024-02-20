@@ -133,14 +133,6 @@ export default {
       var jobfair_alt = this.jobfair_companies[weekday].filter(function (company) { return company.logo }).map(company => company.name);
       return jobfair_alt;
     },
-    goToCurrentDay() {
-      // get current day
-      var today = new Date();
-      var day = today.getDay();
-      var day_name = this.weekdays[day - 1];
-      // go to current day
-      this.$refs.schedule_carousel.slideTo(this.weekdays.indexOf(day_name));
-    },
     // onClick weekday element event
     carouselSlideEvent(target) {
       // if clicked element is "next"
@@ -244,7 +236,6 @@ export default {
       if (this.loading_activities == false && this.loading_jobfair == false) {
         const loading_spinner = document.querySelector('.loading-spinner');
         const activities = document.querySelector('.activities');
-        this.go_to_current_day();
         loading_spinner.classList.add('invisible');
         activities.classList.remove('invisible');
         activities.classList.add('visible');
@@ -263,7 +254,6 @@ export default {
       if (this.loading_activities == false && this.loading_jobfair == false) {
         const loading_spinner = document.querySelector('.loading-spinner');
         const activities = document.querySelector('.activities');
-        this.goToCurrentDay()
         loading_spinner.classList.add('invisible');
         activities.classList.remove('invisible');
         activities.classList.add('visible');
