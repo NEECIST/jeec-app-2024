@@ -264,8 +264,8 @@ export default {
 .add {
   height: 100%;
   margin: 0px;
-  margin-top: 48px;
-  align-self: flex-start;
+  margin-bottom: 4px;
+  align-self: flex-end;
 }
 
 .add a {
