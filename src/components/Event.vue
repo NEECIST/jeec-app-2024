@@ -266,22 +266,23 @@ export default {
   margin: 0px;
   margin-top: 48px;
   align-self: flex-start;
+}
 
-
-  a {
+.add a {
     width: 100%;
     cursor: pointer !important;
-  }
+}
 
-  a g path {
+.add a g path {
     fill: #E7E7E7;
     /* fill: #a73b3b; */
-  }
+}
 
-  a:hover g path {
-    fill: white;
 
-  }
+
+.add a:hover g path {
+  fill: white;
+
 }
 
 .div-foto {
@@ -329,14 +330,14 @@ export default {
   margin: 8px 0;
   margin-left: 20px;
 
-  a {
-    text-decoration-line: underline;
-    pointer-events: all;
-    cursor: pointer;
-    z-index: 100;
-    color: var(--color);
-  }
+}
 
+#info a{
+  text-decoration-line: underline;
+  pointer-events: all;
+  cursor: pointer;
+  z-index: 100;
+  color: var(--color);
 }
 
 #description {
