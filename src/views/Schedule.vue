@@ -5,7 +5,7 @@
     <div style="margin-top: 4vh">
       <div class="carousel" style="margin-bottom: 110px;">
         <Carousel ref="schedule_carousel" :mouseDrag="false" :touchDrag="false" :itemsToShow="2.5" :wrapAround="true"
-          :model-value="1" :transition="500">
+          :model-value="current_day_index" :transition="500">
           <Slide v-for="(weekday, index) in weekdays" :key="index">
             <button class="main-button radient-border-passthrough" :class="weekday.toLowerCase()"
               style="cursor: pointer; margin-bottom: 10px;"
@@ -91,6 +91,7 @@ export default {
         "Thursday",
         "Friday"
       ],
+      current_day_index: 0,
       carousel_breakpoints: {
         0: { itemsToShow: 2.5 },
         640: { itemsToShow: 3.0 },
@@ -104,6 +105,12 @@ export default {
     // get weekday from string format "dd mm yyyy, weekday"
     getWeekday(date) {
       return date.split(", ")[1];
+    },
+
+    setCurrentDayIdx(){
+      var today = new Date();
+      var day = today.getDay();
+      this.current_day_index = day - 1;
     },
 
     getJobFairImages(weekday) {
@@ -200,7 +207,7 @@ export default {
       this.$router.push("/");
     }
 
-
+    this.setCurrentDayIdx();
 
     // make active slide non pointer
     const active_slide = document.querySelector(".carousel__slide--active");
