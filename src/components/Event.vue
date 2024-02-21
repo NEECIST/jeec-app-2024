@@ -1,17 +1,18 @@
 <template>
-  <div class="event">
+  <div class="event" :class="{'is-current': isCurrentEvent}">
 
     <div class="hour-info">
       <div id="circle"></div>
-      <div class="hour">
+      <div class="hour" :class="'type-' + event.type.replace(/\s/g, '').replace(/\W/g, '').toLowerCase()">
         <p v-if="isCurrentEvent" v-bind:class="{'is-current': isCurrentEvent}" > {{ event.time }} - Happening Now!</p>
         <p v-else>{{ event.time }}</p>
       </div>
     </div>
 
     <div class="item radient-border-passthrough"
-      :class="'type-' + event.type.replace(/\s/g, '').replace(/\W/g, '').toLowerCase()">
-      <div class="main" :class="{ 'desc-open': showDesc }">
+      :class="'type-' + event.type.replace(/\s/g, '').replace(/\W/g, '').toLowerCase()"
+      v-bind:class="{'is-current': isCurrentEvent}">
+      <div class="main" :class="{ 'desc-open': showDesc}">
         <h2 id="title">
           {{ event.type }} 
         </h2>
@@ -80,7 +81,7 @@
     </div>
     <div class="hour-info">
       <div id="circle"></div>
-      <div class="hour">
+      <div class="hour" :class="'type-' + event.type.replace(/\s/g, '').replace(/\W/g, '').toLowerCase()">
         <p v-bind:class="{'is-current': isCurrentEvent}">{{ event.end_time }}</p>
       </div>
     </div>
@@ -144,7 +145,7 @@ export default {
 
 
       if (current_weekday == event_weekday) {
-        const current_time = new Date().toLocaleString('en-us', { hour: 'numeric', minute: 'numeric', hour12: true });
+        const current_time = new Date().toLocaleString('en-us', { hour: 'numeric', minute: 'numeric', hour12: false });
         const event_time = this.event.time;
         const event_end_time = this.event.end_time;
 
@@ -192,7 +193,7 @@ export default {
   },
   mounted() {
     this.loadImg = true;
-    // this.checkIfCurrentEvent();
+    this.checkIfCurrentEvent();
     if (this.event.type == "Workshop") {
       this.isWorkshop = true;
     }
@@ -223,10 +224,42 @@ export default {
   font-weight: bolder;
 }
 
-.hour p.is-current {
-  color: #f72585;
-  font-size: larger;
+.hour.type-workshop p.is-current {
+  color: #4cc9f0;
+  font-size: 1.1rem;
+  text-shadow: 0px 0px 3px #4CC9F0;
 }
+.hour.type-insidetalks p.is-current {
+  color: #f72585;
+  font-size: 1.1rem;
+  text-shadow: 0px 0px 3px #f72585;
+}
+
+.hour.type-1515 p.is-current {
+  color: #a428f6;
+  font-size: 1.1rem;
+  text-shadow: 0px 0px 3px #a428f6;
+}
+
+.hour.type-discussionpanel p.is-current {
+  color: rgb(96, 94, 208);
+  font-size: 1.1rem;
+  text-shadow: 0px 0px 3px rgb(96, 94, 208);
+}
+
+.hour.type-cerimony p.is-current {
+  color: #1a9cd8;
+  font-size: 1.1rem;
+  text-shadow: 0px 0px 3px #1a9cd8;
+}
+
+.hour.type-fastmeeting p.is-current {
+  color: rgb(221, 64, 221);
+  font-size: 1.1rem;
+  text-shadow: 0px 0px 3px rgb(221, 64, 221);
+}
+
+
 
 .item {
   --border-radius: 0 60px 60px 40px;
@@ -237,8 +270,8 @@ export default {
   --color: white;
 
   margin-left: 20px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   min-height: 80px;
   display: flex;
   align-items: center;
@@ -247,6 +280,7 @@ export default {
 .item::before {
   content: "";
 }
+
 
 .item.type-insidetalks {
   --color: #f72585;
@@ -265,7 +299,6 @@ export default {
   --background_: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(114, 9, 183, 0.14), rgba(114, 9, 183, 0.08) 60%, rgba(114, 9, 183, 0));
   --border-background_: linear-gradient(165deg, #7209B7, #A414A4 40%, #7209B7);
 }
-
 .item.type-mainspeaker,
 .item.type-discussionpanel {
   --color: rgb(96, 94, 208);
@@ -312,7 +345,6 @@ export default {
     fill: #E7E7E7;
     /* fill: #a73b3b; */
 }
-
 
 
 .add a:hover g path {
