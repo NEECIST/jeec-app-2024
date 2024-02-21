@@ -5,7 +5,7 @@
     <div style="margin-top: 4vh">
       <div class="carousel" style="margin-bottom: 110px;">
         <Carousel ref="schedule_carousel" :mouseDrag="false" :touchDrag="false" :itemsToShow="2.5" :wrapAround="true"
-          :model-value="current_day_index" :transition="500">
+          :transition="500">
           <Slide v-for="(weekday, index) in weekdays" :key="index">
             <button class="main-button radient-border-passthrough" :class="weekday.toLowerCase()"
               style="cursor: pointer; margin-bottom: 10px;"
@@ -21,15 +21,15 @@
                 <p>9:30 - 18:30</p>
                 <div class="showcase" style="display: flex;">
                   <FadeLoop class="fadeloop" :image_list="getJobFairImages(weekday)" :alt_list="getJobFairAlt(weekday)"
-                    :link_list="getJobFairLinks(weekday)" :index="0" :initial_duration="2200" :duration="2500" :step="3">
+                    :link_list="getJobFairLinks(weekday)" :index="0" :initial_duration="2200" :duration="3500" :step="3">
                   </FadeLoop>
 
                   <FadeLoop class="fadeloop" :image_list="getJobFairImages(weekday)" :alt_list="getJobFairAlt(weekday)"
-                    :link_list="getJobFairLinks(weekday)" :index="1" :initial_duration="2400" :duration="2500" :step="3">
+                    :link_list="getJobFairLinks(weekday)" :index="1" :initial_duration="2400" :duration="3500" :step="3">
                   </FadeLoop>
 
                   <FadeLoop class="fadeloop" :image_list="getJobFairImages(weekday)" :alt_list="getJobFairAlt(weekday)"
-                    :link_list="getJobFairLinks(weekday)" :index="2" :initial_duration="2600" :duration="2500" :step="3">
+                    :link_list="getJobFairLinks(weekday)" :index="2" :initial_duration="2600" :duration="3500" :step="3">
                   </FadeLoop>
 
                 </div>
@@ -111,6 +111,38 @@ export default {
       var today = new Date();
       var day = today.getDay();
       this.current_day_index = day - 1;
+    },
+
+    goToCurrentDay(){
+      // get current day
+      var today = new Date();
+      var day = today.getDay();
+      var day_name = this.weekdays[day-1];
+      // go to current day
+      this.$refs.schedule_carousel.slideTo(this.weekdays.indexOf(day_name));
+      const active_slide = document.querySelector(".carousel__slide--active");
+        if (active_slide) {
+          active_slide.firstChild.style.pointerEvents = "all";
+        }
+
+        // update slide pointer events after transition
+        setTimeout(() => {
+          const new_active_slide = document.querySelector(".carousel__slide--active");
+          if (new_active_slide) {
+            new_active_slide.style.pointerEvents = "all";
+            new_active_slide.firstChild.style.pointerEvents = "none";
+            const next_slide = document.querySelector(".carousel__slide--next");
+            if (next_slide) {
+              next_slide.style.pointerEvents = "none";
+              next_slide.firstChild.style.pointerEvents = "all";
+            }
+
+            const weekday = new_active_slide.firstChild.innerText;
+            if (weekday.includes("Friday")) {
+              next_slide.firstChild.style.pointerEvents = "none";
+            }
+          }
+        }, 550);
     },
 
     getJobFairImages(weekday) {
@@ -207,7 +239,6 @@ export default {
       this.$router.push("/");
     }
 
-    this.setCurrentDayIdx();
 
     // make active slide non pointer
     const active_slide = document.querySelector(".carousel__slide--active");
@@ -243,6 +274,7 @@ export default {
       if (this.loading_activities == false && this.loading_jobfair == false) {
         const loading_spinner = document.querySelector('.loading-spinner');
         const activities = document.querySelector('.activities');
+        this.goToCurrentDay()
         loading_spinner.classList.add('invisible');
         activities.classList.remove('invisible');
         activities.classList.add('visible');
@@ -261,6 +293,7 @@ export default {
       if (this.loading_activities == false && this.loading_jobfair == false) {
         const loading_spinner = document.querySelector('.loading-spinner');
         const activities = document.querySelector('.activities');
+        this.goToCurrentDay()
         loading_spinner.classList.add('invisible');
         activities.classList.remove('invisible');
         activities.classList.add('visible');
