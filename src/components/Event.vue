@@ -4,7 +4,8 @@
     <div class="hour-info">
       <div id="circle"></div>
       <div class="hour">
-        <p>{{ event.time }}</p>
+        <p v-if="isCurrentEvent" v-bind:class="{'is-current': isCurrentEvent}" > {{ event.time }} - Happening Now!</p>
+        <p v-else>{{ event.time }}</p>
       </div>
     </div>
 
@@ -12,8 +13,10 @@
       :class="'type-' + event.type.replace(/\s/g, '').replace(/\W/g, '').toLowerCase()">
       <div class="main" :class="{ 'desc-open': showDesc }">
         <h2 id="title">
-          {{ event.type }}
+          {{ event.type }} 
         </h2>
+
+
 
         <h3 id="text">
           {{ event.name }}
@@ -22,6 +25,8 @@
         <div id="description" v-bind:class="{ 'desc-open': showDesc }">
           <br>
           <p>{{ event.description }}</p>
+          <br>
+          <p v-if="isWorkshop"> (This Workshop might require a computer/laptop)</p>
           <br>
         </div>
 
@@ -76,7 +81,7 @@
     <div class="hour-info">
       <div id="circle"></div>
       <div class="hour">
-        <p>{{ event.end_time }}</p>
+        <p v-bind:class="{'is-current': isCurrentEvent}">{{ event.end_time }}</p>
       </div>
     </div>
   </div>
@@ -133,6 +138,24 @@ export default {
       return image_list;
     },
 
+    checkIfCurrentEvent(){
+      const current_weekday = new Date().toLocaleString('en-us', {  weekday: 'long' });
+      const event_weekday = this.event.day.split(', ')[1];
+
+
+      if (current_weekday == event_weekday) {
+        const current_time = new Date().toLocaleString('en-us', { hour: 'numeric', minute: 'numeric', hour12: true });
+        const event_time = this.event.time;
+        const event_end_time = this.event.end_time;
+
+        if (current_time >= event_time && current_time <= event_end_time) {
+          console.log("Current event");
+          console.log(this.event);
+          this.isCurrentEvent = true;
+        }
+      }
+    },
+
     toggleDesc() {
       if (this.showDesc == false) {
         this.showDesc = true;
@@ -152,6 +175,8 @@ export default {
       loadImg: false,
       showDesc: false,
       hideDesc: true,
+      isCurrentEvent: false,
+      isWorkshop: false,
       showmore_text: "+ info",
       atcb_config: {
         customLabels: { "apple": "Apple Calendar", "google": "Google Calendar", "outlookcom": "Outlook Calendar" },
@@ -167,6 +192,11 @@ export default {
   },
   mounted() {
     this.loadImg = true;
+    // this.checkIfCurrentEvent();
+    if (this.event.type == "Workshop") {
+      this.isWorkshop = true;
+    }
+
   }
 
 };
@@ -191,6 +221,11 @@ export default {
   margin-left: 10px;
   font-size: 10pt;
   font-weight: bolder;
+}
+
+.hour p.is-current {
+  color: #f72585;
+  font-size: larger;
 }
 
 .item {
