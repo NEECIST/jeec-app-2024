@@ -506,6 +506,7 @@ export default {
   margin-top: 3rem;
   color: #4CC9F0;
   margin-bottom: 2rem;
+  text-shadow: 0px 0px 4px #4cc9f0;
 }
 
 .squad-container {

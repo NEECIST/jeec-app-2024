@@ -2,7 +2,7 @@
   <div class="today-prizes">
       <template v-if="prizes.individual_prize != null || prizes.squad_prize != null">
         <div class="prizes-container">
-          <h2>Today's Prizes</h2>
+          <h2 >Today's Prizes</h2>
           <div class="prizes-flex">
             <div v-if="prizes.individual_prize != null" class="prize">
               <h3>Solo</h3>
@@ -62,6 +62,7 @@ getDailyPrizes();
   letter-spacing: 4px;
   text-transform: uppercase;
   color: #4cc9f0;
+  text-shadow: 0px 0px 3px #4cc9f0;
 }
 
 .no-prizes {
@@ -85,6 +86,7 @@ getDailyPrizes();
   font-size: 1.3rem;
   color: #4cc9f0;
   padding-bottom: 0.5rem;
+  text-shadow: 0px 0px 3px #4cc9f0;
 }
 
 .prize-img {

@@ -2,7 +2,7 @@
   <div class="next-activity">
     <template v-if="nextActivity.name != ''">
       <div class="activity-container">
-        <h2>Up Next</h2>
+        <h2 style="text-shadow: 0px 0px 3px white">Up Next</h2>
         <div class="activity">
           <div class="activity-info">
             <h3>
