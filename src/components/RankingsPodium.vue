@@ -78,13 +78,13 @@
                   <p v-if="(user_ranking % 10) == 1">{{ user_ranking }}st</p>
                   <p v-if="(user_ranking % 10) == 2">{{ user_ranking }}nd</p>
                   <p v-if="(user_ranking % 10) == 3">{{ user_ranking }}rd</p>
-                  <p v-if="(user_ranking % 10) > 3">{{ user_ranking }}th</p>
+                  <p v-if="((user_ranking % 10) > 3) || ((user_ranking % 10) == 0)">{{ user_ranking }}th</p>
                 </div>
                 <div v-else :id="'student_ranking_number-' + user_ranking" class="student_ranking_number">
                   <p v-if="user_ranking == 1">{{ user_ranking }}st</p>
                   <p v-if="user_ranking == 2">{{ user_ranking }}nd</p>
                   <p v-if="user_ranking == 3">{{ user_ranking }}rd</p>
-                  <p v-if="user_ranking > 3">{{ user_ranking }}th</p>
+                  <p v-if="(user_ranking > 3) || (user_ranking == 0)">{{ user_ranking }}th</p>
                 </div>
               </div>
 
