@@ -1,9 +1,9 @@
 <template>
   <Transition name="slide" appear>
-    <router-link to="/profile" class="popup" v-if="isOpen">
+    <div @click="isOpen = false" class="popup" v-if="isOpen">
       <h2>You still haven't added your CV!</h2>
       <p>Upload now to get 500 points and get you closer to the JEECPOT</p>
-    </router-link>
+    </div>
   </Transition>
 </template>
 <script setup>
@@ -31,8 +31,8 @@ onMounted(() => {
   top: 70px;
   left: 50%;
   translate: -50% 0;
-  width: 80%;
-  height: 100px;
+  width: 100%;
+  max-width: 900px;
   background: rgb(255, 0, 0);
   z-index: 100;
   border-radius: 25px;
@@ -41,9 +41,10 @@ onMounted(() => {
   text-decoration: none;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 0.5rem;
   translate: translateY(0);
+  padding: 0.5rem 2ch;
+  cursor: pointer;
 }
 
 .slide-enter-active {
