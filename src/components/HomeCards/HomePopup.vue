@@ -1,6 +1,7 @@
 <template>
   <Transition name="slide" appear>
     <div @click="isOpen = false" class="popup" v-if="isOpen">
+      <button class="close-button">&times;</button>
       <h2>You still haven't added your CV!</h2>
       <p>Upload now to get 500 points and get you closer to the JEECPOT</p>
     </div>
@@ -45,6 +46,25 @@ onMounted(() => {
   translate: translateY(0);
   padding: 0.5rem 2ch;
   cursor: pointer;
+}
+
+.popup h2 {
+  padding: 0.5rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 0.5;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  scale: 1.1;
 }
 
 .slide-enter-active {
