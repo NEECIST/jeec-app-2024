@@ -1,5 +1,6 @@
 <template>
   <div>
+    <HomePopup></HomePopup>
     <HomeActivities class="card radient-border-passthrough"></HomeActivities>
     <HomePrizes class="card radient-border-passthrough"></HomePrizes>
     <HomeTip class="card radient-border-passthrough"></HomeTip>
@@ -7,6 +8,7 @@
 </template>
 
 <script setup>
+import HomePopup from '@/components/HomeCards/HomePopup.vue';
 import HomeActivities from '@/components/HomeCards/HomeActivities.vue';
 import HomePrizes from '@/components/HomeCards/HomePrizes.vue';
 import HomeTip from '@/components/HomeCards/HomeTip.vue';
