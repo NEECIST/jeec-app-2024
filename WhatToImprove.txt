@@ -1,0 +1,13 @@
+Improve UX/UI, squads not visible enough, sometimes slow (ask crappy phone users), sidebar was in old people mode (big letters)
+Change Point System, confusing sometimes
+Notification for CV (but this time made previously and not as an afterthought)
+Schedule on the correct day, if not already done (it is done either on app or site)
+Do not show all the people in teams in website, have something that says description (like Aerotec :) )
+Show place where activity happens
+Can only win points from job fair if is in a speaker
+See header in admin when scrolling 
+Do our own wheel for lottery
+Probability increasing with more points
+Show all in Job fair Companies
+Better Prizes (Duarte asked for it)
+Use Docker, at least try
