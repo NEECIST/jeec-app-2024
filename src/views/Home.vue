@@ -28,9 +28,15 @@ import HomeTip from '@/components/HomeCards/HomeTip.vue';
   margin-top: 0.5rem;
   margin-bottom: 3rem;
   text-align: center;
+
+  font-family: "Lexend Exa";
 }
 .card::before {
   content: "";
+}
+
+.h2 {
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .card:last-child {
