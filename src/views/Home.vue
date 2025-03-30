@@ -16,14 +16,14 @@ import HomeTip from '@/components/HomeCards/HomeTip.vue';
 
 <style scoped>
 .card {
-  --border-radius: 40px;
-  --border-width: 2.5px;
+  --border-radius: 15px;
+  --border-width: 2.0px;
+  backdrop-filter: blur(2px);
 
   width: 80%;
   max-width: 800px;
-  box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.4);
   
-  padding: 0 2ch;
+  padding: 0 1ch;
   margin: 0 auto;
   margin-top: 0.5rem;
   margin-bottom: 3rem;

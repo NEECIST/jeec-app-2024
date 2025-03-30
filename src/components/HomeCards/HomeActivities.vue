@@ -16,15 +16,22 @@
             <h4>
               {{ nextActivity.name }}
             </h4>
+            <h5>
+              {{ nextActivity.location }}
+            </h5>
+            <p>
+              {{nextActivity.day}} | {{ nextActivity.start_time }} - {{ nextActivity.end_time }}
+            </p>
           </div>
-          <div class="activity-image radient-border-passthrough" :style="{ '--background': backgroundColorWithTransparency, '--border-background': nextActivity.color }">
-            <img class="image" :src="nextActivity.images[0]">
+          <div class="activity-image radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': nextActivity.color }">
+            <div class="circle circle-1 radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': nextActivity.color }">
+              <img class="image"  :src="nextActivity.images[0]">
+            </div>
+            <div class="circle circle-2 radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': nextActivity.color }" >
+              <img class="image" :src="nextActivity.images[1]">
+            </div>
+           
           </div>
-        </div>
-        <div class="activity-time">
-          <p>
-            {{ nextActivity.start_time }} - {{ nextActivity.end_time }}
-          </p>
         </div>
       </div>
     </template>
@@ -44,9 +51,11 @@ import axios from 'axios';
 import authHeader from '@/services/auth-header';
 
 const nextActivity = ref({
-  name: "Creative Writing Workshop",
-  start_time: "10:00 AM",
-  end_time: "12:00 AM",
+  name: "",
+  location: "Main Stage",
+  start_time: "25h00",
+  end_time: "26h00",
+  day: "February 31",
   activity_type: "Panel",
   images: [
     require('@/assets/logo.png'),
@@ -56,9 +65,9 @@ const nextActivity = ref({
 });
 
 // Computed property to add "A" at the end of the hex color
-const backgroundColorWithTransparency = computed(() => {
-  return nextActivity.value.color + '1A';
-});
+// const backgroundColorWithTransparency = computed(() => {
+//   return nextActivity.value.color + '1A';
+// });
 
 // function getNextActivity() {
 //   axios
@@ -85,12 +94,8 @@ const backgroundColorWithTransparency = computed(() => {
 </script>
 
 <style scoped>
-.next-activity {
-  /* Removed CSS variables from here */
-}
-
 .activity-container {
-  padding: 1rem 0 2rem 0;
+  padding: 0.5rem 0 0.9rem 0;
 }
 
 .activity-container h2 {
@@ -104,7 +109,7 @@ const backgroundColorWithTransparency = computed(() => {
   display: flex;
   justify-content: space-around;
   gap: 1rem;
-  padding-top: 1rem;
+  padding-top: 0.3rem;
 }
 
 .activity-info {
@@ -112,19 +117,15 @@ const backgroundColorWithTransparency = computed(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding: 0.5rem 0 0.5rem 0.5rem;
-  gap: 0.05rem;
+  padding: 0 0 0.5rem 0.5rem;
+  gap: 0.3rem;
 }
 
 .activity-info h3 {
   font-family: "Lexend Exa";
-  font-size: clamp(1.1rem, 3.5vw, 1.4rem);
-  color: var(--color-darker-light-blue);
-  /* Panel */
+  font-size: clamp(0.8rem, 3.2vw, 1.1rem);
   font-weight: 700;
-
-  line-height: 18px;
-  /* identical to box height */
+  overflow: hidden;
   letter-spacing: 0.05em;
 
 }
@@ -133,28 +134,43 @@ const backgroundColorWithTransparency = computed(() => {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
+}
+.activity-type-icon {
+  width:clamp(0.8rem, 3.2vw, 1.1rem);
+  height: clamp(0.8rem, 3.2vw, 1.1rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .activity-info h4 {
-  font-size: clamp(1.2rem, 4vw, 1.6rem);
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  letter-spacing: 0.1ch;
+  font-family: "Lexend Exa";
+  font-size: clamp(0.9rem, 3.7vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: 0.05em;
 }
 
-.activity-time p {
+.activity-info h5 {
   font-family: "Lexend Exa";
-  padding-top: 1rem;
+  font-size: clamp(0.8rem, 3.1vw, 1.2rem);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.activity-info p {
+  display: flex;
+  justify-content: flex-start;
+  font-family: "Lexend Exa";
+  font-size: clamp(0.4rem, 3.1vw, 0.8rem);
+  
 }
 
 .activity-image {
   width: 100%;
-  min-width: 70px;
-  max-width: 130px;
+  min-width: 60px;
+  max-width: 80px;
+  position: relative;
   align-self: center;
   aspect-ratio: 1;
   display: flex;
@@ -163,7 +179,6 @@ const backgroundColorWithTransparency = computed(() => {
   overflow: hidden;
 
   --border-radius: 50%;
-  --background: white;
 }
 
 .activity-image::before {
@@ -171,9 +186,32 @@ const backgroundColorWithTransparency = computed(() => {
 }
 
 .activity-image .image {
-  height: 70%;
-  width: 60%;
+  height: 90%;
+  width: 90%;
   object-fit: contain;
+}
+
+.circle {
+  width: 50%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  --border-width: 2.0px;
+  overflow: hidden;
+  --border-radius: 50%;
+}
+
+.circle::before {
+  content: "";
+}
+
+.circle-1 {
+  transform: translate(-30%, -30%);
+}
+.circle-2 {
+  transform: translate(30%, 30%);
 }
 
 .no-activity {
