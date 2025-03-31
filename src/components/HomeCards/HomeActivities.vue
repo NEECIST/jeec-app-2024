@@ -51,7 +51,7 @@ import axios from 'axios';
 import authHeader from '@/services/auth-header';
 
 const nextActivity = ref({
-  name: "",
+  name: "Intro to Machine Learning",
   location: "Main Stage",
   start_time: "25h00",
   end_time: "26h00",
@@ -65,9 +65,9 @@ const nextActivity = ref({
 });
 
 // Computed property to add "A" at the end of the hex color
-// const backgroundColorWithTransparency = computed(() => {
-//   return nextActivity.value.color + '1A';
-// });
+const backgroundColorWithTransparency = computed(() => {
+  return nextActivity.value.color + '1A';
+});
 
 // function getNextActivity() {
 //   axios
