@@ -1,33 +1,19 @@
 <template>
   <div class="wrapper" :class="variant">
-    <!-- <div v-if="variant === 'home'" class="imgs">
-      <img :src="require('@/assets/tickets-' + tickets + '.svg')" aria-hidden="true">
-    </div> -->
-    <div class="bar">
-      <p>Daily Tickets</p>
-      <!-- <div class="tickets radient-border-passthrough">
-        <div class="slot radient-border-passthrough_child"></div>
-        <div class="slot radient-border-passthrough_child"></div>
-        <div class="slot radient-border-passthrough_child"></div>
-        <div class="overlay">
-          <div v-for="ticket in tickets" :key="ticket" class="fill"></div>
-        </div>
-      </div> -->
       <div class="tickets-progress radient-border-passthrough">
-        <div class="progress radient-border-passthrough_child" :style="'--progress:' + progress + '%;'"></div>
+        <div class="progress radient-border-passthrough_child"></div>
         <div class="tickets">
-          <div 
+          <!-- <div 
             v-for="(milestone, index) in userStore.milestones.daily" :key="index"
             :style="'width: ' + milestonePercentages[index] + '% ;'"
             ref="milestonesRef"
             class="ticket"
-          >
-            <img src="@/assets/tickets-1.svg" aria-hidden="true">
-          </div>
+          > -->
+            <p>{{ userpoints }}</p>
+            <img src="@/assets/icons/flash_home.svg" aria-hidden="true">
         </div>
       </div>
     </div>
-  </div>
 </template>
 <script setup>
 import { ref, watch, defineProps, nextTick } from 'vue';
@@ -39,6 +25,7 @@ const props = defineProps(["variant"]);
 const progress = ref(0);
 const milestonesRef = ref([]);
 const milestonePercentages = ref([])
+const userpoints = "8173";
 
 async function getProgress() {
   const userDailyPoints = userStore.userPoints.daily_points;
@@ -89,21 +76,22 @@ watch(() => userStore.userPoints, () => {
 <style scoped>
   .wrapper {
     width: 100%;
-    padding-top: 5px;
+    height: 100%;
+    margin-top: 10px;
     display: flex;
+    justify-content: flex-end;
   }
-  .imgs {
-    display: flex;
-    align-items: center;
-  }
-  .imgs > img {
+  .img {
     width: 40px;
-    height: 34px;
+    height: 380%;
     object-fit: contain;
   }
   .bar {
     text-align: right;
     flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    height: 100%;
   }
   .wrapper.profile > .bar{
     text-align: left;
@@ -123,127 +111,46 @@ watch(() => userStore.userPoints, () => {
     height: 23px;
   }
   .tickets-progress {
-    width: 100%;
-    height: 18px;
+    max-width: 80%;
+    height: 25px;
     position: relative;
-
-    --border-background: linear-gradient(130deg, #605ED0, #4CC9F0, #7209B7, #605ED0);
-    --border-width: 2px;
-    --border-radius: 50px
+    background: linear-gradient(0deg, rgba(25, 156, 255, 0.1), rgba(25, 156, 255, 0.1)), #1F1F1F;
+    --border-background: #199CFF;
+    --border-width: 1.5px;
+    --border-radius: 50px;
   }
+  
   .progress {
-    padding-left: calc(var(--border-width) + var(--progress)) !important;
-    background-size: 200%;
-    background-repeat: repeat;
-    animation: backgroundSlide 4s linear infinite reverse;
-    animation-delay: 1.5s;
+    background-size: 200%;   
+    align-content: center; 
+    justify-content: center;
+    display: flex;
   }
   .tickets {
-    position: absolute;
-    left: 0;
-    top: 0;
+    padding: 3px 3px 0px 8px;
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    gap: 5px;
   }
-  .ticket {
-    width: 33.3333333333%;
-    height: 100%;
-    position: relative;
-  }
-  .ticket:nth-child(1){
-    width: 5%;
-  }
-  .ticket:nth-child(2){
-    width: 40%;
-  }
-  .ticket:nth-child(3){
-    flex-grow: 1;
-  }
+
   .wrapper.profile .tickets img {
     height: 140%;
   }
   .tickets img {
-    height: 160%;
+    height: 90%;
     object-fit: contain;
-    position: absolute;
-    top: 50%;
-    right: 0;
-    translate: 50% -50%;
-  }
-  .ticket.obtained {
-    opacity: 0.4;
+  
   }
 
-  @keyframes backgroundSlide {
-    0% { background-position: 0% 90%; }
-    100% { background-position: 200% 0%; }
-  }
-  /* .tickets {
-    width: 100%;
-    display: flex;
-    height: 18px;
-
-    --border-background: linear-gradient(110deg, #605ED0, #4CC9F0, #7209B7, #605ED0);
-    --border-width: 2px;
-  }
-  .tickets > .slot {    
-    height: 100%;
-    width: 33.33333333333333333333333333333%;
-
-    position: relative;
+  p {
+    font-family: "Lexend Exa";
+    font-size: 0.95rem;
+    color: var(--color-font);
     overflow: hidden;
-
-    background-size: 300% 100%;
-
-    animation-play-state: paused !important;
   }
-  .tickets > div:nth-child(1) {
-    border-radius: 50px 0 0 50px;
-    padding: 2px 1px 2px 2px;
-    background-position: 0%;
-    animation: backgroundSlide1 6s linear infinite reverse;
-  }
-  .tickets > div:nth-child(2) {
-    border-radius: 0;
-    padding: 2px 1px 2px 1px;
-    background-position: 50%;
-    animation: backgroundSlide2 6s linear infinite reverse;
-  }
-  .tickets > div:nth-child(3) {
-    border-radius: 0 50px 50px 0;
-    padding: 2px 2px 2px 1px;
-    background-position: 100%;
-    animation: backgroundSlide3 6s linear infinite reverse;
-  }
-  .overlay {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 40px;
-    display: flex;
-    border: var(--border-width) solid transparent;
-    overflow: hidden;
-    gap: var(--border-width);
-  }
-  .fill {
-    background-color: rgba(0, 0, 0, 0.731);
-    width: calc(33.3333333% - (var(--border-width) / 2));
-    height: 100%;
-  }
-
-  @keyframes backgroundSlide1 {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 300% 0%; }
-  }
-  @keyframes backgroundSlide2 {
-    0% { background-position: 50% 0%; }
-    100% { background-position: 350% 0%; }
-  }
-  @keyframes backgroundSlide3 {
-    0% { background-position: 100% 0%; }
-    100% { background-position: 400% 0%; }
-  }  */
+  
 </style>

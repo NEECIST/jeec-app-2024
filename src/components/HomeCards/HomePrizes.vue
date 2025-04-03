@@ -12,7 +12,6 @@
             <button 
               class="buy-ticket" 
               :class="{ pressed: isPressed }"
-              :style="buttonStyles"
               @touchstart="onTouchStart"
               @touchend="onTouchEnd"
             >
@@ -79,6 +78,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   font-size: clamp(1.2rem, 3.1vw, 1.8rem);
   font-family: "Lexend Exa";
   text-transform: uppercase;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
 }
 
 .no-prizes {
@@ -103,17 +103,8 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   gap: 1.5rem;
 }
 
-.prize h3 {
-  font-family: "Lexend Exa";
-  letter-spacing: 3px;
-  font-size: 1.3rem;
-  color: #4cc9f0;
-  padding-bottom: 0.5rem;
-  text-shadow: 0px 0px 3px #4cc9f0;
-}
-
 .prize-img {
-  max-width: 80px;
+  max-width: 90px;
   flex-grow: 1;
   width: 100%;
   aspect-ratio: 1;
@@ -121,8 +112,6 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   display: flex;
   justify-content: center;
   align-items: center;
-  
-  --background: white;
   --border-radius: 50%;
 }
 
@@ -137,10 +126,10 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
 
 .buy-ticket {
   display: flex;
-  padding: 7.5px 17.5px;
+  padding: 8px 17.5px;
   letter-spacing: 1px;
-  font-size: 70%; /* Adjusted to approximate 16px */
-  font-weight: 600;
+  font-size: 90%; /* Adjusted to approximate 16px */
+  font-weight: 700;
   font-family: "Lexend Exa";
   border: none;
   border-radius: 15px;

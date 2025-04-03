@@ -4,15 +4,15 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 
 const routes = [
-  {
-    path: '/',
-    name: 'login',
-    component: Login,
-    meta: {
-      header: false,
-      userPopup: false,
-    }
-  },
+  // {
+  //   path: '/',
+  //   name: 'login',
+  //   component: Login,
+  //   meta: {
+  //     header: false,
+  //     userPopup: false,
+  //   }
+  // },
   {
     path: "/home",
     name: "Home",
@@ -63,26 +63,26 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from) => {
-  const userStore = useUserStore();
+// router.beforeEach((to, from) => {
+//   const userStore = useUserStore();
 
-  if (userStore.loggedInState != true) {
-    userStore.isLoggedIn();
-    userStore.loggedInState = true;
+//   // // if (userStore.loggedInState != true) {
+//   // //   userStore.isLoggedIn();
+//   // //   userStore.loggedInState = true;
 
-    if (userStore.loggedIn !== true) {
-      router.push("/")
-    }
-  } else {
-    if (userStore.loggedIn == true) {
-      userStore.getPoints();
-    }
-  }
+//   // //   if (userStore.loggedIn !== true) {
+//   // //     router.push("/")
+//   // //   }
+//   // // } else {
+//   // //   if (userStore.loggedIn == true) {
+//   // //     userStore.getPoints();
+//   // //   }
+//   // // }
   
-  if (to.name == "login" && userStore.loggedIn == true) {
-    router.push("/home")
-  }
-})
+//   // // if (to.name == "login" && userStore.loggedIn == true) {
+//   //   router.push("/home")
+//   // // }
+// })
 
 
 export default router

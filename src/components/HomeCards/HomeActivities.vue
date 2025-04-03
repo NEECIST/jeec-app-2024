@@ -1,16 +1,16 @@
 <template>
-  <div class="next-activity" :style="{ '--background': backgroundColorWithTransparency, '--border-background': nextActivity.color }">
+  <div class="next-activity" :style="{ '--background': backgroundColorWithTransparency, '--border-background': currentActivityStyle.color }">
     <template v-if="nextActivity.name != ''">
       <div class="activity-container">
         <h2>Up Next</h2>
         <div class="activity">
           <div class="activity-info">
             <div class="activity-type">
-              <h3 :style="{ color: nextActivity.color }">
+              <h3 :style="{ color: currentActivityStyle.color }">
                 {{ nextActivity.activity_type }}
               </h3>
               <div class="activity-type-icon">
-                <img src="../../assets/icons/Union.png" alt="Activity Type Icon">
+                <img :src="currentActivityStyle.icon" alt="Activity Type Icon">
               </div>
             </div>
             <h4>
@@ -23,11 +23,11 @@
               {{nextActivity.day}} | {{ nextActivity.start_time }} - {{ nextActivity.end_time }}
             </p>
           </div>
-          <div class="activity-image radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': nextActivity.color }">
-            <div class="circle circle-1 radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': nextActivity.color }">
+          <div class="activity-image radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }">
+            <div class="circle circle-1 radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }">
               <img class="image"  :src="nextActivity.images[0]">
             </div>
-            <div class="circle circle-2 radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': nextActivity.color }" >
+            <div class="circle circle-2 radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }" >
               <img class="image" :src="nextActivity.images[1]">
             </div>
            
@@ -61,12 +61,44 @@ const nextActivity = ref({
     require('@/assets/logo.png'),
     require('@/assets/plus_sign.png'),
   ],
-  color: "#2E55FF"
 });
 
-// Computed property to add "A" at the end of the hex color
+const activityTypeMapping = {
+  Panel: {
+    color: "#2E55FF",
+    icon: require('@/assets/icons/panel_icon.svg'),
+  },
+  Workshop: {
+    color: "#FB5607",
+    icon: require('@/assets/icons/workshop_icon.svg'),
+  },
+  'Keynote Speakers': {
+    color: "#2E55FF",
+    icon: require('@/assets/icons/keynote_icon.svg'),
+  },
+  '15/15': {
+    color: "#A300FF",
+    icon: require('@/assets/icons/15_15_icon.svg'),
+  },
+  'Inside Talks': {
+    color: "#FF006E",
+    icon: require('@/assets/icons/inside_talk_icon.svg'),
+  },
+  // Add more activity types as needed
+};
+
+// Computed property to get the current activity's color and icon
+const currentActivityStyle = computed(() => {
+  const mapping = activityTypeMapping[nextActivity.value.activity_type] || {};
+  return {
+    color: mapping.color || "#000000", // Default color
+    icon: mapping.icon || require('@/assets/icons/panel_icon.svg'), // Default icon
+  };
+});
+
+// Computed property to add "1A" transparency to the color
 const backgroundColorWithTransparency = computed(() => {
-  return nextActivity.value.color + '1A';
+  return (currentActivityStyle.value.color || "#000000") + '1A';
 });
 
 // function getNextActivity() {
@@ -95,12 +127,12 @@ const backgroundColorWithTransparency = computed(() => {
 
 <style scoped>
 .activity-container {
-  padding: 0.5rem 0 0.9rem 0;
+  padding: 0.5rem 0 0.9rem 0
 }
 
 .activity-container h2 {
   font-size: clamp(1.2rem, 3.1vw, 1.8rem);
-
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "Lexend Exa";
   text-transform: uppercase;
 }
@@ -109,7 +141,7 @@ const backgroundColorWithTransparency = computed(() => {
   display: flex;
   justify-content: space-around;
   gap: 1rem;
-  padding-top: 0.3rem;
+  padding-top: 0.5rem;
 }
 
 .activity-info {
@@ -186,8 +218,8 @@ const backgroundColorWithTransparency = computed(() => {
 }
 
 .activity-image .image {
-  height: 90%;
-  width: 90%;
+  height: 100%;
+  width: 100%;
   object-fit: contain;
 }
 
@@ -209,9 +241,11 @@ const backgroundColorWithTransparency = computed(() => {
 
 .circle-1 {
   transform: translate(-30%, -30%);
+  overflow: hidden;
 }
 .circle-2 {
   transform: translate(30%, 30%);
+  overflow: hidden;
 }
 
 .no-activity {

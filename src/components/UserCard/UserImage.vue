@@ -1,11 +1,15 @@
 <template>
   <router-link to="/profile" class="radient-border-passthrough" :class="variant">
-    <img :src="'data:image/png;base64,' + image" alt="user image">
+    <!-- <img :src="'data:image/png;base64,' + computedImage" alt="user image"> -->
+    <img :src="image" alt="user image">
   </router-link>
 </template>
 <script setup>
 import { defineProps } from 'vue';
+import { ref } from 'vue';
 const props = defineProps(['image', 'variant']);
+const image = ref(require('@/assets/JEEC.png'));
+
 </script>
 <style scoped>
   a.profile {
@@ -14,8 +18,8 @@ const props = defineProps(['image', 'variant']);
     flex-grow: 1;
   }
   a {
-    --border-background: linear-gradient(135deg, #605ED0 0%, #4CC9F0 40%, #7209B7 100%);
-    --border-width: 2px;
+    --border-background: #199CFF;
+    --border-width: 1.5px;
     --border-radius: 50%;
 
     width: 100%;
