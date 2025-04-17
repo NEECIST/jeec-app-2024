@@ -51,16 +51,13 @@ import axios from 'axios';
 import authHeader from '@/services/auth-header';
 
 const nextActivity = ref({
-  name: "Intro to Machine Learning",
-  location: "Main Stage",
-  start_time: "25h00",
-  end_time: "26h00",
-  day: "February 31",
-  activity_type: "Panel",
-  images: [
-    require('@/assets/logo.png'),
-    require('@/assets/plus_sign.png'),
-  ],
+  name: "",
+  location: "",
+  start_time: "",
+  end_time: "",
+  day: "",
+  activity_type: "",
+  images: [],
 });
 
 const activityTypeMapping = {
@@ -101,28 +98,28 @@ const backgroundColorWithTransparency = computed(() => {
   return (currentActivityStyle.value.color || "#000000") + '1A';
 });
 
-// function getNextActivity() {
-//   axios
-//     .get(
-//       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
-//       {
-//         headers: authHeader()
-//       }
-//     )
-//     .then((response) => {
-//       if (response.data.activity != null) {
-//         nextActivity.value = response.data.activity
-//         response.data.activity.images.forEach((image, index) => {
-//           const bufferArray = [];
-//           bufferArray.push(process.env.VUE_APP_JEEC_BRAIN_URL + image);
+function getNextActivity() {
+  axios
+    .get(
+      process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
+      {
+        headers: authHeader()
+      }
+    )
+    .then((response) => {
+      if (response.data.activity != null) {
+        nextActivity.value = response.data.activity
+        response.data.activity.images.forEach((image, index) => {
+          const bufferArray = [];
+          bufferArray.push(process.env.VUE_APP_JEEC_BRAIN_URL + image);
 
-//           nextActivity.value.images = bufferArray;
-//         });
-//       }
-//     })
-// }
+          nextActivity.value.images = bufferArray;
+        });
+      }
+    })
+}
 
-// getNextActivity();
+getNextActivity();
 </script>
 
 <style scoped>
