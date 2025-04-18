@@ -30,16 +30,16 @@ const callback = (response) => {
 
   console.log(userData);
 
-  axios
-    .post(
-      process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle",
-      userData
-    )
-    .then((response) => {
-      const jwt = decrypt(response.data);
+  // axios
+  //   .post(
+  //     process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle",
+  //     userData
+  //   )
+  //   .then((response) => {
+  //     const jwt = decrypt(response.data);
 
-      userStore.authUser(jwt);
-    });
+  //     userStore.authUser(jwt);
+  //   });
 
 };
 
