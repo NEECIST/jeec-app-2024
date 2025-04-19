@@ -15,9 +15,6 @@ import HomeTip from '@/components/HomeCards/HomeTip.vue';
 import { onMounted } from 'vue';
 import { useUserStore } from '../stores/UserStore';
 
-const userStore = useUserStore();
-
-onMounted(console.log(userStore))
 
 </script>
 

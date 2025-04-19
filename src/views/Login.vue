@@ -29,7 +29,7 @@ const userStore = useUserStore();
 const callback = (response) => {
   const userData = decodeCredential(response.credential);
 
-  console.log(userData);
+  // console.log(userData);
 
   axios
     .post(
@@ -44,37 +44,25 @@ const callback = (response) => {
 
 };
 
-// function loginDev(){
+function loginDev(){
 
-//   const userData = {
-//     iss: "https://accounts.google.com",
-//     azp: "286554998545-hsatr3tkmeskks4r3r4eb7vcfsbv25h7.apps.googleusercontent.com",
-//     aud: "286554998545-hsatr3tkmeskks4r3r4eb7vcfsbv25h7.apps.googleusercontent.com",
-//     sub: "106787828882086990130",
-//     hd: "tecnico.ulisboa.pt",
-//     email: "duarte.d.santos@tecnico.ulisboa.pt",
-//     email_verified: true,
-//     nbf: 1745018547,
-//     name: "Duarte Malta Teixeira Jesus dos Santos",
-//     picture: "https://lh3.googleusercontent.com/a/ACg8ocKjA1Qo1DFfQJiC7jvDb4u59lYIIXfx2JszEa-SsfQRCijyiQ=s96-c",
-//     given_name: "Duarte Malta",
-//     family_name: "Teixeira Jesus dos Santos",
-//     iat: 1745018847,
-//     exp: 1745022447,
-//     jti: "e41d098e58cb083a66e524284822dd3c467a4e05"
-//   }
+  const userData = {
+    email: "duarte.d.santos@tecnico.ulisboa.pt",
+    name: "Duarte Malta Teixeira Jesus dos Santos",
+    picture: "https://lh3.googleusercontent.com/a/ACg8ocKjA1Qo1DFfQJiC7jvDb4u59lYIIXfx2JszEa-SsfQRCijyiQ=s96-c",
+  }
 
-//   axios
-//     .post(
-//       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle",
-//       userData
-//     )
-//     .then((response) => {
-//       const jwt = decrypt(response.data);
+  axios
+    .post(
+      process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle",
+      userData
+    )
+    .then((response) => {
+      const jwt = decrypt(response.data);
 
-//       userStore.authUser(jwt);
-//     });
-// }
+      userStore.authUser(jwt);
+    });
+}
 
 function decrypt(code) {
   const master_key = "12345678901234561234567890123456";
