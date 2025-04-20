@@ -10,6 +10,11 @@
   --color-background: #1f1f1f;
   --color-background-sec: #2b2b2b;
   --color-font: #efeeee;
+  --color-strong-pink: #FF006E;
+  --color-strong-pink-rgb: 255, 0, 110;
+  --color-yellow: #FFBE0B;
+  --color-yellow-rgb: 255, 190, 11;
+  --color-jeec-blue: #199CFF;
 }
 
 body {
