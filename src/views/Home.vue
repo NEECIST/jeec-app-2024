@@ -3,7 +3,7 @@
     <HomePopup></HomePopup>
     <HomeActivities class="card radient-border-passthrough"></HomeActivities>
     <HomePrizes class="card radient-border-passthrough"></HomePrizes>
-    <HomeTip class="card radient-border-passthrough"></HomeTip>
+    <HomeEletrolink class="card radient-border-passthrough"></HomeEletrolink>
   </div>
 </template>
 
@@ -11,31 +11,35 @@
 import HomePopup from '@/components/HomeCards/HomePopup.vue';
 import HomeActivities from '@/components/HomeCards/HomeActivities.vue';
 import HomePrizes from '@/components/HomeCards/HomePrizes.vue';
-import HomeTip from '@/components/HomeCards/HomeTip.vue';
-import { onMounted } from 'vue';
-import { useUserStore } from '../stores/UserStore';
-
-
+import HomeEletrolink from '@/components/HomeCards/HomeEletrolink.vue';
 </script>
 
 <style scoped>
 .card {
-  --border-radius: 40px;
-  --border-width: 2.5px;
+  --border-radius: 15px;
+  --border-width: 2.0px;
+  backdrop-filter: blur(2px);
 
   width: 80%;
   max-width: 800px;
-  box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.4);
   
-  padding: 0 2ch;
+  padding: 0 1.5ch;
   margin: 0 auto;
   margin-top: 0.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   text-align: center;
+
+  font-family: "Lexend Exa";
 }
 .card::before {
   content: "";
 }
+
+.h2 {
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+
 
 .card:last-child {
   margin-bottom: 120px;

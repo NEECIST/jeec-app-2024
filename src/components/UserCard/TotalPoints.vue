@@ -1,10 +1,18 @@
 <template>
   <div class="wrapper" :class="variant">
-    <p>JEECPOT</p>
+    <p>Your JEECPOT chances</p>
     <div class="points radient-border-passthrough">
       <div class="progress radient-border-passthrough_child" :style="'--progress:' + progress + '%;'"></div>
+      <div 
+        class="progress-fill" 
+        :style="{
+          '--progress': progress + '%',
+          ...(progress < 100 && { 'clip-path': 'polygon(10% 0%, 100% 0%, 100% 100%, 5% 100%)' })
+        }"
+        >
+      </div>
       <p v-if="progress >= 100" class="points-total">Eligible!</p>
-      <p v-else class="points-total">{{ progress }}%</p>
+      <p v-else class="points-total">{{ progress}}%</p>
     </div>
   </div>
 </template>
@@ -15,7 +23,7 @@ const userStore = useUserStore();
 
 const props = defineProps(["variant"]);
 
-const progress = ref(0);
+const progress = ref(80);
 
 function getProgress() {
   const userTotalPoints = userStore.userPoints.total_points;
@@ -43,9 +51,17 @@ watch(() => userStore.userPoints, () => {
 </script>
 <style scoped>
   .wrapper {
+    font-family: "Lexend Exa";
     width: 100%;
+    /* height: 100%; */
     text-align: right;
-    padding-top: 1px;
+    padding-top: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: auto;
+    gap: 3px;
   }
   .wrapper.profile {
     text-align: left;
@@ -59,39 +75,46 @@ watch(() => userStore.userPoints, () => {
   }
   p {
     font-family: 'Lexend Exa';
-    font-size: 0.95rem;
+    font-size: 0.6rem;
+    /* Your JEECPOT chances */
+    font-style: normal;
+    font-weight: 300;
+    text-align: right;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
+    margin-right: 2px;
+
   }
   .wrapper.profile > .points {
     height: 23px;
   }
   .points {
-    width: 100%;
-    height: 18px;
+    width: 90%;
+    height: 16px;
     overflow: hidden;
-
-    --border-background: linear-gradient(130deg, #605ED0, #4CC9F0, #7209B7, #605ED0);
-    --border-width: 2px;
-    --border-radius: 50px
+    background: linear-gradient(0deg, rgba(25, 156, 255, 0.1), rgba(25, 156, 255, 0.1)), #1F1F1F;
+    --border-background: #199CFF;
+    --border-width: 1.5px;
+    --border-radius: 50px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
   }
   .progress {
-    padding-left: calc(var(--border-width) + var(--progress)) !important;
-    background-size: 200%;
-    background-repeat: repeat;
-    animation: backgroundSlide 4s linear infinite reverse;
-    animation-delay: 1.5s;
+    overflow: hidden;
+  }
+  .progress-fill{
+    width: calc(var(--border-width) + var(--progress)) !important;
+    height: calc(100% - var(--border-width));
+    background-color: var(--color-jeec-blue);
+    transition: width 0.3s ease-in-out;
   }
 
   .points-total {
     position: absolute;
     top: 50%;
     translate: 0 -50%;
-    text-align: left;
-    padding-left: 1ch;
+    padding-right: 1ch;
     z-index: 2;
   }
-
-  @keyframes backgroundSlide {
-    0% { background-position: 0% 90%; }
-    100% { background-position: 200% 0%; }
-  }
+ 
 </style>

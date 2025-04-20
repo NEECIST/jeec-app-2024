@@ -41,10 +41,12 @@ const props = defineProps({
 </script>
 <style scoped>
 .user-card.home {
-  --height: 90px;
+  --background: #199CFF1A;
+  --border-background: #199CFF;
+  --height: 80px;
 
   --border-radius: 45px;
-  --border-width: 2px;
+  --border-width: 1.5px;
 
   grid-template-areas:
     "qr tickets user"
@@ -58,6 +60,11 @@ const props = defineProps({
   height: var(--height);
   max-width: 450px;
   z-index: 50;
+  backdrop-filter: blur(2px);
+  /* Note: backdrop-filter has minimal browser support */
+  border-radius: 43px;
+  justify-content: center;
+
 }
 
 .user-card.home::before {
@@ -65,21 +72,19 @@ const props = defineProps({
 }
 
 .user-card.home>.qr-wrapper {
-  padding: 17px;
+  padding: 5px;
 }
 
 .user-card.home>.tickets-wrapper {
   padding-right: 5px;
-  margin-left: -5px;
 }
 
 .user-card.home>.points-wrapper {
   padding-right: 5px;
-  margin-left: -5px;
 }
 
 .user-card.home>.user-wrapper {
-  padding: 8px;
+  padding: 5px;
 }
 
 .user-card.nav {
