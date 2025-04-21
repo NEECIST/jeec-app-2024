@@ -88,14 +88,14 @@ const activityTypeMapping = {
 const currentActivityStyle = computed(() => {
   const mapping = activityTypeMapping[nextActivity.value.activity_type] || {};
   return {
-    color: mapping.color || "#000000", // Default color
+    color: mapping.color || "#199CFF", // Default color
     icon: mapping.icon || require('@/assets/icons/panel_icon.svg'), // Default icon
   };
 });
 
 // Computed property to add "1A" transparency to the color
 const backgroundColorWithTransparency = computed(() => {
-  return (currentActivityStyle.value.color || "#000000") + '1A';
+  return (currentActivityStyle.value.color || "#199CFF") + '1A';
 });
 
 function getNextActivity() {
@@ -107,6 +107,7 @@ function getNextActivity() {
       }
     )
     .then((response) => {
+      console.log(response);
       if (response.data.activity != null) {
         nextActivity.value = response.data.activity
         response.data.activity.images.forEach((image, index) => {
@@ -115,6 +116,9 @@ function getNextActivity() {
 
           nextActivity.value.images = bufferArray;
         });
+        nextActivity.value.day = new Date(response.data.activity.day).toLocaleDateString('en-US', { month: 'long',  day: '2-digit' });
+        nextActivity.value.start_time = new Date(response.data.activity.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        nextActivity.value.end_time = new Date(response.data.activity.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
       }
     })
 }
@@ -246,6 +250,14 @@ getNextActivity();
 }
 
 .no-activity {
-  padding: 3rem 0;
+  padding: 3rem 0.3rem;
+}
+
+.no-activity h2 {
+  font-family: "Lexend Exa";
+  font-size: clamp(1.2rem, 3.1vw, 1.8rem);
+  text-transform: uppercase;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  text-align: center;
 }
 </style>
