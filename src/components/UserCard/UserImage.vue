@@ -8,7 +8,7 @@
 import { defineProps } from 'vue';
 import { ref } from 'vue';
 const props = defineProps(['image', 'variant']);
-const image = ref(require('@/assets/JEEC.png'));
+// const image = ref(require('@/assets/JEEC.png'));
 
 </script>
 <style scoped>

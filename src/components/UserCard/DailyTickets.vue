@@ -9,7 +9,7 @@
             ref="milestonesRef"
             class="ticket"
           > -->
-            <p>{{ userpoints }}</p>
+            <p>{{ userDailyPoints }}</p>
             <img src="@/assets/icons/flash_home.svg" aria-hidden="true">
         </div>
       </div>
@@ -22,56 +22,51 @@ const userStore = useUserStore();
 
 const props = defineProps(["variant"]);
 
-const progress = ref(0);
-const milestonesRef = ref([]);
-const milestonePercentages = ref([])
-const userpoints = "8173";
+const userDailyPoints = ref(0);
+
 
 async function getProgress() {
-  const userDailyPoints = userStore.userPoints.daily_points;
+  userDailyPoints = userStore.userPoints.daily_points;
 
-  const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
-  const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
+  // const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
+  // const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
 
-  const progressPercentage = (userDailyPoints / milestones[milestones.length - 1]) * 100;
+  // const progressPercentage = (userDailyPoints / milestones[milestones.length - 1]) * 100;
 
-  if (progressPercentage >= 100) {
-    progress.value = 100;
-  } else {
-    progress.value = progressPercentage;
-  }
+  // if (progressPercentage >= 100) {
+  //   progress.value = 100;
+  // } else {
+  //   progress.value = progressPercentage;
+  // }
 
-  let milestonePercentage = 0;
-  let width = 0;
+  // let milestonePercentage = 0;
+  // let width = 0;
 
-  await nextTick();
+  // await nextTick();
 
-  for (let index = 0; index < milestones.length; index++) {
-    if (index == milestones.length - 1) {
-      milestonePercentage = 100;
-      width = 0;
-    } else {
-      milestonePercentage = (milestones[index] / milestones[milestones.length - 1]) * 100;
-      width = milestonePercentage - ((milestonesMod[index] / milestones[milestones.length - 1]) * 100);
-    }
+  // for (let index = 0; index < milestones.length; index++) {
+  //   if (index == milestones.length - 1) {
+  //     milestonePercentage = 100;
+  //     width = 0;
+  //   } else {
+  //     milestonePercentage = (milestones[index] / milestones[milestones.length - 1]) * 100;
+  //     width = milestonePercentage - ((milestonesMod[index] / milestones[milestones.length - 1]) * 100);
+  //   }
 
-    if (progressPercentage >= milestonePercentage) {
-      milestonesRef.value[index].classList.add("obtained");
-    }
+  //   if (progressPercentage >= milestonePercentage) {
+  //     milestonesRef.value[index].classList.add("obtained");
+  //   }
   
-    milestonePercentages.value.push(width.toString());  
-  }
+  //   milestonePercentages.value.push(width.toString());  
+  // }
 }
 
 watch(() => userStore.userPoints, () => {
-  if (userStore.milestones.daily !== undefined && userStore.milestones.daily.length != 0) {
-    getProgress();
-  } else {
     setTimeout(() => {
       getProgress();
     }, 2000);
   }
-});
+);
 </script>
 <style scoped>
   .wrapper {
