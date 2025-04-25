@@ -4,7 +4,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 
 const routes = [
-  {
+ /*  {
     path: '/',
     name: 'login',
     component: Login,
@@ -12,7 +12,7 @@ const routes = [
       header: false,
       userPopup: false,
     }
-  },
+  }, */
   {
     path: "/home",
     name: "Home",
@@ -47,9 +47,14 @@ const routes = [
     component: () => import("@/views/Rules.vue"),
   },  
   {
-    path: "/prizes",
-    name: "Prizes",
-    component: () => import("@/views/Prizes.vue"),
+    path: "/",
+    name: "Draw",
+    component: () => import("@/views/Draw.vue"),
+  },
+  {
+    path: "/shop",
+    name: "Shop",
+    component: () => import("@/views/Shop.vue"),
   },
   {
     path: "/:pathMatch(.*)*",
@@ -80,7 +85,7 @@ router.beforeEach((to, from) => {
   }
   
   if (to.name == "login" && userStore.loggedIn == true) {
-    router.push("/home")
+    router.push("/")
   }
 })
 
