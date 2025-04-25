@@ -25,7 +25,7 @@
 <script setup>
 import QrCodeButton from './QrCodeButton.vue';
 import DailyTickets from './DailyTickets.vue';
-import TotalPoints from './TotalPoints.vue';
+import TotalPoints from './JEECPot.vue';
 import UserImage from './UserImage.vue';
 
 import { useUserStore } from '@/stores/UserStore';

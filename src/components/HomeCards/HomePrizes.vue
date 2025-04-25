@@ -35,7 +35,7 @@ import authHeader from '@/services/auth-header';
 const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
 
 const prizes = ref({
-  individual_prize: "/static/speakers/mmmm.png" // Added fictional prize
+  individual_prize: null // Added fictional prize
 });
 
 // Uncommented the function for testing
@@ -57,7 +57,7 @@ function getDailyPrizes() {
 }
 
 // Uncomment this line to fetch real prizes during testing
-// getDailyPrizes();
+getDailyPrizes();
 
 const isPressed = ref(false);
 
