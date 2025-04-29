@@ -23,11 +23,15 @@
               {{nextActivity.day}} | {{ nextActivity.start_time }} - {{ nextActivity.end_time }}
             </p>
           </div>
-          <div class="activity-image radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }">
+          <div class="activity-image radient-border-passthrough" :class="{ 'single-image': nextActivity.images.length < 2 }" :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }">
             <div class="circle circle-1 radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }">
               <img class="image"  :src="nextActivity.images[0]">
             </div>
-            <div class="circle circle-2 radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }" >
+            <div 
+              v-if="nextActivity.images.length > 1" 
+              class="circle circle-2 radient-border-passthrough" 
+              :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }"
+            >
               <img class="image" :src="nextActivity.images[1]">
             </div>
            
@@ -49,6 +53,9 @@ import FadeLoop from '../FadeLoop.vue';
 import { ref, computed } from 'vue';
 import axios from 'axios';
 import authHeader from '@/services/auth-header';
+import { useUserStore } from '@/stores/UserStore';
+const userStore = useUserStore();
+const student = userStore.user;
 
 const nextActivity = ref({
   name: "",
@@ -103,19 +110,27 @@ function getNextActivity() {
     .get(
       process.env.VUE_APP_JEEC_BRAIN_URL + "student/next_activity",
       {
-        headers: authHeader()
+        headers: {
+          ...authHeader(), 
+          student: student
+        }
       }
     )
     .then((response) => {
-      console.log(response);
       if (response.data.activity != null) {
         nextActivity.value = response.data.activity
         response.data.activity.images.forEach((image, index) => {
           const bufferArray = [];
           bufferArray.push(process.env.VUE_APP_JEEC_BRAIN_URL + image);
-
+          
           nextActivity.value.images = bufferArray;
+          
         });
+        // Add a default image if the array is empty
+        if (nextActivity.value.images.length === 0) {
+          nextActivity.value.images.push(require('@/assets/JEEC.png'));
+          nextActivity.value.images.push(require('@/assets/JEEC.png'));
+        }
         nextActivity.value.day = new Date(response.data.activity.day).toLocaleDateString('en-US', { month: 'long',  day: '2-digit' });
         nextActivity.value.start_time = new Date(response.data.activity.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
         nextActivity.value.end_time = new Date(response.data.activity.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -132,7 +147,7 @@ getNextActivity();
 }
 
 .activity-container h2 {
-  font-size: clamp(1.2rem, 3.1vw, 1.8rem);
+  font-size: clamp(1.4rem, 3.1vw, 1.8rem);
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "Lexend Exa";
   text-transform: uppercase;
@@ -156,7 +171,7 @@ getNextActivity();
 
 .activity-info h3 {
   font-family: "Lexend Exa";
-  font-size: clamp(0.8rem, 3.2vw, 1.1rem);
+  font-size: clamp(1.1rem, 3.2vw, 1.1rem);
   font-weight: 700;
   overflow: hidden;
   letter-spacing: 0.05em;
@@ -179,14 +194,14 @@ getNextActivity();
 
 .activity-info h4 {
   font-family: "Lexend Exa";
-  font-size: clamp(0.9rem, 3.7vw, 1.3rem);
+  font-size: clamp(1.2rem, 3.7vw, 1.3rem);
   font-weight: 400;
   letter-spacing: 0.05em;
 }
 
 .activity-info h5 {
   font-family: "Lexend Exa";
-  font-size: clamp(0.8rem, 3.1vw, 1.2rem);
+  font-size: clamp(1rem, 3.1vw, 1.2rem);
   font-weight: 400;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -195,7 +210,7 @@ getNextActivity();
   display: flex;
   justify-content: flex-start;
   font-family: "Lexend Exa";
-  font-size: clamp(0.4rem, 3.1vw, 0.8rem);
+  font-size: clamp(0.9rem, 3.1vw, 0.8em);
   
 }
 
@@ -222,17 +237,37 @@ getNextActivity();
   height: 100%;
   width: 100%;
   object-fit: contain;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); /* Add shadow */
+}
+
+.single-image {
+  width: 100%;
+  max-width: 100px; /* Adjust as needed */
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.single-image .circle-1 {
+  transform: translate(0, 0); /* Center the image */
+  width: 100%;
+  height: 100%;
+}
+
+.single-image .circle-2 {
+  display: none; /* Hide the second circle */
 }
 
 .circle {
-  width: 50%;
-  height: 50%;
+  width: 55%;
+  height: 55%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   --border-width: 2.0px;
-  overflow: hidden;
   --border-radius: 50%;
 }
 

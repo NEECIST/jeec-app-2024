@@ -1,5 +1,5 @@
 <template>
-  <div :class="variant, { 'radient-border-passthrough': variant != 'nav' }" class="user-card">
+  <div :class="[variant, { 'radient-border-passthrough': variant != 'nav' }]" class="user-card">
     <div class="name-wrapper" v-if="variant != 'home'">
       <p>{{ userStore.user.name }}</p>
       <p v-if="variant == 'profile'" class="username">{{ userStore.user.username }}</p>
@@ -24,8 +24,8 @@
 </template>
 <script setup>
 import QrCodeButton from './QrCodeButton.vue';
-import DailyTickets from './DailyTickets.vue';
-import TotalPoints from './JEECPot.vue';
+import DailyTickets from './CurrentPoints.vue';
+import TotalPoints from './JEECPOT.vue';
 import UserImage from './UserImage.vue';
 
 import { useUserStore } from '@/stores/UserStore';

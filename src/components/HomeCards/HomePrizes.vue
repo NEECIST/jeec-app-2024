@@ -31,6 +31,9 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import authHeader from '@/services/auth-header';
+import { useUserStore } from '@/stores/UserStore';
+const userStore = useUserStore();
+const student = userStore.user;
 
 const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
 
@@ -42,13 +45,18 @@ const prizes = ref({
 function getDailyPrizes() {
   axios
     .get(
-      jeec_brain_url + "/student/get_today_rewards",
+      `${jeec_brain_url}/student/home_prize`,
       {
-        headers: authHeader()
+        headers: {
+          ...authHeader(), 
+          student: student
+        }
       }
-    )
+    ) 
     .then((response) => {
-      prizes.value = response.data.prizes || { individual_prize: null };
+      prizes.value = {
+        individual_prize: response.data.img_daily_prize || null
+      };
     })
     .catch((error) => {
       console.error("Error fetching daily prizes:", error);
@@ -75,7 +83,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   --border-background: var(--color-strong-pink);
 }
 .today-prizes h2 {
-  font-size: clamp(1.2rem, 3.1vw, 1.8rem);
+  font-size: clamp(1.4rem, 3.1vw, 1.8rem);
   font-family: "Lexend Exa";
   text-transform: uppercase;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
@@ -101,6 +109,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   align-items: center;
   padding: 1rem 0 0 0;
   gap: 1.5rem;
+  overflow: hidden;
 }
 
 .prize-img {
@@ -113,6 +122,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   justify-content: center;
   align-items: center;
   --border-radius: 50%;
+  object-fit: contain;
 }
 
 .prize-img::before {
@@ -120,8 +130,9 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
 }
 
 .prize-img img {
-  width: 100%;
-  height: 100%;
+  width: 99%;
+  height: 99%;
+  object-fit: contain;
 }
 
 .buy-ticket {

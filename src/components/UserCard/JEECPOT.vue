@@ -23,7 +23,7 @@ const userStore = useUserStore();
 
 const props = defineProps(["variant"]);
 
-const progress = ref(80);
+const progress = ref(0);
 
 function getProgress() {
   const userTotalPoints = userStore.userPoints.total_points;

@@ -24,12 +24,13 @@ import HomeCv from '@/components/HomeCards/HomeCv.vue';
 
   width: 80%;
   max-width: 800px;
-  
+  min-height: 170px;
   padding: 0 1.5ch;
   margin: 0 auto;
   margin-top: 0.5rem;
   margin-bottom: 1rem;
   text-align: center;
+  align-content: center;
 
   font-family: "Lexend Exa";
 }

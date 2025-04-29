@@ -3,12 +3,6 @@
       <div class="tickets-progress radient-border-passthrough">
         <div class="progress radient-border-passthrough_child"></div>
         <div class="tickets">
-          <!-- <div 
-            v-for="(milestone, index) in userStore.milestones.daily" :key="index"
-            :style="'width: ' + milestonePercentages[index] + '% ;'"
-            ref="milestonesRef"
-            class="ticket"
-          > -->
             <p>{{ userDailyPoints }}</p>
             <img src="@/assets/icons/flash_home.svg" aria-hidden="true">
         </div>
@@ -26,7 +20,7 @@ const userDailyPoints = ref(0);
 
 
 async function getProgress() {
-  userDailyPoints = userStore.userPoints.daily_points;
+  userDailyPoints.value = userStore.userPoints.daily_points;
 
   // const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
   // const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
@@ -62,9 +56,7 @@ async function getProgress() {
 }
 
 watch(() => userStore.userPoints, () => {
-    setTimeout(() => {
-      getProgress();
-    }, 2000);
+    getProgress();
   }
 );
 </script>

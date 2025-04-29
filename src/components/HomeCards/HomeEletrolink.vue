@@ -46,6 +46,7 @@
     /* Container Styling */
     .container {
       padding: 0.5rem 0.05rem 0.9rem 0.05rem;
+      gap: 0.5rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -57,7 +58,7 @@
     
     /* Title */
     .container h2 {
-    font-size: clamp(1.2rem, 3.1vw, 1.8rem);
+    font-size: clamp(1.4rem, 3.1vw, 1.8rem);
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     font-family: "Lexend Exa";
     text-transform: uppercase;
