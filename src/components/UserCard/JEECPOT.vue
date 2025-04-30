@@ -17,7 +17,7 @@
   </div>
 </template>
 <script setup>
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch, defineProps, onMounted } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 const userStore = useUserStore();
 
@@ -28,19 +28,23 @@ const progress = ref(0);
 function getProgress() {
   const userTotalPoints = userStore.userPoints.total_points;
 
-  const milestone = userStore.milestones.final;
+  const milestone = userStore.milestones.total;
   
   const progressPercentage = (userTotalPoints / milestone) * 100;
-  
-  if (progressPercentage > 100) {
+  console.log("Progress Percentage: ", progressPercentage);
+  if (progressPercentage === NaN) {
+    progress.value = 0;
+  } else if (progressPercentage > 100) {
     progress.value = 100
   } else {
-    progress.value = progressPercentage.toFixed(2);
+    progress.value = Math.round(progressPercentage);
   }
+  
+
 };
 
 watch(() => userStore.userPoints, () => {
-  if (userStore.milestones.final != 0) {
+  if (userStore.milestones.total != 0) {
     getProgress();
   } else {
     setTimeout(() => {
@@ -48,6 +52,11 @@ watch(() => userStore.userPoints, () => {
     }, 2000);
   }
 });
+
+onMounted(() => {
+  getProgress();
+});
+
 </script>
 <style scoped>
   .wrapper {

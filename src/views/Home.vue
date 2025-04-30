@@ -24,7 +24,7 @@ import HomeCv from '@/components/HomeCards/HomeCv.vue';
 
   width: 80%;
   max-width: 800px;
-  min-height: 170px;
+  min-height: 130px;
   padding: 0 1.5ch;
   margin: 0 auto;
   margin-top: 0.5rem;
