@@ -22,7 +22,7 @@ export const useUserStore = defineStore("UserStore", {
         total_points: 0,
         daily_points: 0,
         jeecpot: 0,
-        tickets: 0
+        current_points: 0
       }
     };
   },

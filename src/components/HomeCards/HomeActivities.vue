@@ -171,7 +171,7 @@ getNextActivity();
 
 .activity-info h3 {
   font-family: "Lexend Exa";
-  font-size: clamp(1.1rem, 3.2vw, 1.1rem);
+  font-size: clamp(1.0rem, 3.2vw, 1.1rem);
   font-weight: 700;
   overflow: hidden;
   letter-spacing: 0.05em;
@@ -194,14 +194,14 @@ getNextActivity();
 
 .activity-info h4 {
   font-family: "Lexend Exa";
-  font-size: clamp(1.2rem, 3.7vw, 1.3rem);
+  font-size: clamp(1.1rem, 3.7vw, 1.3rem);
   font-weight: 400;
   letter-spacing: 0.05em;
 }
 
 .activity-info h5 {
   font-family: "Lexend Exa";
-  font-size: clamp(1rem, 3.1vw, 1.2rem);
+  font-size: clamp(0.8rem, 3.1vw, 1.2rem);
   font-weight: 400;
   letter-spacing: 0.05em;
   text-transform: uppercase;
