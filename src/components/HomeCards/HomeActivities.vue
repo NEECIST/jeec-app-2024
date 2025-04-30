@@ -48,12 +48,13 @@
 </template>
 
 <script setup>
-import FadeLoop from '../FadeLoop.vue';
+
 
 import { ref, computed } from 'vue';
 import axios from 'axios';
 import authHeader from '@/services/auth-header';
 import { useUserStore } from '@/stores/UserStore';
+import { onMounted } from 'vue';
 const userStore = useUserStore();
 const student = userStore.user;
 
@@ -138,7 +139,9 @@ function getNextActivity() {
     })
 }
 
-getNextActivity();
+onMounted(() => {
+  getNextActivity();
+});
 </script>
 
 <style scoped>

@@ -32,6 +32,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import authHeader from '@/services/auth-header';
 import { useUserStore } from '@/stores/UserStore';
+import { onMounted } from 'vue';
 const userStore = useUserStore();
 const student = userStore.user;
 
@@ -64,8 +65,10 @@ function getDailyPrizes() {
     });
 }
 
-// Uncomment this line to fetch real prizes during testing
-getDailyPrizes();
+onMounted(() => {
+  getDailyPrizes();
+});
+
 
 const isPressed = ref(false);
 
