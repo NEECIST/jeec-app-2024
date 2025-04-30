@@ -85,7 +85,7 @@ router.beforeEach((to, from) => {
   }
   
   if (to.name == "login" && userStore.loggedIn == true) {
-    router.push("/")
+    router.push("/home")
   }
 })
 
