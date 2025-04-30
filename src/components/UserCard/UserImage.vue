@@ -18,7 +18,7 @@ const props = defineProps({
   }
 });
 // const image = ref();
-console.log(props.image);
+// console.log(props.image);
 </script>
 <style scoped>
   a.profile {
