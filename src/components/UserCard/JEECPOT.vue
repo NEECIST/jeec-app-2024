@@ -12,7 +12,7 @@
         >
       </div>
       <p v-if="progress >= 100" class="points-total">Eligible!</p>
-      <p v-else class="points-total">{{ progress}}%</p>
+      <p v-else class="points-total">{{progress}}%</p>
     </div>
   </div>
 </template>
@@ -32,10 +32,11 @@ function getProgress() {
   
   const progressPercentage = (userTotalPoints / milestone) * 100;
   console.log("Progress Percentage: ", progressPercentage);
-  if (progressPercentage === NaN) {
+
+  if (isNaN(progressPercentage)) {
     progress.value = 0;
   } else if (progressPercentage > 100) {
-    progress.value = 100
+    progress.value = 100;
   } else {
     progress.value = Math.round(progressPercentage);
   }

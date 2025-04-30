@@ -1,6 +1,6 @@
 <template>
     <div class="eletrolink-card" :style="{ '--background': 'rgba(var(--color-yellow-rgb), 0.1)', '--border-background': 'var(--color-yellow)' }">
-        <div class="container">
+        <div v-if="no_eletrolink" class="container">
           <!-- Title -->
           <h2>ELETROLINK</h2>
     
@@ -21,6 +21,10 @@
             @touchend="onTouchEnd"
           >
           Sign up</button>
+        </div>
+        <!-- No Eletrolink Message -->
+        <div v-else class="no-eletrolink">
+          No Eletrolink today
         </div>
     </div>
   </template>
@@ -46,6 +50,7 @@
     const companies = ref({
       images: []
     });
+    const no_eletrolink = ref(false);
   
     const isPressed = ref(false);
   
@@ -57,32 +62,38 @@
         .get(
           process.env.VUE_APP_JEEC_BRAIN_URL + "student/eletrolink_home",
           {
-            headers: {
-              ...authHeader(), 
-              student: student
-            }
+        headers: {
+          ...authHeader(), 
+          student: student
+        }
           }
         )
         .then((response) => {
-          
-          if (response.data.eletrolink.companies != null) {
-              response.data.eletrolink.companies.forEach((image, index) => {
-              const bufferArray = [];
-              bufferArray.push(process.env.VUE_APP_JEEC_BRAIN_URL + image);
-              
-              companies.value = bufferArray;
-              
-            });
+          if (response.data.eletrolink.companies && response.data.eletrolink.companies.length > 0) {
+            console.log(response.data.eletrolink.companies);
+            no_eletrolink.value = true;
+            const bufferArray = response.data.eletrolink.companies.map((image) => 
+              process.env.VUE_APP_JEEC_BRAIN_URL + image
+            );
+            companies.value.images = bufferArray;
+          } else {
+            no_eletrolink.value = false;
           }
-          // Add a default image if the array is empty
-          companies.value.images.push(require('@/assets/JEEC.png'));
-          companies.value.images.push(require('@/assets/JEEC.png'));
-          companies.value.images.push(require('@/assets/JEEC.png'));
-        })
+        });
 }
   </script>
     
   <style scoped>
+
+    .no-eletrolink {
+      padding: 2rem 0;
+      color: var(--color-font);
+      font-size: clamp(1.4rem, 3.1vw, 1.8rem);
+      font-family: "Lexend Exa";
+      text-transform: uppercase;
+      text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      font-weight: 700;
+    }
   
     /* Container Styling */
     .container {
