@@ -3,16 +3,16 @@
     <TheUserInfo variant="profile"></TheUserInfo>
 
     <div class="profile-buttons">
-      <button v-if="this.student.uploaded_cv == false" @click.stop="toggleModal2">
+      <button v-if="false" @click.stop="toggleModal2">
         <img :src="cv_img" alt="">
         <p>Upload your CV</p>
       </button>
       <!-- <button v-else-if="this.student.approved_cv == false && this.student.rejected_cv == false"></button> -->
-      <button v-else-if="this.student.approved_cv == false" @click.stop="toggleModal2">
+      <button v-else-if="false" @click.stop="toggleModal2">
         <img :src="cv_img" alt="">
         <p>Waiting for approval</p>
       </button>
-      <button v-else-if="this.student.approved_cv == true" @click.stop="toggleModal2">
+      <button v-else-if="true" @click.stop="toggleModal2">
         <img :src="cv_img" alt="">
         <p>CV Approved</p>
       </button>
@@ -118,7 +118,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import QrCodeButton from "@/components/UserCard/QrCodeButton.vue";
 import TheUserInfo from "@/components/UserCard/TheUserInfo.vue";
 import Squad from "@/components/Squads/Squad.vue";
@@ -128,195 +128,44 @@ import { useUserStore } from '@/stores/UserStore';
 import { mapState, mapActions } from 'pinia';
 import axios from "axios";
 import authHeader from "../services/auth-header";
+import { ref, onMounted } from 'vue';
+import CryptoJS from "crypto-js";
 
-export default {
-  name: "Profile",
-  components: {
-    TheUserInfo, Squad, ToastNotification, QrCodeButton
-  },
-  data: function () {
-    return {
-      loading_linkedin: false,
-      modalVisible: false,
-      modalVisible2: false,
-      cv_img: require("../assets/cv_button_img.svg"),
-      link_img: require("../assets/linkedin_button_img.svg"),
-      code: "",
-      dialog: false,
-      dialog_width: "",
-      prev_length: 0,
-      points: 0,
-      squad: null,
-      error: "",
-      create_squad: false,
-      loading_redeem: false,
-      loading_squad: true,
-      squad: null,
-      student: {},
-      showToast: false,
-      toastMessage: '',
-      toastType: 'success',
-      isFromTecnico: false,
-      educationLevel: "Other",
-      get_cv_files: '',
-      formData: null,
-    };
-  },
-  computed: {
-    ...mapState(useUserStore, ['user'])
-  },
-  methods: {
-    ...mapActions(useUserStore, ['getPoints']),
 
-    showNotification(message, type) {
-      this.toastMessage = message;
-      this.toastType = type;
-      this.showToast = true;
-    },
+const student = ref({});
+const squad = ref({});
+const squad_invites = ref([]);
 
-    validateAndUploadCV() {
-      if (this.educationLevel != "" && (this.isFromTecnico == true || this.isFromTecnico == false) && this.formData != null) {
-        this.modalVisible2 = false;
-        axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/updateIsfromTecnico", {
-          student_username: this.student.username,
-          tecnico: this.isFromTecnico,
-          educationLevel: this.educationLevel
-        }, {
-          headers: authHeader()
-        },).then(response => {
-          UserService.addCVNOVO(this.formData).then(
-            () => {
-              this.student.approved_cv = false;
-              this.formData = null;
-              if (!this.student.uploaded_cv) {
-                this.showNotification("CV Submitted", "points");
-                this.student.uploaded_cv = true;
-              } else {
-                this.showNotification("CV and other fields updated", "success");
-              }
-            },
-            (error) => {
-              console.log(response.statusCode, error);
-              this.showNotification("Failed to upload, file size may be too large. Try uploading less than 600kb", "error");
-            }
-          );
-        }).catch(error => {
-          console.error("Error updating ", error);
-          this.showNotification("Something bad occurred", "error");
-        });
 
-      } else {
-        this.showNotification("Please fill all the fields and upload your CV.", "error");
-      }
-    },
+const fetchProfile = () => {
+  axios
+  .post(import.meta.env.VITE_APP_JEEC_BRAIN_URL + '/student/profile/info',{
+    student_username: "JonhDoe",
+  },{auth: {
+      username: import.meta.env.VITE_APP_JEEC_WEBSITE_USERNAME, 
+      password: import.meta.env.VITE_APP_JEEC_WEBSITE_KEY
+    }
+  })
+  .then((response)=>{
 
-    toggleModal() {
-      this.modalVisible = !this.modalVisible;
-    },
+    const data = response.data;
 
-    toggleModal2() {
-      this.modalVisible2 = !this.modalVisible2;
-    },
+    student.value = data.student;
+    squad.value = data.squad;
+    squad_invites.value = data.squad_invites;
 
-    change_Create() {
-      this.create_squad = !this.create_squad;
-    },
-    add_linkedin(e) {
-      e.preventDefault();
+    console.log("Student: ", student.value);
+    console.log("Squad: ", squad.value);
+    console.log("Squad Invites: ", squad_invites.value);
 
-      this.modalVisible = false;
-
-      this.loading_linkedin = true;
-      var url = this.$refs.linkedin_url.value;
-      this.dialog = false;
-
-      UserService.addLinkedin(url).then(
-        (response) => {
-          if (!this.student.linkedin_url) {
-            this.showNotification("Added LinkedIn points", "points");
-            this.student.linkedin_url = url;
-            setTimeout(() => {
-              this.getPoints();
-            }, 1000);
-          } else {
-            this.showNotification("LinkedIn updated successfully", "success");
-          }
-
-          this.loading_linkedin = false;
-        },
-        (error) => {
-
-          this.showNotification("Failed to add LinkedIn", "error");
-          this.loading_linkedin = false;
-        }
-      );
-    },
-
-    cv_click() {
-      this.$refs.cv.click();
-    },
-    add_cv_novo() {
-
-      if (!this.$refs.cv.files.length) return;
-
-      this.formData = new FormData(); // Re-initialize to ensure it's fresh
-      this.formData.append('cv', this.$refs.cv.files[0]);
-
-      // UserService.addCVNOVO(formData).then(
-      //   (response) => {
-      //     if (!this.student.uploaded_cv) {
-      //       this.showNotification("Added CV points", "points");
-      //       this.student.uploaded_cv = true;
-      //     } else {
-      //       this.showNotification("CV uploaded successfully. If approved, you will receive a reward", "success");
-      //     }
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //     this.showNotification("Failed to upload CV", "error");
-      //   }
-      // );
-      // this.$refs.cv.value = ""; 
-    },
-
-    see_cv() {
-      if (this.student.uploaded_cv) {
-        UserService.getCV().then(
-          (response) => {
-            var raw = atob(response.data.data);
-            var uint8Array = new Uint8Array(raw.length);
-            for (var i = 0; i < raw.length; i++) {
-              uint8Array[i] = raw.charCodeAt(i);
-            }
-            var fileBlob = new Blob([uint8Array], {
-              type: response.data["content-type"],
-            });
-            var objetURL = window.URL.createObjectURL(fileBlob);
-
-            this.cv_url = objetURL;
-
-            this.$refs.see_cv.href = objetURL;
-            this.$refs.see_cv.click();
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      }
-    },
-  },
-  created() {
-    UserService.getUserStudent().then(
-      (response) => {
-
-        this.student = response.data.data;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
+  })
+  .catch((error)=>{
+    console.log(error);
+  })
 };
+
+onMounted(fetchProfile);
+
 </script>
 
 <style scoped>
