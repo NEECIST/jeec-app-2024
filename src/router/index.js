@@ -47,7 +47,7 @@ const routes = [
     component: () => import("@/views/Rules.vue"),
   },  
   {
-    path: "/",
+    path: "/draw",
     name: "Draw",
     component: () => import("@/views/Draw.vue"),
   },
