@@ -36,7 +36,7 @@
       </a>
 
       <div style="position: absolute;">
-        <a style="display: none" ref="see_cv" :href="cv_url" :download="this.student.username + '_cv.pdf'">CV</a>
+        <a style="display: none" ref="see_cv" :href="cv_url" >CV</a>
 
         <div class="modal" v-if="modalVisible == true">
           <div class="modal-backdrop" @click="toggleModal"></div>
@@ -49,7 +49,7 @@
               <div class="modal-body">
                 <input type="url" ref="linkedin_url" class="input-field" placeholder="https://www.linkedin.com/in/XXXXX/"
                   pattern="^https?://((www|\w\w)\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\w|\d)+/?){3}))$" autofocus
-                  :value="this.student.linkedin_url" required />
+                />
               </div>
               <div class="modal-submit">
                 <button type="submit">Confirm</button>
@@ -138,12 +138,16 @@ const squad_invites = ref([]);
 
 
 const fetchProfile = () => {
+  console.log("Fetching profile...");
+
+  const student_username = new FormData();
+
+  student_username.append("student_username", "JonhDoe");
+
   axios
-  .post(import.meta.env.VITE_APP_JEEC_BRAIN_URL + '/student/profile/info',{
-    student_username: "JonhDoe",
-  },{auth: {
-      username: import.meta.env.VITE_APP_JEEC_WEBSITE_USERNAME, 
-      password: import.meta.env.VITE_APP_JEEC_WEBSITE_KEY
+  .post(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/profile/info', student_username,{auth: {
+      username: process.env.VUE_APP_JEEC_WEBSITE_USERNAME, 
+      password: process.env.VUE_APP_JEEC_WEBSITE_KEY
     }
   })
   .then((response)=>{
