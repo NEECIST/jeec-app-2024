@@ -9,14 +9,15 @@
                 <img :src="jeec_brain_url + prizes.individual_prize" class="activity-img">
               </router-link>
             </div>
-            <button 
+            <router-link 
+              to="/shop" 
               class="buy-ticket" 
               :class="{ pressed: isPressed }"
               @touchstart="onTouchStart"
               @touchend="onTouchEnd"
             >
               Buy Ticket
-            </button>
+            </router-link>
           </div>
         </div>
       </template>
@@ -154,6 +155,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   max-width: 50%;
   align-content: center;
   max-height: 10%;
+  text-decoration: none;
 }
 
 .pressed {
