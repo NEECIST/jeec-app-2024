@@ -9,8 +9,8 @@
     
           <!-- Company Logos -->
           <div class="companies">
-            <div class="company" v-for="(company, index) in companies" :key="index">
-              <img :src="jeec_brain_url + company.logo" :alt="company.name" class="logo" />
+            <div class="company" v-for="(company, index) in companies.images" :key="index">
+              <img :src="company" class="logo" />
             </div>
           </div>
     
@@ -27,18 +27,59 @@
     
   <script setup>
     import { ref } from "vue";
+    import axios from "axios";
+    import authHeader from "@/services/auth-header";
+    import { onMounted } from "vue";
+    import { useUserStore } from '@/stores/UserStore';
+
+    const userStore = useUserStore();
+    const student = userStore.user;
+
+
+
+    onMounted(() => {
+      getEletrolink();
+    });
+
     const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
     // Example logos (Replace with real images)
-    const companies = ref([
-      { name: "Deloitte", logo: "/static/speakers/mmmm.png" },
-      { name: "Deloitte", logo: "/static/speakers/mmmm.png" },
-      { name: "Deloitte", logo: "/static/speakers/mmmm.png" }
-    ]);
+    const companies = ref({
+      images: []
+    });
   
     const isPressed = ref(false);
   
     const onTouchStart = () => (isPressed.value = true);
     const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
+
+    function getEletrolink() {
+      axios
+        .get(
+          process.env.VUE_APP_JEEC_BRAIN_URL + "student/eletrolink_home",
+          {
+            headers: {
+              ...authHeader(), 
+              student: student
+            }
+          }
+        )
+        .then((response) => {
+          
+          if (response.data.eletrolink.companies != null) {
+              response.data.eletrolink.companies.forEach((image, index) => {
+              const bufferArray = [];
+              bufferArray.push(process.env.VUE_APP_JEEC_BRAIN_URL + image);
+              
+              companies.value = bufferArray;
+              
+            });
+          }
+          // Add a default image if the array is empty
+          companies.value.images.push(require('@/assets/JEEC.png'));
+          companies.value.images.push(require('@/assets/JEEC.png'));
+          companies.value.images.push(require('@/assets/JEEC.png'));
+        })
+}
   </script>
     
   <style scoped>
