@@ -20,7 +20,12 @@ const userDailyPoints = ref(0);
 
 
 async function getProgress() {
-  userDailyPoints.value = userStore.userPoints.daily_points;
+  if (userStore.userPoints.current_points == undefined) {
+    userDailyPoints.value = 0;
+  }
+  else {
+    userDailyPoints.value = userStore.userPoints.current_points;
+  }
 
   // const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
   // const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
