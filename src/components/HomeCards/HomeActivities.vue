@@ -120,13 +120,11 @@ function getNextActivity() {
     .then((response) => {
       if (response.data.activity != null) {
         nextActivity.value = response.data.activity
-        response.data.activity.images.forEach((image, index) => {
-          const bufferArray = [];
-          bufferArray.push(process.env.VUE_APP_JEEC_BRAIN_URL + image);
-          
-          nextActivity.value.images = bufferArray;
-          
-        });
+        const updatedImages = response.data.activity.images.map((image) => 
+          process.env.VUE_APP_JEEC_BRAIN_URL + image
+        );
+        nextActivity.value.images = updatedImages;
+        console.log(nextActivity.value.images);
         // Add a default image if the array is empty
         if (nextActivity.value.images.length === 0) {
           nextActivity.value.images.push(require('@/assets/JEEC.png'));
@@ -137,6 +135,9 @@ function getNextActivity() {
         nextActivity.value.end_time = new Date(response.data.activity.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
       }
     })
+    .catch((error) => {
+          console.error("Error fetching Activity data:", error);
+        });
 }
 
 onMounted(() => {

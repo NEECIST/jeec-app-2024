@@ -37,7 +37,7 @@ import { onMounted } from 'vue';
 const userStore = useUserStore();
 const student = userStore.user;
 
-const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
+const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL.slice(0, -1);
 
 const prizes = ref({
   individual_prize: null // Added fictional prize
@@ -87,7 +87,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   --border-background: var(--color-strong-pink);
 }
 .today-prizes h2 {
-  font-size: clamp(1.4rem, 3.1vw, 1.8rem);
+  font-size: clamp(1.3rem, 3.1vw, 1.8rem);
   font-family: "Lexend Exa";
   text-transform: uppercase;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 

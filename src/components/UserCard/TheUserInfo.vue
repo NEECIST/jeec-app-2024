@@ -13,10 +13,10 @@
       <QrCodeButton></QrCodeButton>
     </div>
     <div class="tickets-wrapper">
-      <DailyTickets :variant="variant"></DailyTickets>
+      <CurrentPoints :variant="variant"></CurrentPoints>
     </div>
     <div class="points-wrapper">
-      <TotalPoints :variant="variant"></TotalPoints>
+      <JEECPOT :variant="variant"></JEECPOT>
     </div>
     <div class="user-wrapper">
       <UserImage :image="userStore.user.picture" :variant="variant"></UserImage>
@@ -29,8 +29,8 @@
 </template>
 <script setup>
 import QrCodeButton from './QrCodeButton.vue';
-import DailyTickets from './CurrentPoints.vue';
-import TotalPoints from './JEECPOT.vue';
+import CurrentPoints from './CurrentPoints.vue';
+import JEECPOT from './JEECPOT.vue';
 import UserImage from './UserImage.vue';
 
 import { useUserStore } from '@/stores/UserStore';
@@ -87,8 +87,10 @@ const props = defineProps({
   z-index: 50;
   backdrop-filter: blur(10px);
   /* Note: backdrop-filter has minimal browser support */
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 43px;
   justify-content: center;
+  box-sizing: border-box; /* Include padding in the element's dimensions */
 
 }
 
