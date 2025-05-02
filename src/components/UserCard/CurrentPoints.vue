@@ -69,7 +69,7 @@ watch(() => userStore.userPoints, () => {
   .wrapper {
     width: 100%;
     height: 100%;
-    margin-top: 10px;
+    margin-top: 7px;
     display: flex;
     justify-content: flex-end;
   }
