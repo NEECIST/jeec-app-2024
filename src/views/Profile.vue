@@ -68,7 +68,7 @@
             />
           </div>
         </div>
-        <div v-else="isCreatingSquad">
+        <div v-else>
           <SquadCreation
             @return="creationReturn"
             @notification="showNotification"
