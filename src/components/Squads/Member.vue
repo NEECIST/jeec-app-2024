@@ -1,6 +1,6 @@
 <template>
   <div class="member" v-if="not_kick">
-    <div class="member-image radient-border-passthrough">
+    <div class="member-image">
       <img :src="member.photo" alt="profile photo" class="profile-photo" />
     </div>
     <div class="member-info">
@@ -80,23 +80,20 @@ export default {
 
 <style scoped>
 .member {
-  display: grid;
-  grid-template-columns: 60px 1fr;
-  grid-template-rows: 1fr;
+  display: flex;
   align-items: center;
-  margin-top: 0.6rem;
-  padding-left: 5%;
-  gap: 1rem;
-  position: relative;
+  gap: 0.7rem;
+  margin-top: 0rem;
+  margin-left: 0.1rem;
 }
 
 .member-image {
-  width: 100%;
-  aspect-ratio: 1;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   overflow: hidden;
-
-  --border-width: 1.5px;
+  border: 2px solid #199cff;
+  flex-shrink: 0;
 }
 
 .member-image::before {
@@ -124,16 +121,17 @@ export default {
 }
 
 .member-info .name {
-  font-size: 1.4rem;
-  /* display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;  
-  overflow: hidden; */
+  font-size: 1.05rem;
+  font-family: "Lexend Exa", sans-serif;
+  color: white;
+  margin: 0;
 }
 
 .member-info .username {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
+  font-family: "Lexend Exa", sans-serif;
   color: #1a9cd8;
+  margin: 0;
 }
 
 .kick-member {

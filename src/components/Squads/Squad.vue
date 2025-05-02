@@ -5,7 +5,7 @@
         <div class="squad-texts">
           <p class="squad-name">{{ squad.name }}</p>
           <div class="squad-motto-wrapper">
-            <p class="squad-motto">{{ squad.cry }}</p>
+            {{ squad.cry }}
           </div>
         </div>
         <div class="squad-image-wrapper">
@@ -27,18 +27,26 @@
         />
 
         <!-- <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true" -->
-        <div class="squad-add-members">
-          <div class="squad-add-click" @click.stop="change_add_member_dialog">
+        <div class="squad-add-members member">
+          <div class="add-members-row" @click.stop="change_add_member_dialog">
             <div class="member-image plus-circle">
-              <p v-if="!add_members_dialog">+</p>
-              <p v-else>-</p>
+              <img
+                v-if="!add_members_dialog"
+                src="@/assets/add-member-button.png"
+                alt="Add Member Icon"
+                class="plus-icon-image"
+              />
+              <img
+                v-else
+                src="@/assets/minus.png"
+                alt="Close Add Member"
+                class="minus-icon-image"
+              />
             </div>
             <p class="add-members-text">ADD MEMBERS</p>
           </div>
-          <div
-            v-if="add_members_dialog"
-            class="squad-add-members-dialog"
-          >
+
+          <div v-if="add_members_dialog" class="squad-add-members-dialog">
             <input
               v-model="search"
               type="text"
@@ -46,16 +54,9 @@
               class="search-input"
               @input="filterStudents"
             />
-            <div class="buttons-conteiner">
-              <button
-                class="invite"
-              >
-                Invite
-              </button>
-              <button
-                class="cancel"
-                @click.stop="change_add_member_dialog"
-              >
+            <div class="join-decline">
+              <button class="join" @click="invite">Invite</button>
+              <button class="decline" @click.stop="change_add_member_dialog">
                 Cancel
               </button>
             </div>
@@ -69,11 +70,7 @@
     </div>
   </div>
 
-  <div
-    class="dialog-overlay"
-    v-if="false"
-    @keydown.esc="closeDialog"
-  >
+  <div class="dialog-overlay" v-if="false" @keydown.esc="closeDialog">
     <div class="squad-dialog-backdrop" @click="closeDialog"></div>
     <div class="squad-dialog" ref="dialog">
       <p class="dialog-title">Add Members</p>
@@ -588,17 +585,16 @@ export default {
 }
 
 .squad-motto-wrapper {
-  display: inline-block;
-  border: 2px solid #199cff;
-  border-radius: 15px;
-  padding: 0.3rem 1rem;
-  margin-top: 0.4rem;
-}
-
-.squad-motto {
   font-size: 1rem;
   color: white;
-  margin: 0;
+  margin-top: 0.4rem;
+  padding: 0.3rem 1rem;
+  border: 2px solid #199cff;
+  border-radius: 15px;
+  font-family: "Lexend", sans-serif;
+  max-width: fit-content;
+  text-align: left;
+  align-self: flex-start;
 }
 
 .squad-image {
@@ -620,38 +616,145 @@ export default {
 }
 
 .squad-sub-title {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
+  font-family: "Lexend Exa", sans-serif;
   font-weight: 500;
   color: white;
-  margin-top: 1rem;
-  font-family: "Lexend", sans-serif;
+  letter-spacing: 0.05em;
+  margin: 0.4rem 0 0.3rem 0.1rem;
+  text-align: left;
 }
 
 .squad-members {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
-  margin-right: 70px;
-  
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.squad-add-members {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.add-members-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  margin-left: 0.1rem;
+}
+
+.plus-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #199cff;
+  border: 2px solid #199cff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.plus-icon-image,
+.minus-icon-image {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.minus-icon-image {
+  filter: invert(1);
+}
+
+.add-members-text {
+  font-size: 1.05rem;
+  font-family: "Lexend Exa", sans-serif;
+  color: #199cff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  font-weight: 600;
 }
 
 .squad-add-members-dialog {
-  width:100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-top: 1rem;
+  gap: 0.7rem;
+  margin-top: 0.6rem;
 }
 
 .squad-add-members-dialog .search-input {
   width: 100%;
-  height: 30px;
-  padding: 0 25px;
-  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 2px solid #199cff;
+  background-color: transparent;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.95rem;
+  color: white;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.squad-add-members-dialog .search-input::placeholder {
+  color: #aaa;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.9rem;
+}
+
+.squad-add-members-dialog .search-input:focus {
+  border-color: #1a9cd8;
+}
+
+.join-decline {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.join-decline button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+  border-radius: 50px;
+  font-family: "Lexend Exa";
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.join-decline button.join {
+  background-color: #199cff;
+  color: white;
   border: none;
-  background-color: #f0f0f0;
-  font-size: 1.2rem;
+}
+
+.join-decline button.decline {
+  background-color: transparent;
+  color: white;
+  border: 1.5px solid #199cff;
+}
+
+.join-decline button:hover {
+  transform: scale(1.03);
+}
+
+.plus-icon-image {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.minus-icon-image {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  filter: invert(1);
 }
 
 .buttons-conteiner {
@@ -696,17 +799,17 @@ export default {
 }
 
 .plus-circle {
-  width: 60px;
-  height: 60px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  background-color: #199cff;
+  border: 2px solid #199cff;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #199cff;
-  border: 2px solid #199cff;
-  font-size: 2rem;
-  color: white;
+  font-size: 1.3rem;
   font-weight: bold;
+  color: white;
   flex-shrink: 0;
 }
 
@@ -718,18 +821,21 @@ export default {
 }
 
 .add-members-text {
-  font-size: 1.2rem;
-  font-family: "Lexend", sans-serif;
-  text-transform: uppercase;
+  font-size: 1.05rem;
+  font-family: "Lexend Exa", sans-serif;
   color: #199cff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  font-weight: 600;
 }
 
 .squad-leave {
   position: absolute;
-  bottom: 20px;
+  top: 220px;
   right: 20px;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   background: none;
   border: 2px solid #199cff;
   border-radius: 50%;
@@ -745,9 +851,10 @@ export default {
 }
 
 .squad-leave img {
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
   filter: invert(57%) sepia(96%) saturate(3276%) hue-rotate(181deg)
     brightness(103%) contrast(103%);
+  margin-left: 5px;
 }
 </style>
