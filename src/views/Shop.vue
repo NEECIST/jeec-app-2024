@@ -1,9 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-// import { useUserStore } from '@/stores/UserStore' TODO
+import authHeader from "../services/auth-header";
+import { useUserStore } from '@/stores/UserStore'
+// PONTOS CARALHO atualizar 
 
-// const userStore = useUserStore();
+const userStore = useUserStore();
 const items = ref([])
 const loading = ref(true)
 const error = ref(null)
@@ -20,15 +22,12 @@ const fetchPrizes = async () => {
   
   try {
     const response = await axios.get(
-      import.meta.env.VITE_APP_JEEC_WEBSITE_API_URL + '/get-prizes-shop', 
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/get-prizes-shop', 
       {
-        auth: {
-          username: import.meta.env.VITE_APP_JEEC_WEBSITE_USERNAME,
-          password: import.meta.env.VITE_APP_JEEC_WEBSITE_KEY
-        }
-      }
+        headers: authHeader()
+      } 
     );
-    
+    console.log(response.data)
     // Transform the data and properly handle base64 images
     items.value = response.data.map(prize => ({
       id: prize.id,
@@ -55,13 +54,10 @@ const fetchDailyPrize = async () => {
 
   try {
     const response = await axios.get(
-      import.meta.env.VITE_APP_JEEC_WEBSITE_API_URL + '/get-daily-prize',
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/get-daily-prize',
       {
-        auth: {
-          username: import.meta.env.VITE_APP_JEEC_WEBSITE_USERNAME,
-          password: import.meta.env.VITE_APP_JEEC_WEBSITE_KEY
-        }
-      }
+        headers: authHeader()
+      } 
     );
 
     if (response.data && response.data.length > 0) {
@@ -98,27 +94,23 @@ const closePopup = () => {
 
 const buyPrize = async (prize) => {
   try {
-    const username = userStore.username;
-    
+    const username = userStore.user.username;
     const response = await axios.post(
-      import.meta.env.VITE_APP_JEEC_WEBSITE_API_URL + '/buy-prize',
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/buy-prize',
       { 
         prize_id: prize.id,
         username: username
       }, 
       {
-        auth: {
-          username: import.meta.env.VITE_APP_JEEC_WEBSITE_USERNAME,
-          password: import.meta.env.VITE_APP_JEEC_WEBSITE_KEY
-        }
-      }
+        headers: authHeader()
+      } 
     )
-    
+
     const item = items.value.find(item => item.id === prize.id)
     if (item) {
       item.bought = true
     }
-    
+    userStore.userPoints.current_points = response.data[0].current_points;
     closePopup()
   } catch (err) {
     console.error('Purchase failed:', err)
@@ -134,7 +126,7 @@ onMounted(() => {
 
 <template>
 <div class="view">
-
+<!-- FALTA VER A LOGICA DO BOUGHT :TODO -->
   <!-- SECTION DOS PARAGRAFOS -->
   <section class="info-section">
     <p>Earn points by participating in JEEC!</p>
@@ -163,7 +155,7 @@ onMounted(() => {
         
       <a href="#" class="ticket-link">
         <div class="ticket-content">
-          <img src="/src/assets/Ticket-Vector.svg" alt="Ticket image" style="height: 40px;width: 40px;">
+          <img src="@/assets/Ticket-Vector.svg" alt="Ticket image" style="height: 40px;width: 40px;">
           <div id="btn-ticket">
             <p>Daily Draw</p>
             <p>Ticket</p>

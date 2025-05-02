@@ -30,7 +30,7 @@
               <div class="shop">
                 <div class="carousel__item">
                   <div class="circle" :style="prize.image ? { backgroundImage: `url(${prize.image})`, backgroundSize: 'cover' } : {}"></div>
-                  <p class="day-label">{{ prize.day }}</p>
+                  <p class="day-label">{{ prize.day || 'Not defined yet' }}</p>
                   <p class="prize-name">{{ prize.name }}</p>
                 </div>
               </div>
@@ -47,7 +47,7 @@
           <router-link to="/profile" class="upload-cv-btn">
             <div class="upload-cv-content">
               <!-- SVG Icon -->
-              <img src="/src/assets/CVImage.svg" alt="">
+              <img src="@/assets/CVImage.svg" alt="">
               <span>Upload your CV</span>
             </div>
           </router-link>
@@ -101,20 +101,20 @@
 </template>
 
 <script setup>
-import 'vue3-carousel/carousel.css';
+import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Navigation } from 'vue3-carousel';
 import { ref, onMounted, computed } from 'vue';
 import axios from "axios";
+import authHeader from "../services/auth-header";
 
-// Loading and error states
+
 const isLoading = ref(true);
 const hasError = ref(false);
 const errorMessage = ref('');
 
-// Weekdays for daily prizes display
+
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-// Prizes data structure
 const prizesArray = ref({
   Daily: [],
   Squad: [],
@@ -123,7 +123,6 @@ const prizesArray = ref({
   Shop: [],
 });
 
-// Segmented prizes by type
 const segmentedPrizes = ref({
   CV: [],
   Daily: [],
@@ -166,17 +165,14 @@ const fetchPrizes = async () => {
     hasError.value = false;
     
     const response = await axios.get(
-      import.meta.env.VITE_APP_JEEC_WEBSITE_API_URL + '/site-get-prizes', 
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/site-get-prizes', 
       {
-        auth: {
-          username: import.meta.env.VITE_APP_JEEC_WEBSITE_USERNAME,
-          password: import.meta.env.VITE_APP_JEEC_WEBSITE_KEY
-        }
-      }
+        headers: authHeader()
+      } 
     );
     
     prizesArray.value = response.data;
-    
+    console.log(response)
     // Segment the prizes by type
     segmentedPrizes.value = {
       CV: response.data.CV || [],
@@ -197,10 +193,28 @@ const fetchPrizes = async () => {
   }
 };
 
+
+
+// Map date from rowplace to weekday
+const getWeekdayFromRowplace = (rowplace) => {
+  // Map known dates to weekdays
+  const dateToWeekday = {
+    '5/05': 'Monday',
+    '6/05': 'Tuesday',
+    '7/05': 'Wednesday',
+    '8/05': 'Thursday',
+    '9/05': 'Friday'
+  };
+  
+  return dateToWeekday[rowplace] || null;
+};
+
 // Helper computed properties to get prizes safely with proper formatting
 const dailyPrizes = computed(() => {
-  return weekdays.map((day, index) => {
-    const prize = segmentedPrizes.value.Daily[index];
+  return segmentedPrizes.value.Daily.map(prize => {
+    // Determine the day based on rowplace
+    const day = prize?.rowplace ? getWeekdayFromRowplace(prize.rowplace) : null;
+    
     return {
       name: prize?.name || "Prize coming soon",
       image: prize?.image_url ? `data:image/*;base64,${prize.image_url}` : null,
@@ -241,6 +255,10 @@ onMounted(() => {
 .view {
   padding-top: var(--header-height);
   --acc-color: var(--c-acc-violet)
+}
+
+.squad-jeecpot-section{
+  padding-bottom: 80px;
 }
 
 .shop {
@@ -313,7 +331,10 @@ a {
   margin-top: 8px;
   font-size: 0.9rem;
   font-weight: bold;
+  margin-bottom: 0;
 }
+
+
 
 .prize-name {
   font-size: 0.8rem;

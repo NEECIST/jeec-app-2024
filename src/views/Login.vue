@@ -51,7 +51,7 @@ function loginDev(){
     name: "Duarte Malta Teixeira Jesus dos Santos",
     picture: "https://lh3.googleusercontent.com/a/ACg8ocKjA1Qo1DFfQJiC7jvDb4u59lYIIXfx2JszEa-SsfQRCijyiQ=s96-c",
   }
-
+  
   axios
     .post(
       process.env.VUE_APP_JEEC_BRAIN_URL + "/student/redirecturigoogle",
@@ -59,7 +59,6 @@ function loginDev(){
     )
     .then((response) => {
       const jwt = decrypt(response.data);
-
       userStore.authUser(jwt);
     });
 }
