@@ -163,7 +163,7 @@ onMounted(() => {
         
       <a href="#" class="ticket-link">
         <div class="ticket-content">
-          <img src="/src/assets/Ticket-Vector.svg" alt="Ticket image" style="height: 40px;width: 40px;">
+          <img src="@/assets/Ticket-Vector.svg" alt="Ticket image" style="height: 40px;width: 40px;">
           <div id="btn-ticket">
             <p>Daily Draw</p>
             <p>Ticket</p>

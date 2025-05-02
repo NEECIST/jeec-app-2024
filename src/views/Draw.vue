@@ -101,10 +101,11 @@
 </template>
 
 <script setup>
-import 'vue3-carousel/carousel.css';
+// import 'vue3-carousel/carousel.css';
 import { Carousel, Slide, Navigation } from 'vue3-carousel';
 import { ref, onMounted, computed } from 'vue';
 import axios from "axios";
+import authHeader from "../services/auth-header";
 
 // Loading and error states
 const isLoading = ref(true);
@@ -166,12 +167,9 @@ const fetchPrizes = async () => {
     hasError.value = false;
     
     const response = await axios.get(
-      import.meta.env.VITE_APP_JEEC_WEBSITE_API_URL + '/site-get-prizes', 
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/site-get-prizes', 
       {
-        auth: {
-          username: import.meta.env.VITE_APP_JEEC_WEBSITE_USERNAME,
-          password: import.meta.env.VITE_APP_JEEC_WEBSITE_KEY
-        }
+        headers: authHeader()
       }
     );
     
@@ -199,15 +197,23 @@ const fetchPrizes = async () => {
 
 // Helper computed properties to get prizes safely with proper formatting
 const dailyPrizes = computed(() => {
+
+
   return weekdays.map((day, index) => {
     const prize = segmentedPrizes.value.Daily[index];
+
+    console.log(`data:image/*;base64,${prize.image_url}`)
     return {
       name: prize?.name || "Prize coming soon",
       image: prize?.image_url ? `data:image/*;base64,${prize.image_url}` : null,
       day: day
     };
+
   });
-});
+
+
+}
+);
 
 const individualPrizes = computed(() => {
   return segmentedPrizes.value.Individual.map(prize => ({
