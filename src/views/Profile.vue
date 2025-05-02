@@ -77,7 +77,7 @@
         </div>
       </div>
       <div v-else>
-        <!-- <Squad :squad="student.squad" /> -->
+        <Squad :squad="hard_squad" />
       </div>
     </div>
 
@@ -196,7 +196,7 @@ const code = ref('');
 const dialog = ref(false);
 const prev_length = ref(0);
 const points = ref(0);
-const squad = ref(null);
+const squad = ref({});
 const error = ref('');
 const create_squad = ref(false);
 const loading_redeem = ref(false);

@@ -18,7 +18,10 @@
         <!-- <Member v-for="member in orderedMembers" :key="member.username" :member="member"
           :captain_ist_id="squad.captain_ist_id" @kick="kick_member" /> -->
 
-        <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true"
+        <Member v-for="member in squad.members" :key="member.id" :member="member"/>
+
+        <!-- <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true" -->
+         <button
           class="squad-add_members">
           <div class="plus-symbol">
             <p>&plus;</p>
