@@ -49,31 +49,36 @@
 
     <div class="squad-section">
       <h2 class="squad-title">SQUAD</h2>
-      <div v-if="!isInSquad && !isCreatingSquad">
-        <div class="profile-buttons-jeec">
-          <button
-            @click="change_Create"
-            class="create-squad-button"
-          >
-            <p>CREATE SQUAD</p>
-          </button>
-        </div>
+      <!-- <div v-if="!isInSquad"> -->
+      <div v-if="true">
+        <div v-if="!isCreatingSquad">
+          <div class="profile-buttons-jeec">
+            <button
+              @click="change_Create"
+              class="create-squad-button"
+            >
+              <p>CREATE SQUAD</p>
+            </button>
+          </div>
 
-        <div class="invites">
-          <Invite v-for="invite in invites" :key="invite.id"
-            :invite="invite"
-            @accept="handleAcceptInvite"
-            @reject="handleRejectInvite"
+          <div class="invites">
+            <Invite v-for="invite in invites" :key="invite.id"
+              :invite="invite"
+              @accept="handleAcceptInvite"
+              @reject="handleRejectInvite"
+            />
+          </div>
+        </div>
+        <div v-else="isCreatingSquad">
+          <SquadCreation
+            @return="creationReturn"
+            @notification="showNotification"
           />
         </div>
       </div>
-      <div v-else-if="isCreatingSquad">
-        <SquadCreation
-          @return="creationReturn"
-          @notification="showNotification"
-        />
+      <div v-else>
+        <!-- <Squad :squad="student.squad" /> -->
       </div>
-      <!-- <Squad /> -->
     </div>
 
     <div style="position: absolute">
@@ -215,6 +220,16 @@ const invites = ref([
   { id: 4, squad_name: "Visionários", squad_cry: "Ver além do óbvio.", sender_name: "Ana Costa" },
   { id: 5, squad_name: "Inovadores", squad_cry: "Sempre um passo à frente.", sender_name: "Rui Martins" }
 ]);
+
+const hard_squad = ref({
+  name: "Teste",
+  id: 1,
+  cry: "For Victory!",
+  members: [
+    { id: 101, name: "John Doe" },
+    { id: 102, name: "Jane Smith" }
+  ]
+});
 
 // Computed properties
 const isInSquad = computed(() => student.value && student.value.squad);

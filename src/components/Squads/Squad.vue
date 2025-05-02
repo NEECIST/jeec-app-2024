@@ -1,101 +1,62 @@
 <template>
-  <section class="squad-section">
-    <h2 v-if="squad != null">YOUR SQUAD</h2>
-    <h2 v-else>SQUAD</h2>
-
-    <template v-if="!loading_squad">
-      <div v-if="squad === null">
-        <SquadCreation @create="create_squad" @notification="notification" />
-
-        <Invite @accept="accept_invite" @reject="reject_invite" v-for="invite in invites" :key="invite.sender_username"
-          :invite="invite" />
+  <div class="squad-section">
+    <div class="squad-container radient-border-passthrough">
+      <div class="squad-header">
+        <div class="squad-texts">
+          <p class="squad-name"> {{ squad.name }} </p>
+          <div class="squad-motto radient-border-passthrough">
+            <p> {{ squad.cry }} </p>
+          </div>
+        </div>
+        <div class="squad-image radient-border-passthrough">
+          <img :src="jeec_brain_url + squad.image" alt="squad-image" />
+        </div>
       </div>
 
-      <div v-else-if="squad != null" class="squad-container radient-border-passthrough">
-        <div class="squad-header">
-          <div class="squad-texts">
-            <p class="squad-name"> {{ squad.name }} </p>
-            <div class="squad-motto radient-border-passthrough">
-              <p> {{ squad.cry }} </p>
-            </div>
-          </div>
-          <div class="squad-image radient-border-passthrough">
-            <img :src="jeec_brain_url + squad.image" alt="squad-image" />
-          </div>
-        </div>
+      <div class="squad-members">
+        <h3 class="squad-sub-title">Members</h3>
+        <!-- <Member v-for="member in orderedMembers" :key="member.username" :member="member"
+          :captain_ist_id="squad.captain_ist_id" @kick="kick_member" /> -->
 
-        <div class="squad-rankings">
-          <div>
-            <h3 class="squad-sub-title"> Daily </h3>
-            <div class="squad-ranking">
-              <p class="squad-position" :class="'pos-' + squad.rank_daily">
-                <template v-if="(squad.rank_daily % 10) == 1">{{ squad.rank_daily }}st</template>
-                <template v-if="(squad.rank_daily % 10) == 2">{{ squad.rank_daily }}nd</template>
-                <template v-if="(squad.rank_daily % 10) == 3">{{ squad.rank_daily }}rd</template>
-                <template v-if="(squad.rank_daily % 10) > 3">{{ squad.rank_daily }}th</template>
-              </p>
-              <p>{{ squad.daily_points }} points</p>
-            </div>
+        <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true"
+          class="squad-add_members">
+          <div class="plus-symbol">
+            <p>&plus;</p>
           </div>
-          <div>
-            <h3 class="squad-sub-title"> Total </h3>
-            <div class="squad-ranking">
-              <p class="squad-position" :class="'pos-' + squad.rank_weekly">
-                <template v-if="(squad.rank_weekly % 10) == 1">{{ squad.rank_weekly }}st</template>
-                <template v-if="(squad.rank_weekly % 10) == 2">{{ squad.rank_weekly }}nd</template>
-                <template v-if="(squad.rank_weekly % 10) == 3">{{ squad.rank_weekly }}rd</template>
-                <template v-if="(squad.rank_weekly % 10) > 3">{{ squad.rank_weekly }}th</template>
-              </p>
-              <p>{{ squad.total_points }} points</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="squad-members">
-          <h3 class="squad-sub-title">Members ({{ squad.members.data.length }}/4)</h3>
-          <Member v-for="member in orderedMembers" :key="member.username" :member="member"
-            :captain_ist_id="squad.captain_ist_id" @kick="kick_member" />
-
-          <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true"
-            class="squad-add_members">
-            <div class="plus-symbol">
-              <p>&plus;</p>
-            </div>
-            <p>Add Members</p>
-          </button>
-        </div>
-
-        <button @click.stop="leave_squad" class="squad-leave radient-border-passthrough">
-          <img :src=leave_squad_button alt="Leave Squad Icon" />
+          <p>Add Members</p>
         </button>
       </div>
 
-      <div class="dialog-overlay" v-if="add_members_dialog" @keydown.esc="closeDialog">
-        <div class="squad-dialog-backdrop" @click="closeDialog"></div>
-        <div class="squad-dialog radient-border-passthrough" ref="dialog">
-          <p class="dialog-title">Add Members</p>
-          <input v-model="search" type="text" placeholder="Search username..." class="search-input"
-            @input="filterStudents" />
-          <div class="chips-container">
-            <button v-for="(squadmate, index) in squadmates" :key="index" class="chip" @click="remove(squadmate, $event)">
-              <p v-if="squadmate">{{ squadmate }} <span class="close-icon">×</span> </p>
-            </button>
-          </div>
-          <div class="autocomplete">
-            <div v-if="Array.isArray(this.students2) && this.students2.length > 0">
-              <ul>
-                <li v-for="student in this.students3" :key="student.username" @click="addSquadmate(student)">
-                  <!-- <img :src="student.photo" alt="Student Photo" class="avatar" /> -->
-                  {{ student.username }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <button @click.stop="invite" class="invite">Invite</button>
+      <button @click.stop="leave_squad" class="squad-leave radient-border-passthrough">
+        <img :src=leave_squad_button alt="Leave Squad Icon" />
+      </button>
+    </div>
+  </div>
+
+  <div class="dialog-overlay" v-if="add_members_dialog" @keydown.esc="closeDialog">
+    <div class="squad-dialog-backdrop" @click="closeDialog"></div>
+    <div class="squad-dialog radient-border-passthrough" ref="dialog">
+      <p class="dialog-title">Add Members</p>
+      <input v-model="search" type="text" placeholder="Search username..." class="search-input"
+        @input="filterStudents" />
+      <div class="chips-container">
+        <button v-for="(squadmate, index) in squadmates" :key="index" class="chip" @click="remove(squadmate, $event)">
+          <p v-if="squadmate">{{ squadmate }} <span class="close-icon">×</span> </p>
+        </button>
+      </div>
+      <div class="autocomplete">
+        <div v-if="Array.isArray(this.students2) && this.students2.length > 0">
+          <ul>
+            <li v-for="student in this.students3" :key="student.username" @click="addSquadmate(student)">
+              <!-- <img :src="student.photo" alt="Student Photo" class="avatar" /> -->
+              {{ student.username }}
+            </li>
+          </ul>
         </div>
       </div>
-    </template>
-  </section>
+      <button @click.stop="invite" class="invite">Invite</button>
+    </div>
+  </div>
 
   <div>
     <ToastNotification :message="toastMessage" :type="toastType" :visible="showToast" @close="showToast = false">
@@ -122,10 +83,12 @@ export default {
     Member,
     ToastNotification
   },
+  props: {
+    squad: Object,
+  },
   data: function () {
     return {
       button: "my squad",
-      squad: null,
       invites: [],
       invites_sent: [],
       students3: [],
