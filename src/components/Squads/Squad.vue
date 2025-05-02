@@ -1,15 +1,17 @@
 <template>
   <div class="squad-section">
-    <div class="squad-container radient-border-passthrough">
+    <div class="squad-container">
       <div class="squad-header">
         <div class="squad-texts">
-          <p class="squad-name"> {{ squad.name }} </p>
-          <div class="squad-motto radient-border-passthrough">
-            <p> {{ squad.cry }} </p>
+          <p class="squad-name">{{ squad.name }}</p>
+          <div class="squad-motto-wrapper">
+            <p class="squad-motto">{{ squad.cry }}</p>
           </div>
         </div>
-        <div class="squad-image radient-border-passthrough">
-          <img :src="jeec_brain_url + squad.image" alt="squad-image" />
+        <div class="squad-image-wrapper">
+          <div class="squad-image">
+            <img :src="jeec_brain_url + squad.image" alt="squad-image" />
+          </div>
         </div>
       </div>
 
@@ -18,39 +20,62 @@
         <!-- <Member v-for="member in orderedMembers" :key="member.username" :member="member"
           :captain_ist_id="squad.captain_ist_id" @kick="kick_member" /> -->
 
-        <Member v-for="member in squad.members" :key="member.id" :member="member"/>
+        <Member
+          v-for="member in squad.members"
+          :key="member.id"
+          :member="member"
+        />
 
         <!-- <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true" -->
-         <button
-          class="squad-add_members">
-          <div class="plus-symbol">
-            <p>&plus;</p>
+        <div class="squad-add_members">
+          <div class="member-image plus-circle">
+            <p>+</p>
           </div>
-          <p>Add Members</p>
-        </button>
+          <p class="add-members-text">ADD MEMBERS</p>
+        </div>
       </div>
 
-      <button @click.stop="leave_squad" class="squad-leave radient-border-passthrough">
-        <img :src=leave_squad_button alt="Leave Squad Icon" />
+      <button @click.stop="leave_squad" class="squad-leave">
+        <img :src="leave_squad_button" alt="Leave Squad Icon" />
       </button>
     </div>
   </div>
 
-  <div class="dialog-overlay" v-if="add_members_dialog" @keydown.esc="closeDialog">
+  <div
+    class="dialog-overlay"
+    v-if="add_members_dialog"
+    @keydown.esc="closeDialog"
+  >
     <div class="squad-dialog-backdrop" @click="closeDialog"></div>
-    <div class="squad-dialog radient-border-passthrough" ref="dialog">
+    <div class="squad-dialog" ref="dialog">
       <p class="dialog-title">Add Members</p>
-      <input v-model="search" type="text" placeholder="Search username..." class="search-input"
-        @input="filterStudents" />
+      <input
+        v-model="search"
+        type="text"
+        placeholder="Search username..."
+        class="search-input"
+        @input="filterStudents"
+      />
       <div class="chips-container">
-        <button v-for="(squadmate, index) in squadmates" :key="index" class="chip" @click="remove(squadmate, $event)">
-          <p v-if="squadmate">{{ squadmate }} <span class="close-icon">×</span> </p>
+        <button
+          v-for="(squadmate, index) in squadmates"
+          :key="index"
+          class="chip"
+          @click="remove(squadmate, $event)"
+        >
+          <p v-if="squadmate">
+            {{ squadmate }} <span class="close-icon">×</span>
+          </p>
         </button>
       </div>
       <div class="autocomplete">
         <div v-if="Array.isArray(this.students2) && this.students2.length > 0">
           <ul>
-            <li v-for="student in this.students3" :key="student.username" @click="addSquadmate(student)">
+            <li
+              v-for="student in this.students3"
+              :key="student.username"
+              @click="addSquadmate(student)"
+            >
               <!-- <img :src="student.photo" alt="Student Photo" class="avatar" /> -->
               {{ student.username }}
             </li>
@@ -62,7 +87,12 @@
   </div>
 
   <div>
-    <ToastNotification :message="toastMessage" :type="toastType" :visible="showToast" @close="showToast = false">
+    <ToastNotification
+      :message="toastMessage"
+      :type="toastType"
+      :visible="showToast"
+      @close="showToast = false"
+    >
     </ToastNotification>
   </div>
 </template>
@@ -75,8 +105,8 @@ import Member from "@/components/Squads/Member.vue";
 import ToastNotification from "@/components/Squads/ToastNotification.vue";
 
 import UserService from "../../services/user.service";
-import { useUserStore } from '@/stores/UserStore';
-import { mapState } from 'pinia';
+import { useUserStore } from "@/stores/UserStore";
+import { mapState } from "pinia";
 
 export default {
   username: "Squad",
@@ -84,7 +114,7 @@ export default {
     Invite,
     SquadCreation,
     Member,
-    ToastNotification
+    ToastNotification,
   },
   props: {
     squad: Object,
@@ -118,14 +148,13 @@ export default {
       leave_squad_button: require("@/assets/squad-leave.svg"),
       plus_squad_button: require("../../assets/plus_sign.png"),
       showToast: false,
-      toastMessage: '',
-      toastType: 'success',
+      toastMessage: "",
+      toastType: "success",
       students2: [],
-      photos: []
+      photos: [],
     };
   },
   methods: {
-
     showNotification(message, type) {
       this.toastMessage = message;
       this.toastType = type;
@@ -133,16 +162,16 @@ export default {
     },
 
     filterStudents() {
-      if (this.search.trim() === '') {
+      if (this.search.trim() === "") {
         this.students3 = [];
       } else {
-        this.students3 = this.students2.filter(student =>
+        this.students3 = this.students2.filter((student) =>
           student.username.toLowerCase().includes(this.search.toLowerCase())
         );
       }
     },
     closeDialog(event) {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         this.add_members_dialog = false;
       }
     },
@@ -154,10 +183,13 @@ export default {
     addSquadmate(student) {
       if (student && student.username) {
         const username = student.username;
-        console.log((this.squadmates.length + this.squad.members.data.length));
-        if ((this.squadmates.length + this.squad.members.data.length) < 4 && !this.squadmates.includes(username)) {
+        console.log(this.squadmates.length + this.squad.members.data.length);
+        if (
+          this.squadmates.length + this.squad.members.data.length < 4 &&
+          !this.squadmates.includes(username)
+        ) {
           this.squadmates.push(username);
-          this.search = ''; // Clear the search input after adding a squadmate
+          this.search = ""; // Clear the search input after adding a squadmate
         }
       } else {
         console.error("Invalid student object:", student);
@@ -177,7 +209,6 @@ export default {
     async accept_invite(invite_id) {
       await UserService.acceptInvitation(invite_id).then(
         (response) => {
-
           UserService.getSquadInvitationsReceived().then(
             (response) => {
               this.invites = response.data.data;
@@ -212,24 +243,24 @@ export default {
         },
         (error) => {
           this.showNotification("Squad is full", "success");
-          console.log(error)
+          console.log(error);
         }
       );
       this.$router.go();
     },
     limitStudents() {
-      if (
-        this.squad.members.data.length >= 4
-      ) {
+      if (this.squad.members.data.length >= 4) {
         this.squadmates.pop();
       }
 
       this.search = "";
     },
     remove(item, event) {
-      console.log('remover');
+      console.log("remover");
       event.stopPropagation();
-      const index = this.squadmates.findIndex(squadmate => squadmate.username === item.username);
+      const index = this.squadmates.findIndex(
+        (squadmate) => squadmate.username === item.username
+      );
       if (index >= 0) this.squadmates.splice(index, 1);
     },
 
@@ -242,8 +273,8 @@ export default {
           (response) => {
             this.squadmates = [];
             const data = response.data;
-            this.members_with_squad = data.members_with_squad
-            this.invited_members = data.invited_members
+            this.members_with_squad = data.members_with_squad;
+            this.invited_members = data.invited_members;
 
             UserService.getSquadInvitationsSent().then(
               (response) => {
@@ -275,53 +306,82 @@ export default {
           }
         );
 
-        let string_notification_invites = ""
-        let string_notification_squads = ""
+        let string_notification_invites = "";
+        let string_notification_squads = "";
 
         if (this.invited_members.length >= 1) {
-          string_notification_invites = "Invitation sent successfully to "
+          string_notification_invites = "Invitation sent successfully to ";
           for (let j = 0; j < this.invited_members.length; j++) {
-
-            if (j == (this.invited_members.length - 1)) {
-              string_notification_invites = string_notification_invites + " " + this.invited_members[j]
-              string_notification_invites = string_notification_invites + " \n"
-            } else if (this.invited_members.length >= 2 && j == (this.invited_members.length - 2)) {
-              string_notification_invites = string_notification_invites + " " + this.invited_members[j] + " and"
+            if (j == this.invited_members.length - 1) {
+              string_notification_invites =
+                string_notification_invites + " " + this.invited_members[j];
+              string_notification_invites = string_notification_invites + " \n";
+            } else if (
+              this.invited_members.length >= 2 &&
+              j == this.invited_members.length - 2
+            ) {
+              string_notification_invites =
+                string_notification_invites +
+                " " +
+                this.invited_members[j] +
+                " and";
             } else {
-              string_notification_invites = string_notification_invites + " " + this.invited_members[j] + ","
+              string_notification_invites =
+                string_notification_invites +
+                " " +
+                this.invited_members[j] +
+                ",";
             }
           }
         }
         if (this.members_with_squad.length == 1) {
           if (this.invited_members.length >= 1) {
-            string_notification_squads = string_notification_squads + " but member "
+            string_notification_squads =
+              string_notification_squads + " but member ";
           } else {
-            string_notification_squads = string_notification_squads + "Member "
+            string_notification_squads = string_notification_squads + "Member ";
           }
         } else if (this.members_with_squad.length > 1) {
           if (this.invited_members.length >= 1) {
-            string_notification_squads = string_notification_squads + "but members "
+            string_notification_squads =
+              string_notification_squads + "but members ";
           } else {
-            string_notification_squads = string_notification_squads + "Members "
+            string_notification_squads =
+              string_notification_squads + "Members ";
           }
-
         }
         for (let i = 0; i < this.members_with_squad.length; i++) {
-          if (i == (this.members_with_squad.length - 1)) {
-            string_notification_squads = string_notification_squads + " " + this.members_with_squad[i]
+          if (i == this.members_with_squad.length - 1) {
+            string_notification_squads =
+              string_notification_squads + " " + this.members_with_squad[i];
             if (this.members_with_squad.length == 1) {
-              string_notification_squads = string_notification_squads + " already has a squad"
+              string_notification_squads =
+                string_notification_squads + " already has a squad";
             } else {
-              string_notification_squads = string_notification_squads + " already have a squad"
+              string_notification_squads =
+                string_notification_squads + " already have a squad";
             }
-          } else if (this.members_with_squad.length >= 2 && i == (this.members_with_squad.length - 2)) {
-            string_notification_squads = string_notification_squads + " " + this.members_with_squad[i] + " and"
+          } else if (
+            this.members_with_squad.length >= 2 &&
+            i == this.members_with_squad.length - 2
+          ) {
+            string_notification_squads =
+              string_notification_squads +
+              " " +
+              this.members_with_squad[i] +
+              " and";
           } else {
-            string_notification_squads = string_notification_squads + " " + this.members_with_squad[i] + ","
+            string_notification_squads =
+              string_notification_squads +
+              " " +
+              this.members_with_squad[i] +
+              ",";
           }
         }
-        this.showNotification(string_notification_invites + "\n" + string_notification_squads, "points");
-
+        this.showNotification(
+          string_notification_invites + "\n" + string_notification_squads,
+          "points"
+        );
       }
     },
     async reject_invite(invite_id) {
@@ -348,10 +408,9 @@ export default {
           );
         }
       );
-      this.$router.go()
+      this.$router.go();
     },
     leave_squad() {
-
       if (!confirm("Are you sure you want to proceed?")) {
         return;
       }
@@ -360,7 +419,7 @@ export default {
         (response) => {
           this.$emit("delete", response.data.data);
           this.loading_squad = false;
-          this.$router.go()
+          this.$router.go();
         },
         (error) => {
           console.log(error);
@@ -386,10 +445,10 @@ export default {
     },
   },
   computed: {
-    ...mapState(useUserStore, ['user']),
+    ...mapState(useUserStore, ["user"]),
     orderedMembers() {
       let members = [...this.squad.members.data];
-      let captainIndex = members.findIndex(member => member.is_captain);
+      let captainIndex = members.findIndex((member) => member.is_captain);
       if (captainIndex > 0) {
         let [captain] = members.splice(captainIndex, 1);
         members.unshift(captain);
@@ -400,25 +459,23 @@ export default {
   },
 
   mounted() {
-    document.addEventListener('click', this.handleClickOutside);
+    document.addEventListener("click", this.handleClickOutside);
   },
 
   async beforeMount() {
-
     if (!this.user) {
       this.$router.push("/");
     }
 
     UserService.getUserSquad().then(
       (response) => {
-
         if (response.data.error) {
           this.squad = null;
           this.loading_squad = false;
         } else {
           this.squad = response.data.data;
           var squad = this.squad;
-          console.log(this.squad)
+          console.log(this.squad);
 
           squad.members.data.forEach(function (item, i) {
             if (item.name === squad.captain_ist_id) {
@@ -429,7 +486,6 @@ export default {
 
           this.loading_squad = false;
         }
-
       },
       (error) => {
         console.log(error);
@@ -464,30 +520,19 @@ export default {
   overflow: hidden;
 }
 
-.squad-section h2 {
-  text-align: center;
-  font-family: "Lexend Exa";
-  font-size: 2rem;
-  letter-spacing: 3px;
-  margin-top: 3rem;
-  color: #4CC9F0;
-  margin-bottom: 2rem;
-  text-shadow: 0px 0px 4px #4cc9f0;
-}
-
 .squad-container {
-  padding: 1rem 2rem;
-  max-width: 600px;
-  margin: 0 auto;
+  background-color: #199cff1a;
+  border: 1.5px solid #199cff;
+  border-radius: 20px 60px 20px 20px;
+  padding: 1rem 1.5rem;
+  width: 90%;
+  max-width: 650px;
+  margin: 1.5rem auto;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-
-  --border-radius: 45px;
-}
-
-.squad-container::before {
-  content: "";
+  font-family: "Lexend", sans-serif;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .squad-header {
@@ -501,281 +546,121 @@ export default {
   flex-grow: 1;
 }
 
-.squad-texts>p {
-  font-family: "Lexend Exa";
-  letter-spacing: 3px;
-  font-weight: 600;
+.squad-name {
   font-size: 2rem;
-  padding-left: 1rem;
-  padding-bottom: 1rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  text-align: left;
+  letter-spacing: 0.1em;
+}
+
+.squad-motto-wrapper {
+  display: inline-block;
+  border: 2px solid #199cff;
+  border-radius: 15px;
+  padding: 0.3rem 1rem;
+  margin-top: 0.4rem;
 }
 
 .squad-motto {
-  flex-grow: 1;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 0.3rem 25px;
-
-  --border-radius: 25px;
-  --border-width: 1.5px;
-  --background: radial-gradient(ellipse 250% 200% at 0% 0%, rgba(114, 9, 183, 0.14), rgba(114, 9, 183, 0.08) 60%, rgba(114, 9, 183, 0));
-  --border-background: linear-gradient(165deg, #7209B7, #A414A4 40%, #7209B7);
-}
-
-.squad-motto::before {
-  content: "";
-}
-
-.squad-motto p {
-  font-size: 1.1rem;
+  font-size: 1rem;
+  color: white;
+  margin: 0;
 }
 
 .squad-image {
-  width: 50%;
-  max-width: 120px;
-  aspect-ratio: 1;
-  flex-shrink: 0.3;
-
-  --border-radius: 50%;
-}
-
-.squad-image::before {
-  content: "";
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #199cff;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .squad-image img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  object-fit: cover;
 }
 
 .squad-sub-title {
-  font-family: "Lexend Exa";
-  letter-spacing: 4px;
-  font-size: 1.3rem;
-  font-weight: 400;
-}
-
-.squad-rankings {
-  display: flex;
-  gap: 2rem;
-}
-
-.squad-ranking {
-  display: flex;
-  align-items: center;
-  gap: 2ch;
-  padding-top: 0.4rem;
-  padding-left: 0.4rem;
-}
-
-.squad-ranking p {
-  overflow-wrap: normal;
-}
-
-.squad-position {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 35px;
-  height: 35px;
-  flex-shrink: 0;
-  font-size: 0.6rem;
-  font-weight: 800;
-  border-radius: 100%;
-  border: #39250E 2px solid;
-  background-color: #6D3F0B;
-}
-
-.squad-position.pos-1 {
-  background-color: #C1A875;
-  border: #ddc695 2px solid;
-}
-
-.squad-position.pos-2 {
-  background-color: #a8a8a8;
-  border: #c4c2c2 2px solid;
-}
-
-.squad-position.pos-3 {
-  background-color: #C9705C;
-  border: #e18a77 2px solid;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: white;
+  margin-top: 1rem;
+  font-family: "Lexend", sans-serif;
 }
 
 .squad-add_members {
   display: flex;
-  background: none;
-  border: none;
   align-items: center;
-  padding-top: 0.6rem;
-  padding-left: 10%;
+  justify-content: start;
   gap: 1rem;
+  margin-top: 1rem;
   cursor: pointer;
 }
 
-.squad-add_members .plus-symbol {
+.squad-add_members:hover {
+  scale: 1.02;
+}
+
+.plus-circle {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
+  background-color: #199cff;
+  border: 2px solid #199cff;
+  font-size: 2rem;
+  color: white;
+  font-weight: bold;
   flex-shrink: 0;
-  aspect-ratio: 1;
-  font-size: 2.4rem;
-  border: #1A9CD8 2px solid;
-  background: linear-gradient(45deg, #1A9CD8, #60cdff);
 }
 
-.squad-add_members .plus-symbol p {
-  position: relative;
-  top: -3px;
+.plus-circle p {
+  margin: 0;
+  padding: 0;
   line-height: 1;
+  transform: translateY(-2px);
 }
 
-.squad-add_members>p {
+.add-members-text {
   font-size: 1.2rem;
-  font-family: "Lexend Exa";
+  font-family: "Lexend", sans-serif;
   text-transform: uppercase;
-  color: #1A9CD8;
-  text-align: start;
+  color: #199cff;
 }
 
 .squad-leave {
-  align-self: flex-end;
-  border: none;
-  padding: 2rem;
-  cursor: pointer;
-  margin-top: -1.5rem;
-}
-
-.squad-leave::before {
-  content: "";
-}
-
-.squad-leave:hover {
-  scale: 1.1;
-} 
-
-.squad-leave img {
   position: absolute;
-  top: 50%;
-  left: 53%;
-  translate: -50% -50%;
-}
-
-.dialog-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 999;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background: none;
+  border: 2px solid #199cff;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.squad-dialog-backdrop {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: -1;
-}
-
-.squad-dialog {
-  width: 90%;
-  max-width: 500px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-
-  --border-width: 2px;
-  --border-radius: 8px;
-}
-
-.squad-dialog::before {
-  content: "";
-}
-
-.dialog-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.search-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-family: "Lexend Deca";
-}
-
-.chips-container {
-  background: none;
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.chip {
-  background-color: rgba(0, 0, 0, 0.4);
-  border: none;
-  border: 1px solid black;
-  padding: 5px 10px;
-  border-radius: 20px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.close-icon {
-  margin-left: 5px;
-  cursor: pointer;
+.squad-leave:hover {
+  transform: scale(1.1);
 }
 
-.autocomplete {
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.autocomplete ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid black;
-}
-
-.autocomplete li {
-  padding: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid black;
-  font-family: "Lexend Deca";
-}
-
-.autocomplete li:last-child {
-  border-bottom: none;
-}
-
-.squad-dialog .invite {
-  background: linear-gradient(165deg, #605ED0 -100%, #4CC9F0 20%, #7209B7 130%);
-  padding: 0.4rem 1.5ch;
-  font-size: 1rem;
-  margin-top: 0.8rem;
-  border-radius: 40px;
-  border: none;
-  align-self: flex-end;
-  cursor: pointer;
+.squad-leave img {
+  width: 24px;
+  height: 24px;
+  filter: invert(57%) sepia(96%) saturate(3276%) hue-rotate(181deg)
+    brightness(103%) contrast(103%);
 }
 </style>

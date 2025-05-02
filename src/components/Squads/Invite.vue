@@ -1,10 +1,10 @@
 <template>
-  <div class="squad-invite radient-border-passthrough">
+  <div class="squad-invite">
     <h3>You've been invited to</h3>
 
     <div class="invite">
       <div class="squad-header">
-        <div class="squad-image radient-border-passthrough">
+        <div class="squad-image">
           <img :src="jeec_brain_url + invite.squad_image" alt="squad-image" />
         </div>
         <div class="squad-info">
@@ -51,106 +51,105 @@ export default {
 
 <style scoped>
 .squad-invite {
-  margin: 0 auto;
-  margin-top: 2rem;
-  max-width: 600px;
-  padding: 1rem 3ch;
-
-  --border-radius: 35px;
-}
-
-.squad-invite::before {
-  content: "";
+  background-color: rgba(25, 156, 255, 0.1);
+  border: 1.5px solid #199cff;
+  border-radius: 20px;
+  padding: 1rem 1.5rem;
+  width: 90%;
+  max-width: 650px;
+  margin: 1.5rem auto;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .squad-invite h3 {
   font-family: "Lexend Exa";
-  letter-spacing: 3px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #e7e7e7;
   text-align: center;
-  font-size: clamp(1.1rem, 5vw, 1.4rem);
-  padding: 0 2ch;
+  margin-bottom: 0.8rem;
 }
 
-.invite {
-  display: flex;
-  flex-direction: column;
-}
 .squad-header {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 2rem;
-  padding-top: 1.4rem;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
 }
 
 .squad-image {
-  max-width: 100px;
-  min-width: 60px;
-  height: 100%;
-  aspect-ratio: 1;
-  
-  --border-radius: 50%;
-}
-
-.squad-image::before {
-  content: "";
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid #199cff;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .squad-image img {
-  border-radius: 50%;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .squad-info {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  justify-content: center;
+  color: white;
 }
 
 .squad-info p {
   font-family: "Lexend Exa";
-  letter-spacing: 3px;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .squad-info p:first-child {
-  font-weight: 600;
-  font-size: clamp(1rem, 5vw, 1.3rem);
+  font-weight: 500;
+  font-size: 1.1rem;
 }
 
 .squad-info p:last-child {
-  font-size: clamp(0.8rem, 5vw, 1rem);
-}
-
-.squad-sender {
-  text-align: center;
-  font-family: "Lexend Exa";
-  letter-spacing: 3px;
-  padding-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #e7e7e7;
 }
 
 .join-decline {
-  padding-top: 1.5rem;
-  padding-bottom: 0.5rem;
   display: flex;
   justify-content: center;
-  gap: 3rem;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 .join-decline button {
-  width: 110px;
-  padding: 0.5rem 0;
-  border: none;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
   border-radius: 50px;
-  font-size: 1.3rem;
+  font-family: "Lexend Exa";
+  font-weight: 600;
   cursor: pointer;
+  transition: transform 0.2s ease;
+  text-transform: none;
+  white-space: nowrap;
 }
 
 .join-decline button.join {
-  background: linear-gradient(165deg, #605ED0 -100%, #4CC9F0 20%, #7209B7 130%);
+  background-color: #199cff;
+  color: white;
+  border: none;
 }
 
 .join-decline button.decline {
-  background: radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.14) 0%, rgba(76, 202, 240, 0.08) 70%, rgba(76, 202, 240, 0) 100%);
+  background-color: transparent;
+  color: white;
+  border: 1.5px solid #199cff;
+}
+
+.join-decline button:hover {
+  transform: scale(1.03);
 }
 </style>

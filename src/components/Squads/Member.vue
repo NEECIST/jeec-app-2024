@@ -8,8 +8,11 @@
       <p class="name">{{ member.name }}</p>
       <p class="username">{{ member.username }}</p>
     </div>
-    <button class="kick-member" v-if="can_kick && !loading_kick && !member.is_captain"
-      @click.stop="kick">
+    <button
+      class="kick-member"
+      v-if="can_kick && !loading_kick && !member.is_captain"
+      @click.stop="kick"
+    >
       <div></div>
       <div></div>
     </button>
@@ -18,8 +21,8 @@
 
 <script>
 import UserService from "../../services/user.service";
-import { useUserStore } from '@/stores/UserStore';
-import { mapState } from 'pinia';
+import { useUserStore } from "@/stores/UserStore";
+import { mapState } from "pinia";
 
 export default {
   name: "Member",
@@ -31,11 +34,11 @@ export default {
     return {
       loading_kick: false,
       kick_img: require("@/assets/icons/recycle-icon.svg"),
-      not_kick: true
+      not_kick: true,
     };
   },
   computed: {
-    ...mapState(useUserStore, ['user']),
+    ...mapState(useUserStore, ["user"]),
     nameArray() {
       var names = this.member.username;
 
@@ -43,7 +46,7 @@ export default {
       else return [this.member.username, ""];
     },
 
-    can_kick () {
+    can_kick() {
       return (
         this.user.username === this.captain_ist_id &&
         this.member.external_id !== this.user.student_external_id
@@ -82,7 +85,7 @@ export default {
   grid-template-rows: 1fr;
   align-items: center;
   margin-top: 0.6rem;
-  padding-left: 10%;
+  padding-left: 5%;
   gap: 1rem;
   position: relative;
 }
@@ -130,7 +133,7 @@ export default {
 
 .member-info .username {
   font-size: 0.9rem;
-  color: #1A9CD8;
+  color: #1a9cd8;
 }
 
 .kick-member {
@@ -160,8 +163,8 @@ export default {
   border-radius: 10px;
   rotate: 45deg;
   transform-origin: 50% 50%;
-  background-color: #F72585;
-  box-shadow: 0 0 3px #F72585;
+  background-color: #f72585;
+  box-shadow: 0 0 3px #f72585;
 }
 
 .kick-member div:last-child {

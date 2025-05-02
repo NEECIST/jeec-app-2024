@@ -53,16 +53,15 @@
       <div v-if="true">
         <div v-if="!isCreatingSquad">
           <div class="profile-buttons-jeec">
-            <button
-              @click="change_Create"
-              class="create-squad-button"
-            >
+            <button @click="change_Create" class="create-squad-button">
               <p>CREATE SQUAD</p>
             </button>
           </div>
 
           <div class="invites">
-            <Invite v-for="invite in invites" :key="invite.id"
+            <Invite
+              v-for="invite in invites"
+              :key="invite.id"
               :invite="invite"
               @accept="handleAcceptInvite"
               @reject="handleRejectInvite"
@@ -173,9 +172,9 @@
 
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useUserStore } from '@/stores/UserStore';
-import axios from 'axios';
+import { ref, computed, onMounted } from "vue";
+import { useUserStore } from "@/stores/UserStore";
+import axios from "axios";
 import UserService from "../services/user.service";
 import authHeader from "../services/auth-header";
 
@@ -192,33 +191,58 @@ import SquadCreation from "@/components/Squads/SquadCreation.vue";
 const loading_linkedin = ref(false);
 const modalVisible = ref(false);
 const modalVisible2 = ref(false);
-const code = ref('');
+const code = ref("");
 const dialog = ref(false);
 const prev_length = ref(0);
 const points = ref(0);
 const squad = ref({});
-const error = ref('');
+const error = ref("");
 const create_squad = ref(false);
 const loading_redeem = ref(false);
 const loading_squad = ref(true);
 const student = ref({});
 const showToast = ref(false);
-const toastMessage = ref('');
-const toastType = ref('success');
+const toastMessage = ref("");
+const toastType = ref("success");
 const isFromTecnico = ref(false);
-const educationLevel = ref('Other');
-const get_cv_files = ref('');
+const educationLevel = ref("Other");
+const get_cv_files = ref("");
 const formData = ref(null);
-const cv_url = ref('');
+const cv_url = ref("");
 const percentage = ref(50);
 const user = ref({}); // Tornar user reativo
 
 const invites = ref([
-  { id: 1, squad_name: "Exploradores", squad_cry: "Para além do limite!", sender_name: "João Silva" },
-  { id: 2, squad_name: "Tech Masters", squad_cry: "Código é vida!", sender_name: "Maria Oliveira" },
-  { id: 3, squad_name: "Engenheiros do Futuro", squad_cry: "Construindo o amanhã.", sender_name: "Carlos Ferreira" },
-  { id: 4, squad_name: "Visionários", squad_cry: "Ver além do óbvio.", sender_name: "Ana Costa" },
-  { id: 5, squad_name: "Inovadores", squad_cry: "Sempre um passo à frente.", sender_name: "Rui Martins" }
+  {
+    id: 1,
+    squad_name: "Exploradores",
+    squad_cry: "Para além do limite!",
+    sender_name: "João Silva",
+  },
+  {
+    id: 2,
+    squad_name: "Tech Masters",
+    squad_cry: "Código é vida!",
+    sender_name: "Maria Oliveira",
+  },
+  {
+    id: 3,
+    squad_name: "Engenheiros do Futuro",
+    squad_cry: "Construindo o amanhã.",
+    sender_name: "Carlos Ferreira",
+  },
+  {
+    id: 4,
+    squad_name: "Visionários",
+    squad_cry: "Ver além do óbvio.",
+    sender_name: "Ana Costa",
+  },
+  {
+    id: 5,
+    squad_name: "Inovadores",
+    squad_cry: "Sempre um passo à frente.",
+    sender_name: "Rui Martins",
+  },
 ]);
 
 const hard_squad = ref({
@@ -227,8 +251,8 @@ const hard_squad = ref({
   cry: "For Victory!",
   members: [
     { id: 101, name: "John Doe" },
-    { id: 102, name: "Jane Smith" }
-  ]
+    { id: 102, name: "Jane Smith" },
+  ],
 });
 
 // Computed properties
@@ -244,7 +268,7 @@ const showNotification = (message, type) => {
 
 const validateAndUploadCV = () => {
   if (
-    educationLevel.value !== '' &&
+    educationLevel.value !== "" &&
     (isFromTecnico.value === true || isFromTecnico.value === false) &&
     formData.value !== null
   ) {
@@ -267,27 +291,27 @@ const validateAndUploadCV = () => {
             student.value.approved_cv = false;
             formData.value = null;
             if (!student.value.uploaded_cv) {
-              showNotification('CV Submitted', 'points');
+              showNotification("CV Submitted", "points");
               student.value.uploaded_cv = true;
             } else {
-              showNotification('CV and other fields updated', 'success');
+              showNotification("CV and other fields updated", "success");
             }
           },
           (error) => {
             console.log(error);
             showNotification(
-              'Failed to upload, file size may be too large. Try uploading less than 600kb',
-              'error'
+              "Failed to upload, file size may be too large. Try uploading less than 600kb",
+              "error"
             );
           }
         );
       })
       .catch((error) => {
-        console.error('Error updating ', error);
-        showNotification('Something bad occurred', 'error');
+        console.error("Error updating ", error);
+        showNotification("Something bad occurred", "error");
       });
   } else {
-    showNotification('Please fill all the fields and upload your CV.', 'error');
+    showNotification("Please fill all the fields and upload your CV.", "error");
   }
 };
 
@@ -328,19 +352,19 @@ const add_linkedin = (e) => {
   UserService.addLinkedin(url).then(
     (response) => {
       if (!student.value.linkedin_url) {
-        showNotification('Added LinkedIn points', 'points');
+        showNotification("Added LinkedIn points", "points");
         student.value.linkedin_url = url;
         setTimeout(() => {
           getPoints();
         }, 1000);
       } else {
-        showNotification('LinkedIn updated successfully', 'success');
+        showNotification("LinkedIn updated successfully", "success");
       }
 
       loading_linkedin.value = false;
     },
     (error) => {
-      showNotification('Failed to add LinkedIn', 'error');
+      showNotification("Failed to add LinkedIn", "error");
       loading_linkedin.value = false;
     }
   );
@@ -354,7 +378,7 @@ const add_cv_novo = () => {
   if (!$refs.cv.files.length) return;
 
   formData.value = new FormData();
-  formData.value.append('cv', $refs.cv.files[0]);
+  formData.value.append("cv", $refs.cv.files[0]);
 };
 
 const see_cv = () => {
@@ -367,7 +391,7 @@ const see_cv = () => {
           uint8Array[i] = raw.charCodeAt(i);
         }
         const fileBlob = new Blob([uint8Array], {
-          type: response.data['content-type'],
+          type: response.data["content-type"],
         });
         const objetURL = window.URL.createObjectURL(fileBlob);
 
@@ -385,7 +409,6 @@ const see_cv = () => {
 
 // Substituir onCreated() por onMounted()
 onMounted(() => {
-
   const userStore = useUserStore();
   user.value = userStore.user; // Atribuindo o valor corretamente
 
@@ -454,10 +477,9 @@ onMounted(() => {
   border: 2px solid #199cff;
   padding: 0.3rem 0.6rem;
   border-radius: 25px;
-  color: white;
   font-size: 0.8rem;
   font-family: "Lexend Exa", sans-serif;
-  font-weight: 300;
+  font-weight: 100;
   display: flex;
   align-items: center;
   gap: 0.3rem;
