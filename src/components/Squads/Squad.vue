@@ -27,11 +27,39 @@
         />
 
         <!-- <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true" -->
-        <div class="squad-add_members">
-          <div class="member-image plus-circle">
-            <p>+</p>
+        <div class="squad-add-members">
+          <div class="squad-add-click" @click.stop="change_add_member_dialog">
+            <div class="member-image plus-circle">
+              <p v-if="!add_members_dialog">+</p>
+              <p v-else>-</p>
+            </div>
+            <p class="add-members-text">ADD MEMBERS</p>
           </div>
-          <p class="add-members-text">ADD MEMBERS</p>
+          <div
+            v-if="add_members_dialog"
+            class="squad-add-members-dialog"
+          >
+            <input
+              v-model="search"
+              type="text"
+              placeholder="Search username..."
+              class="search-input"
+              @input="filterStudents"
+            />
+            <div class="buttons-conteiner">
+              <button
+                class="invite"
+              >
+                Invite
+              </button>
+              <button
+                class="cancel"
+                @click.stop="change_add_member_dialog"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -43,7 +71,7 @@
 
   <div
     class="dialog-overlay"
-    v-if="add_members_dialog"
+    v-if="false"
     @keydown.esc="closeDialog"
   >
     <div class="squad-dialog-backdrop" @click="closeDialog"></div>
@@ -430,6 +458,10 @@ export default {
     kick_member(squad) {
       this.squad = squad;
     },
+    change_add_member_dialog() {
+      this.add_members_dialog = !this.add_members_dialog;
+      console.log("add_member_dialog ", this.add_members_dialog);
+    },
     cancel_invite() {
       UserService.getSquadInvitationsSent().then(
         (response) => {
@@ -595,7 +627,62 @@ export default {
   font-family: "Lexend", sans-serif;
 }
 
-.squad-add_members {
+.squad-members {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-right: 70px;
+  
+}
+
+.squad-add-members-dialog {
+  width:100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 1rem;
+}
+
+.squad-add-members-dialog .search-input {
+  width: 100%;
+  height: 30px;
+  padding: 0 25px;
+  border-radius: 10px;
+  border: none;
+  background-color: #f0f0f0;
+  font-size: 1.2rem;
+}
+
+.buttons-conteiner {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+}
+
+.buttons-conteiner > button {
+  width: 100%;
+  max-width: 100px;
+  height: 25px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.buttons-conteiner button.invite {
+  background-color: #199cff;
+  color: white;
+  border: none;
+}
+
+.buttons-conteiner button.cancel {
+  background-color: transparent;
+  color: white;
+  border: 1.5px solid #199cff;
+}
+
+.squad-add-click {
   display: flex;
   align-items: center;
   justify-content: start;
@@ -604,7 +691,7 @@ export default {
   cursor: pointer;
 }
 
-.squad-add_members:hover {
+.squad-add-click:hover {
   scale: 1.02;
 }
 

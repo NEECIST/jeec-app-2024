@@ -50,7 +50,7 @@
     <div class="squad-section">
       <h2 class="squad-title">SQUAD</h2>
       <!-- <div v-if="!isInSquad"> -->
-      <div v-if="true">
+      <div v-if="false">
         <div v-if="!isCreatingSquad">
           <div class="profile-buttons-jeec">
             <button @click="change_Create" class="create-squad-button">
