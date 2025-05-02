@@ -12,9 +12,6 @@
           <p>Motto {{ invite.squad_cry }}</p>
         </div>
       </div>
-      <div class="squad-sender">
-        <p>By {{ nameArray[0] }} {{ nameArray[nameArray.length - 1] }}</p>
-      </div>
     </div>
 
     <div v-if="!loading" class="join-decline">
@@ -35,14 +32,6 @@ export default {
       jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,
       loading: false,
     };
-  },
-  computed: {
-    nameArray() {
-      var names = this.invite.sender_name.split(" ");
-
-      if (names.length > 1) return names;
-      else return [this.invite.sender_name, ""];
-    },
   },
   methods: {
     accept() {

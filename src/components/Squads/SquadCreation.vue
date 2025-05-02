@@ -1,6 +1,5 @@
 <template>
   <div class="create-squad radient-border-passthrough" :class="{ expanded: expanded }">
-    <button @click="expanded = !expanded">Create Squad</button>
     <div class="create-modal" :aria-hidden="expanded" :inert="!expanded">
       <div class="name-image">
         <input class="create-name" :class="{ input_exists: name.length }" type="text" placeholder="Name for the squad..."
@@ -20,7 +19,11 @@
         </div>
       </div>
 
-      <button class="create-submit" @click.stop="create_squad" v-if="!loading">Create</button>
+      <div class="buttons" v-if="!loading">
+        <button class="create-submit" @click.stop="create_squad">Create</button>
+        <button class="create-submit" @click.stop="cancel">Cancel</button>
+      </div>
+  
 
       <p class="error-msg">{{ error }}</p>
     </div>
@@ -51,7 +54,7 @@ export default {
       error: "",
       loading: false,
       locked: true,
-      expanded: false,
+      expanded: true,
       showToast: false,
       toastMessage: '',
       toastType: 'success',
@@ -113,10 +116,7 @@ export default {
       await UserService.createSquad(formData)
         .then((response) => {
           // handle success
-          this.$emit("create", response.data.data);
-          this.error = "";
-          this.loading = false;
-          this.$router.go()
+          this.$emit("return");
         })
         .catch((error) => {
           // handle error
@@ -126,6 +126,9 @@ export default {
           this.error = "Squad name already taken";
           // this.showNotification("Squad already exists", "error");
         });
+    },
+    async cancel() {
+      this.$emit("return");
     },
   },
   computed: {
@@ -279,6 +282,11 @@ export default {
   font-family: "Lexend Deca";
   width: 100%;
   font-size: 1.1rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
 }
 
 .create-submit {
