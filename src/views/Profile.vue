@@ -500,13 +500,20 @@ onMounted(() => {
 
 .profile-buttons-jeec {
   display: flex;
-  gap: 0.7rem;
-  justify-content: center;
+  justify-content: space-between;
   margin-top: 0.5rem;
-  flex-wrap: wrap;
-  max-width: 650px;
+  max-width: 680px;
   margin-left: auto;
   margin-right: auto;
+  gap: 0.7rem;
+  padding: 0 1rem;
+}
+
+.profile-buttons-jeec button.linkedin-button,
+.profile-buttons-jeec button.cv-button {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .profile-buttons-jeec button {

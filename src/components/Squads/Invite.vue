@@ -99,6 +99,8 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
+  text-align: left;
   color: white;
 }
 
@@ -135,6 +137,8 @@ export default {
   transition: transform 0.2s ease;
   text-transform: none;
   white-space: nowrap;
+  min-width: 100px;
+  text-align: center;
 }
 
 .join-decline button.join {

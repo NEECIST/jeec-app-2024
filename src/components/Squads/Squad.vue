@@ -4,15 +4,17 @@
       <div class="squad-header">
         <div class="squad-texts">
           <p class="squad-name">{{ squad.name }}</p>
-          <div class="squad-motto-wrapper">
-            {{ squad.cry }}
-          </div>
+          <div class="squad-motto-wrapper">{{ squad.cry }}</div>
         </div>
         <div class="squad-image-wrapper">
           <div class="squad-image">
             <img :src="jeec_brain_url + squad.image" alt="squad-image" />
           </div>
         </div>
+      </div>
+
+      <div class="jeecpot-wrapper">
+        <JEECPOT :squadId="squad.id" />
       </div>
 
       <div class="squad-members">
@@ -126,7 +128,7 @@
 import Invite from "@/components/Squads/Invite.vue";
 import SquadCreation from "@/components/Squads/SquadCreation.vue";
 import Member from "@/components/Squads/Member.vue";
-
+import JEECPOT from "@/components/UserCard/JEECPOT.vue";
 import ToastNotification from "@/components/Squads/ToastNotification.vue";
 
 import UserService from "../../services/user.service";
@@ -139,6 +141,7 @@ export default {
     Invite,
     SquadCreation,
     Member,
+    JEECPOT,
     ToastNotification,
   },
   props: {
@@ -726,6 +729,8 @@ export default {
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease;
+  min-width: 100px;
+  text-align: center;
 }
 
 .join-decline button.join {
@@ -832,7 +837,7 @@ export default {
 
 .squad-leave {
   position: absolute;
-  top: 220px;
+  top: 280px;
   right: 20px;
   width: 60px;
   height: 60px;
@@ -856,5 +861,12 @@ export default {
   filter: invert(57%) sepia(96%) saturate(3276%) hue-rotate(181deg)
     brightness(103%) contrast(103%);
   margin-left: 5px;
+}
+
+.jeecpot-wrapper {
+  margin: 0.7rem 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>
