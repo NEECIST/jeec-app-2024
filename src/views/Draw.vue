@@ -165,7 +165,7 @@ const fetchPrizes = async () => {
     hasError.value = false;
     
     const response = await axios.get(
-      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/site-get-prizes', 
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/site-get-prizes', 
       {
         headers: authHeader()
       } 

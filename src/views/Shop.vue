@@ -35,7 +35,7 @@ const fetchPrizes = async () => {
   try {
     const username = userStore.user.username;
     const response = await axios.get(
-      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/get-prizes-shop', 
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/get-prizes-shop', 
       { 
         params: { username: username },
         headers: authHeader()
@@ -69,7 +69,7 @@ const fetchDailyPrize = async () => {
 
   try {
     const response = await axios.get(
-      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/get-daily-prize',
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/get-daily-prize',
       {
         headers: authHeader()
       } 
@@ -133,7 +133,7 @@ const buyPrize = async (prize) => {
   try {
     const username = userStore.user.username;
     const response = await axios.post(
-      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/buy-prize',
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/buy-prize',
       { 
         prize_id: prize.id,
         username: username,
