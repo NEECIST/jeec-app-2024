@@ -119,7 +119,7 @@ watch(() => userStore.userPoints, () => {
     display: flex;
   }
   .tickets {
-    padding: 3px 3px 0px 8px;
+    padding: 3px 8px 0px 12px;
     width: 100%;
     height: 100%;
     display: flex;

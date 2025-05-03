@@ -144,7 +144,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   padding: 8px 17.5px;
   letter-spacing: 1px;
   font-size: 90%; /* Adjusted to approximate 16px */
-  font-weight: 700;
+  font-weight: light;
   font-family: "Lexend Exa";
   border: none;
   border-radius: 15px;
