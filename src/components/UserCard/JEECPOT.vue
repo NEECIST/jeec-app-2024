@@ -99,7 +99,7 @@ onMounted(() => {
     font-size: 0.8rem;
     /* Your JEECPOT chances */
     font-style: normal;
-    font-weight: 300;
+    font-weight: lighter;
     text-align: right;
     text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
     margin-right: 2px;
