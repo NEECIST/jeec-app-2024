@@ -83,11 +83,12 @@
     <div style="position: absolute">
       <a style="display: none" ref="see_cv" :href="cv_url">CV</a>
 
+      <!-- LinkedIn Modal -->
       <div class="modal" v-if="modalVisible == true">
         <div class="modal-backdrop" @click="toggleModal"></div>
-        <div class="modal-content">
+        <div class="modal-content custom-modal">
           <div class="modal-header">
-            <h2>Add LinkedIn</h2>
+            <h2 class="modal-title">Add LinkedIn</h2>
             <button class="modal-close" @click="toggleModal">&times;</button>
           </div>
           <form @submit="add_linkedin">
@@ -95,55 +96,65 @@
               <input
                 type="url"
                 ref="linkedin_url"
-                class="input-field"
+                class="modal-input"
                 placeholder="https://www.linkedin.com/in/XXXXX/"
                 pattern="^https?://((www|\\w\\w)\\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\\w|\\d)+/?){3}))$"
                 autofocus
               />
             </div>
-            <div class="modal-submit">
-              <button type="submit">Confirm</button>
+            <div class="modal-submit center-submit">
+              <button class="invite-button" type="submit">Confirm</button>
             </div>
           </form>
         </div>
       </div>
 
+      <!-- CV Modal -->
       <div class="modal" v-if="modalVisible2 == true">
         <div class="modal-backdrop" @click="toggleModal2"></div>
-        <div class="modal-content">
+        <div class="modal-content custom-modal">
           <div class="modal-header">
-            <h2>Add CV</h2>
+            <h2 class="modal-title">Add CV</h2>
             <button class="modal-close" @click="toggleModal2">&times;</button>
           </div>
           <form @submit.prevent="validateAndUploadCV">
             <div class="modal-body">
-              <p>Are you from Técnico?</p>
-              <label>
-                <input type="radio" v-model="isFromTecnico" :value="true" />
-                <p>Yes</p>
-              </label>
-              <label>
-                <input type="radio" v-model="isFromTecnico" :value="false" />
-                <p>No</p>
-              </label>
+              <div class="inline-radio-group">
+                <p>Are you from Técnico?</p>
+                <div class="radio-options">
+                  <label>
+                    <input type="radio" v-model="isFromTecnico" :value="true" />
+                    <span>Yes</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      v-model="isFromTecnico"
+                      :value="false"
+                    />
+                    <span>No</span>
+                  </label>
+                </div>
+              </div>
               <div class="modal-spacer"></div>
               <p>Your level of education:</p>
               <select
-                class="input-field"
+                class="modal-input"
                 v-model="educationLevel"
                 placeholder="Your level of education"
                 required
               >
-                <option value="BSc"><p>BSc</p></option>
-                <option value="MSc"><p>MSc</p></option>
-                <option value="Other"><p>Other</p></option>
+                <option value="BSc">BSc</option>
+                <option value="MSc">MSc</option>
+                <option value="Other">Other</option>
               </select>
               <div class="modal-spacer"></div>
               <p>Your CV:</p>
-              <button class="cv-button" @click.stop="cv_click" type="button">
-                <p>Upload your CV</p>
-              </button>
+              <label class="upload-cv-button" for="cvInput"
+                >Upload your CV</label
+              >
               <input
+                id="cvInput"
                 hidden
                 type="file"
                 accept="application/pdf"
@@ -151,8 +162,8 @@
                 @change="add_cv_novo"
               />
             </div>
-            <div class="modal-submit">
-              <button type="submit">Confirm</button>
+            <div class="modal-submit center-submit">
+              <button class="invite-button" type="submit">Confirm</button>
             </div>
           </form>
         </div>
@@ -639,85 +650,155 @@ onMounted(() => {
   left: 0;
   z-index: -1;
 }
-
 .modal-content {
   background: var(--color-background-sec, #1e1e2f);
   padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: 20px;
   width: 90%;
-  max-width: 800px;
+  max-width: 500px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  font-family: "Lexend Exa", sans-serif;
+  color: white;
 }
 
 .modal-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
   position: relative;
 }
 
-.modal-header h2 {
-  text-align: center;
+.modal-title {
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.1rem;
   color: white;
+  text-align: center;
+  font-family: "Lexend", sans-serif;
 }
 
-.modal-header .modal-close {
+.modal-close {
+  position: absolute;
+  right: 0;
   background: none;
   border: none;
-  font-size: 2rem;
-  line-height: 0.5;
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
+  font-size: 1.6rem;
   color: white;
+  cursor: pointer;
 }
 
-.modal-header .modal-close:hover {
-  scale: 1.1;
+.modal-close:hover {
+  transform: scale(1.1);
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .modal-body > p {
-  padding-bottom: 0.1rem;
+  font-size: 1.05rem;
+  font-weight: 500;
   color: white;
 }
 
-.modal-body .modal-spacer {
-  padding-bottom: 1rem;
-}
-
-.modal-body label {
-  display: flex;
-  gap: 1ch;
-  color: white;
-}
-
-.modal-body > button {
-  color: var(--color-background-sec);
-  padding: 0.5rem 2ch;
-}
-
-.input-field {
+.modal-input {
   width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #7f8c8d;
-  font-family: inherit;
+  padding: 0.5rem 0.7rem;
+  border-radius: 12px;
+  border: 2px solid #199cff;
+  background-color: transparent;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.9rem;
+  color: white;
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
-.modal-submit button {
+.modal-input::placeholder {
+  color: #aaa;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.75rem;
+}
+
+.modal-input:focus {
+  border-color: #42b5ff;
+}
+
+.modal-submit {
+  display: flex;
+  justify-content: center;
   margin-top: 1rem;
+}
+
+.modal-submit .invite-button {
+  padding: 0.4rem 1.5rem;
+  font-size: 0.95rem;
+  border-radius: 50px;
   background-color: #199cff;
   color: white;
-  padding: 10px 20px;
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 600;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-  float: right;
+  transition: transform 0.2s ease;
 }
 
-.modal-submit button:hover {
-  background-color: #42b5ff;
+.modal-submit .invite-button:hover {
+  transform: scale(1.03);
+}
+
+.inline-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.95rem;
+}
+
+.inline-radio-group > p {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: white;
+}
+
+.inline-radio-group .radio-options {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.inline-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.upload-cv-button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 2px solid #199cff;
+  background-color: transparent;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.upload-cv-button:hover {
+  border-color: #42b5ff;
 }
 </style>
