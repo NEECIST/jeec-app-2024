@@ -63,6 +63,7 @@ function onRouteChange() {
 };
 
 onMounted(async () => {
+  userStore.logOut()
   await router.isReady();
   onRouteChange()
   watch(() => route.fullPath, onRouteChange);
