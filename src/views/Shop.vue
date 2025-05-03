@@ -15,6 +15,8 @@ const dailyPrize = ref(null)
 const dailyPrizeLoading = ref(true)
 const dailyPrizeError = ref(null)
 
+// Add new ref for insufficient points popup
+const showInsufficientPointsPopup = ref(false)
 
 const fetchPrizes = async () => {
   loading.value = true
@@ -92,7 +94,19 @@ const closePopup = () => {
   showPopup.value = false
 }
 
+// Add new function to close insufficient points popup
+const closeInsufficientPointsPopup = () => {
+  showInsufficientPointsPopup.value = false
+}
+
 const buyPrize = async (prize) => {
+  // Check if user has enough points
+  if(userStore.userPoints.current_points < prize.price){
+    showInsufficientPointsPopup.value = true
+    showPopup.value = false
+    return
+  }
+
   try {
     const username = userStore.user.username;
     const response = await axios.post(
@@ -159,7 +173,7 @@ onMounted(() => {
           <div id="btn-ticket">
             <p>Daily Draw</p>
             <p>Ticket</p>
-            <p class="coin">50 🔵</p>
+            <p class="coin">50 <img src="@/assets/icons/flash_home.svg" alt="credit"></p>
           </div>
         </div>
       </a>
@@ -196,7 +210,7 @@ onMounted(() => {
           <div v-else class="no-image-placeholder">?</div>
         </div>
         <div class="price">
-          <span v-if="!item.bought">{{ item.price }} 🔵</span>
+          <p v-if="!item.bought" class="coin">{{ item.price }}  <img src="@/assets/icons/flash_home.svg" alt="credits"></p>
           <span v-else class="bought-text">Bought</span>
         </div>
       </div>
@@ -221,7 +235,29 @@ onMounted(() => {
           @click="buyPrize(selectedPrize)"
           :disabled="selectedPrize.bought"
         >
-          BUY PRIZE <span class="price-tag">{{ selectedPrize.price }} 🔵</span>
+          BUY PRIZE <p class="price-tag coin">{{ selectedPrize.price }} <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"></p>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insufficient Points Popup -->
+  <div v-if="showInsufficientPointsPopup" class="popup-overlay">
+    <div class="prize-popup insufficient-points-popup">
+      <div class="popup-header">
+        <h2>Insufficient Points</h2>
+        <button class="close-button" @click="closeInsufficientPointsPopup">✕</button>
+      </div>
+      <div class="popup-body">
+        <div class="insufficient-points-icon">
+          <img src="@/assets/icons/flash_home.svg" alt="flash">
+        </div>
+        <p class="insufficient-points-message">You don't have enough points to buy this prize.</p>
+        <button 
+          class="ok-button" 
+          @click="closeInsufficientPointsPopup"
+        >
+          OK, GOT IT!
         </button>
       </div>
     </div>
@@ -237,6 +273,12 @@ onMounted(() => {
   background-color: #1a1a1a;
   position: relative;
   font-family: Arial, sans-serif;
+}
+
+.coin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2ch;
 }
 
 .daily-prize-circle {
@@ -440,23 +482,27 @@ onMounted(() => {
 }
 
 .prize-popup {
-  background-color: #4a1075;
+  background-color: rgba(163, 0, 255, 0.2);
   width: 90%;
   max-width: 320px;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: solid purple;
+  backdrop-filter: blur(5px);
 }
 
 .popup-header {
   padding: 16px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   color: white;
 }
 
 .popup-header h2 {
+  text-align: center;
+  flex: 1;
   margin: 0;
   font-size: 20px;
   font-weight: bold;
@@ -541,14 +587,14 @@ onMounted(() => {
 }
 
 .buy-button {
-  background-color: #2196f3;
+  background-color: #199CFF;
   color: white;
   border: none;
   border-radius: 24px;
   padding: 12px 24px;
   font-weight: bold;
   cursor: pointer;
-  width: 100%;
+  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -561,6 +607,51 @@ onMounted(() => {
 
 .price-tag {
   margin-left: 8px;
+}
+
+/* Insufficient Points Popup Styles */
+.insufficient-points-popup {
+  background-color: #4a1075;
+}
+
+.insufficient-points-icon {
+  width: 80px;
+  height: 80px;
+  background: #4a1075;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid white;
+}
+
+.insufficient-points-icon img{
+  height: 50px;
+  width: 50px;
+}
+
+.insufficient-points-icon span {
+  font-size: 36px;
+}
+
+.insufficient-points-message {
+  color: white;
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.ok-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 24px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 8px;
 }
 
 /* Responsive adjustments */
