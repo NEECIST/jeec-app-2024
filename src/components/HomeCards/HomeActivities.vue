@@ -120,17 +120,14 @@ function getNextActivity() {
     .then((response) => {
       if (response.data.activity != null) {
         nextActivity.value = response.data.activity
-        console.log("Next Activity:", nextActivity.value);
-        const updatedImages = response.data.activity.images.map((image) => 
-          process.env.VUE_APP_JEEC_BRAIN_URL + image
-        );
-        nextActivity.value.images = updatedImages;
-        console.log(nextActivity.value.images);
+        // console.log("Next Activity:", nextActivity.value);
+        // console.log(nextActivity.value.images);
+
         nextActivity.value.day = new Date(response.data.activity.day).toLocaleDateString('en-US', { month: 'long',  day: '2-digit' });
         nextActivity.value.start_time = new Date(response.data.activity.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
         nextActivity.value.end_time = new Date(response.data.activity.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
       }
-      console.log("Next Activity:", response.data);
+      // console.log("Next Activity:", response.data);
     })
     .catch((error) => {
           console.error("Error fetching Activity data:", error);

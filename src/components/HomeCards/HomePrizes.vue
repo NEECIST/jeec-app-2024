@@ -6,7 +6,7 @@
           <div class="prizes-flex">
             <div v-if="prizes.individual_prize != null" class="prize">
               <router-link to="prizes" class="prize-img radient-border-passthrough">
-                <img :src="jeec_brain_url + prizes.individual_prize" class="activity-img">
+                <img :src="prizes.individual_prize" class="activity-img">
               </router-link>
             </div>
             <router-link 
@@ -59,6 +59,7 @@ function getDailyPrizes() {
       prizes.value = {
         individual_prize: response.data.img_daily_prize || null
       };
+      console.log("Daily prize response:", response.data)
     })
     .catch((error) => {
       console.error("Error fetching daily prizes:", error);
