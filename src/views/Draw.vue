@@ -220,8 +220,12 @@ const dailyPrizes = computed(() => {
       image: prize?.image_url ? `data:image/*;base64,${prize.image_url}` : null,
       day: day
     };
+
   });
-});
+
+
+}
+);
 
 const individualPrizes = computed(() => {
   return segmentedPrizes.value.Individual.map(prize => ({
