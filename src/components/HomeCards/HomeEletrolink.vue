@@ -77,7 +77,7 @@
             );
             companies.value.images = bufferArray;
             console.log("Eletrolink data:", companies.value.images);
-            console.log("Eletrolink data:", no_eletrolink.value);
+           
           } else {
             no_eletrolink.value = false;
           }
@@ -177,7 +177,7 @@
       background-color:var(--color-yellow);
       color: var(--color-font);
       font-size: 1rem;
-      font-weight: bold;
+      font-weight: light;
       padding: 5px 15px;
       border: none;
       border-radius: 50px;
