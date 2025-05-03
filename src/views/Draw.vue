@@ -278,7 +278,11 @@ section {
 h2 {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #ff4c9b;
+  color: white;
+  text-shadow: 0 0 5px var(--color-strong-pink),
+    0 0 10px var(--color-strong-pink),
+    0 0 20px var(--color-strong-pink),
+    0 0 40px var(--color-strong-pink);
   margin-bottom: 10px;
   text-transform: uppercase;
 }
