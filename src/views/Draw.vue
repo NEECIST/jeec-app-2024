@@ -258,11 +258,8 @@ onMounted(() => {
 <style scoped>
 .view {
   padding-top: var(--header-height);
-  --acc-color: var(--c-acc-violet)
-}
-
-.squad-jeecpot-section{
-  padding-bottom: 80px;
+  --acc-color: var(--c-acc-violet);
+  padding-bottom: 100px;
 }
 
 .shop {

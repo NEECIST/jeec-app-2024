@@ -18,28 +18,41 @@ const dailyPrizeError = ref(null)
 // Add new ref for insufficient points popup
 const showInsufficientPointsPopup = ref(false)
 
+// Add new ref for ticket popup
+const showTicketPopup = ref(false)
+
+
+const prizeTicket = {
+  name: 'Ticket',
+  description: 'A ticket for the daily prize draw. Enter for a chance to win the daily prize shown!',
+  price: 50
+}
+
 const fetchPrizes = async () => {
   loading.value = true
   error.value = null
   
   try {
+    const username = userStore.user.username;
     const response = await axios.get(
       process.env.VUE_APP_JEEC_BRAIN_URL + '/website/get-prizes-shop', 
-      {
+      { 
+        params: { username: username },
         headers: authHeader()
-      } 
+      }
     );
-    console.log(response.data)
-    // Transform the data and properly handle base64 images
-    items.value = response.data.map(prize => ({
-      id: prize.id,
-      name: prize.name || 'No prize',
-      description: prize.description || 'No description available',
-      // Make sure we're correctly formatting the base64 image
-      imageData: prize.imageData ? `data:image/*;base64,${prize.imageData}` : null,
-      price: prize.price || 50,
-      bought: prize.bought || false
-    }))
+    // Transform the data and filter out any prize named "Ticket"
+    items.value = response.data
+      .filter(prize => prize.name !== "Ticket")
+      .map(prize => ({
+        id: prize.id,
+        name: prize.name || 'No prize',
+        description: prize.description || 'No description available',
+        // Make sure we're correctly formatting the base64 image
+        imageData: prize.imageData ? `data:image/*;base64,${prize.imageData}` : null,
+        price: prize.price || 50,
+        bought: prize.bought || false
+      }))
     console.log(items);
   } catch (err) {
     console.error('Failed to fetch prizes:', err)
@@ -90,8 +103,18 @@ const openPrizePopup = (prize) => {
   showPopup.value = true
 }
 
+// New function to open ticket popup
+const openTicketPopup = () => {
+  showTicketPopup.value = true
+}
+
 const closePopup = () => {
   showPopup.value = false
+}
+
+// New function to close ticket popup
+const closeTicketPopup = () => {
+  showTicketPopup.value = false
 }
 
 // Add new function to close insufficient points popup
@@ -113,7 +136,8 @@ const buyPrize = async (prize) => {
       process.env.VUE_APP_JEEC_BRAIN_URL + '/website/buy-prize',
       { 
         prize_id: prize.id,
-        username: username
+        username: username,
+        prizeName: null
       }, 
       {
         headers: authHeader()
@@ -129,6 +153,40 @@ const buyPrize = async (prize) => {
   } catch (err) {
     console.error('Purchase failed:', err)
     alert('Failed to purchase the prize. Please try again.')
+  }
+}
+
+// New function to buy a ticket
+const buyDailyTicket = async () => {
+  // Check if user has enough points
+  if(userStore.userPoints.current_points < prizeTicket.price){
+    showInsufficientPointsPopup.value = true
+    showTicketPopup.value = false
+    return
+  }
+
+  try {
+    const username = userStore.user.username;
+    const response = await axios.post(
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/buy-daily-ticket',
+      { 
+        username: username,
+        prize_id: null,
+        prizeName: prizeTicket.name
+      }, 
+      {
+        headers: authHeader()
+      } 
+    )
+
+    // Update user points
+    userStore.userPoints.current_points = response.data[0].current_points;
+    closeTicketPopup()
+    // You might want to show a success message or take other actions
+    alert('You have successfully purchased a ticket for the daily draw!')
+  } catch (err) {
+    console.error('Ticket purchase failed:', err)
+    alert('Failed to purchase the ticket. Please try again.')
   }
 }
 
@@ -167,7 +225,7 @@ onMounted(() => {
         <div v-else class="no-image-placeholder">?</div>
       </div>
         
-      <a href="#" class="ticket-link">
+      <a href="#" class="ticket-link" @click.prevent="openTicketPopup">
         <div class="ticket-content">
           <img src="@/assets/Ticket-Vector.svg" alt="Ticket image" style="height: 40px;width: 40px;">
           <div id="btn-ticket">
@@ -236,6 +294,28 @@ onMounted(() => {
           :disabled="selectedPrize.bought"
         >
           BUY PRIZE <p class="price-tag coin">{{ selectedPrize.price }} <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"></p>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ticket Popup -->
+  <div v-if="showTicketPopup" class="popup-overlay">
+    <div class="prize-popup">
+      <div class="popup-header">
+        <h2>Daily Draw Ticket</h2>
+        <button class="close-button" @click="closeTicketPopup">✕</button>
+      </div>
+      <div class="popup-body">
+        <div class="prize-circle ticket-circle">
+          <img src="@/assets/Ticket-Vector.svg" alt="Ticket" class="popup-prize-image ticket-image-popup" />
+        </div>
+        <p class="prize-description">Purchase a ticket for the daily prize draw. You could win the prize displayed next to the ticket!</p>
+        <button 
+          class="buy-button" 
+          @click="buyDailyTicket"
+        >
+          BUY TICKET <p class="price-tag coin">50 <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"></p>
         </button>
       </div>
     </div>
@@ -316,6 +396,18 @@ onMounted(() => {
   max-width: 80px;
   margin-left: 12px;
   border-radius: 4px;
+}
+
+.ticket-image-popup {
+  max-width: 60px;
+  max-height: 60px;
+}
+
+.ticket-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
 }
 
 #btn-ticket > p {
@@ -528,7 +620,7 @@ onMounted(() => {
 .prize-circle {
   width: 100px;
   height: 100px;
-  background: white;
+  background: transparent;
   border-radius: 50%;
   margin-bottom: 16px;
   display: flex;
