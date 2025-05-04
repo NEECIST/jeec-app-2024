@@ -1,7 +1,7 @@
 <template>
   <div class="view">
     <!-- SECTION: Main Title and Description -->
-    <section class="info-section">
+    <section>
       <h3>Earn points by participating in JEEC!</h3>
       <p>
         Visit companies at the job fair or take part in Eletrolink to collect points. 
@@ -297,10 +297,6 @@ p {
 
 a {
   text-decoration: none;
-}
-
-.info-section {
-  background: #1a1a1a; 
 }
 
 .daily-draw-section .carousel-container {
