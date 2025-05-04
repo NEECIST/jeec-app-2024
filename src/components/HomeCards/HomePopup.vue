@@ -3,7 +3,7 @@
     <div @click="isOpen = false" class="popup" v-if="isOpen">
       <button class="close-button">&times;</button>
       <h2>You still haven't added your CV!</h2>
-      <p>Upload now to get 500 points and get you closer to the JEECPOT</p>
+      <p>Upload now to get 300 points and get you closer to the JEECPOT</p>
     </div>
   </Transition>
 </template>

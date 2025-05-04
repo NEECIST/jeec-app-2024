@@ -25,7 +25,7 @@ const showTicketPopup = ref(false)
 const prizeTicket = {
   name: 'Ticket Diário',
   description: 'A ticket for the daily prize draw. Enter for a chance to win the daily prize shown!',
-  price: 50
+  price: 500
 }
 
 const fetchPrizes = async () => {
@@ -50,7 +50,7 @@ const fetchPrizes = async () => {
         description: prize.description || 'No description available',
         // Make sure we're correctly formatting the base64 image
         imageData: prize.imageData ? `data:image/*;base64,${prize.imageData}` : null,
-        price: prize.price || 50,
+        price: prize.price || 500,
         bought: prize.bought || false
       }))
   } catch (err) {
@@ -230,7 +230,7 @@ onMounted(() => {
           <div id="btn-ticket">
             <p>Daily Draw</p>
             <p>Ticket</p>
-            <p class="coin">50 <img src="@/assets/icons/flash_home.svg" alt="credit"></p>
+            <p class="coin">500 <img src="@/assets/icons/flash_home.svg" alt="credit"></p>
           </div>
         </div>
       </a>
@@ -314,7 +314,7 @@ onMounted(() => {
           class="buy-button" 
           @click="buyDailyTicket"
         >
-          BUY TICKET <p class="price-tag coin">50 <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"></p>
+          BUY TICKET <p class="price-tag coin">500 <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"></p>
         </button>
       </div>
     </div>
@@ -494,6 +494,10 @@ onMounted(() => {
   height: 80px;
   border-radius: 50%;
   background: white;
+}
+
+.white {
+  object-fit: contain;
 }
 
 .circle.bought {

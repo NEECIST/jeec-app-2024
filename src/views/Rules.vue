@@ -5,8 +5,8 @@
       <li>
         <p>You can earn points through the following activities:</p>
         <ul>
-          <li>Submitting your LinkedIn: 25 points</li>
-          <li>Submitting your CV: 50 points</li>
+          <li>Submitting your LinkedIn: 50 points</li>
+          <li>Submitting your CV: 300 points</li>
           <li>Job Fair: 50 points/company</li>
           <li>15/15: 300 points</li>
           <li>Inside Talks: 450 points</li>
