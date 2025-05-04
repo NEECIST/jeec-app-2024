@@ -179,7 +179,7 @@ li a.active-link::before {
 .link-underline {
   width: 100%;
   height: 2.3px;
-  background: linear-gradient(90deg, #605ED0, #4CC9F0, #7209B7);
+  background: var(--color-jeec-blue);
   opacity: 0.6;
   border-radius: 3px;
 }

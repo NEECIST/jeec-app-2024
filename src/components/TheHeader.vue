@@ -37,8 +37,9 @@ header {
 
 header h1 {
   text-transform: uppercase;
-  color: var(--color-background);
-  text-shadow: 0px 0px 15px #4CC9F0, 2px 2px 0 #4CC9F0, 2px -2px 0 #4CC9F0, -2px 2px 0 #4CC9F0, -2px -2px 0 #4CC9F0;  letter-spacing: 2px;
+  color: white;
+  text-shadow: 0 0 20px #199cff;
   font-size: clamp(1.5rem, 8vw, 2.3rem);
+  letter-spacing: 0.1em;
 }
 </style>

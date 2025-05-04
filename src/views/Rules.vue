@@ -5,27 +5,33 @@
       <li>
         <p>You can earn points through the following activities:</p>
         <ul>
-          <li>Job Fair: 25 points</li>
-          <li>15/15: 300 points</li>
-          <li>Workshop, Inside Talks, Discussion Panel and Main Speaker: 500 points</li>
           <li>Submitting your LinkedIn: 25 points</li>
-          <li>Subscribe at Ordem dos Engenheiros: 300 points</li>
-          <li>Submitting your CV: 500 points</li>
+          <li>Submitting your CV: 50 points</li>
+          <li>Job Fair: 50 points/company</li>
+          <li>15/15: 300 points</li>
+          <li>Inside Talks: 450 points</li>
+          <li>Eletrolink: 450 points (+200 if you enroll earlier)</li>
+          <li>Workshops: 600 points</li>
+          <li>Discussion Panel: 600 points</li>
+          <li>KeyNote Speakers: 750 points</li>
         </ul>
       </li>
       <li>The points are only awarded if you stay for the whole period of the activity. Claiming the points and then leaving the activity will get you banned.</li>
       <li>To earn points for activities that are not performed in the app, you must use your QR Code.</li>
       <li>For the Job Fair activity, you must present the QR Code to the people in the booth. For other activities, you present it to the JEEC members stationed at that activity.</li>
-      <li>Points are divided into daily points and total points. Daily points are the points gained in the present day. Total points are all tne points gained throughout the week, including the daily points.</li>
+      <li>Points are divided into daily points and total points. Daily points are the points gained in the present day. Total points are all the points gained throughout the week, including the daily points.</li>
       <li>You can also create a squad to earn squad points. Squad points are only earned by their members while they are in the squad. If a member of the squad leaves it or gets banned, all points earned by that member are deleted from the squad. Squads can have up to 4 members.</li>
     </ol>
 
     <h2>Prizes:</h2>
     <ol>
-      <li>Tickets: Tickets can be earned with daily points. Every day, up to 3 tickets can be earned. The first ticket is obtained at 50 points, the second at 550, and the third at 1100. Spend the tickets for a chance to win prizes.</li>
-      <li>Daily Prizes: The individual and the squad with the highest number of daily points will receive, at the end of that day, the corresponding daily prize.</li>
-      <li>JEECPOT: Every individual who reaches 2000 total points participates in the final lottery. These prizes will be randomly attributed to the participants. Every participant can only receive one prize, and having more points does not increase the chances of winning a prize.</li>
-      <li>Weekly Prizes: The first, second and third individuals and squads with the highest total number of points at the end of the event will receive the corresponding weekly prizes.</li>
+      <li>Daily Draw: Buy a ticket at the Prize Shop (500 points) and enter the daily Draw! One winner every day.</li>
+      <li>Weekly Individual Draw: At the end of the week, we'll draw 3 winners from the participants with the most points. The more points you have, the more chances you get to win!</li>
+      <li>Weekly Squads Draw: Same rules, but for squads! Get your team to the top and win together.</li>
+      <li>EletroLink Champion: The participant with the most EletroLinks wins.</li>
+      <li>Job Fair Explorer: The one who visits the most booths during the fair takes the prize.</li>
+      <li>CV Giveaway: Upload your CV to our platform and get a shot at winning a prize. Easy!</li>
+      <li>Activity Prizes: One person is randomly selected at the end of each activity to win!</li>
     </ol>
   </div>
 </template>
