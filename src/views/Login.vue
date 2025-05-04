@@ -8,10 +8,10 @@
     <div class="login">
       <p>Login to our Webapp</p>
       <p>Webapp not available yet. Stay tunned!</p>
-      <div class="button_wrapper">
+      <!-- <div class="button_wrapper">
         <GoogleLogin :callback="callback" />
         <p>v3.0</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
