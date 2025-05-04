@@ -69,11 +69,9 @@
           }
         )
         .then((response) => {
-          // console.log("Eletrolink response:", response.data);
           if (response.data.companies && response.data.companies.length > 0) {
             no_eletrolink.value = true;
             companies.value.images = response.data.companies;
-            // console.log("Eletrolink data:", companies.value.images);
            
           } else {
             no_eletrolink.value = false;

@@ -53,7 +53,6 @@ const fetchPrizes = async () => {
         price: prize.price || 50,
         bought: prize.bought || false
       }))
-    console.log(items);
   } catch (err) {
     console.error('Failed to fetch prizes:', err)
     error.value = 'Failed to load prizes. Please try again later.'

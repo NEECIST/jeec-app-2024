@@ -125,7 +125,6 @@ function getNextActivity() {
         nextActivity.value.start_time = new Date(response.data.activity.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
         nextActivity.value.end_time = new Date(response.data.activity.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
       }
-      // console.log("Next Activity:", response.data);
     })
     .catch((error) => {
           console.error("Error fetching Activity data:", error);

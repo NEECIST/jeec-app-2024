@@ -145,7 +145,6 @@ export default {
     
   },
   created() {
-    console.log(this.user);
     if (!this.user) {
       this.$router.push("/");
     }
@@ -153,7 +152,6 @@ export default {
     UserService.getAllRanking().then(
       (response) => {
         this.rankingdata = response.data;
-        console.log(this.rankingdata); 
 
         this.students_weekly = this.rankingdata.individual_top10_weekly;
 

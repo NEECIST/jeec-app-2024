@@ -59,7 +59,6 @@ function getDailyPrizes() {
       prizes.value = {
         individual_prize: response.data.img_daily_prize || null
       };
-      console.log("Daily prize response:", response.data)
     })
     .catch((error) => {
       console.error("Error fetching daily prizes:", error);

@@ -52,7 +52,6 @@ export const useUserStore = defineStore("UserStore", {
           }
         )
         .then((response) => {
-          console.log(response)
           const data = response.data
           this.user = data.current_student
           localStorage.setItem("user", JSON.stringify(this.user))
@@ -65,8 +64,6 @@ export const useUserStore = defineStore("UserStore", {
       } else {
         window.location.reload();
       }
-
-      console.log(this.user)
     },
     async getMilestones() {
       await axios

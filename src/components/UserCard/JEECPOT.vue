@@ -35,7 +35,6 @@ function getProgress() {
   const milestone = userStore.milestones.total;
   
   const progressPercentage = (userTotalPoints / milestone) * 100;
-  console.log("Progress Percentage: ", progressPercentage);
 
   if (isNaN(progressPercentage)) {
     progress.value = 0;

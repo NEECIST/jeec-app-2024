@@ -153,8 +153,6 @@ export default {
 
     invite() {
 
-      console.log("invite", this.search);
-
       UserService.inviteSquad(this.search).then(
         (response) => {
           this.loading_add = false;
@@ -190,7 +188,6 @@ export default {
     },
     change_add_member_dialog() {
       this.add_members_dialog = !this.add_members_dialog;
-      console.log("add_member_dialog ", this.squad.members);
       this.search = "";
     },
     progress() {
@@ -211,15 +208,12 @@ export default {
         let [captain] = members.splice(captainIndex, 1);
         members.unshift(captain);
       }
-      console.log(members);
       return members;
     },
   },
 
   mounted() {
     document.addEventListener("click", this.handleClickOutside);
-
-    console.log("SQUADSQUASDQUAD");
 
     UserService.getEventInfo().then(
       (response) => {

@@ -107,10 +107,6 @@ export default {
     index: String
   },
   methods: {
-    addEvent() {
-      console.log("Add event");
-    },
-
     formatToCalendarDate() {
       const date = this.event.day.split(',')[0];
       const date_components = date.split(' ');
@@ -150,8 +146,6 @@ export default {
         const event_end_time = this.event.end_time;
 
         if (current_time >= event_time && current_time <= event_end_time) {
-          console.log("Current event");
-          console.log(this.event);
           this.isCurrentEvent = true;
         }
       }

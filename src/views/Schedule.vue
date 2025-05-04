@@ -469,7 +469,6 @@ async function fetchData() {
       new Promise(resolve => setTimeout(resolve, 200))
     ]);
     const data = response.data;
-    console.log('Dados recebidos:', data);
     base_path.value = process.env.VUE_APP_JEEC_BRAIN_URL.replace('ist/', 'ist');
     db_activities.value = data.other_activities.map(activity => ({
       id: activity.id,
@@ -490,7 +489,6 @@ async function fetchData() {
       })) || [],
       logo_companies: activity.companies || []
     }));
-    console.log('Atividades:', db_activities.value);
 
   } catch (error) {
     console.error('Erro ao buscar os dados:', error);

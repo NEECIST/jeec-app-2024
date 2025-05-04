@@ -43,9 +43,6 @@ export default {
       this.$emit("reject", this.invite.external_id);
     },
   },
-  mounted() {
-    console.log(this.invite);
-  },
 };
 </script>
 

@@ -92,21 +92,6 @@ const student = userStore.user;
 
 const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL.slice(0, -1);
 
-// function fetchData() {
-//     axios.get(
-//     `${jeec_brain_url}/student/get_eletrolink_activities`,
-//       {
-//         headers: {
-//           ...authHeader(), 
-//           student: student
-//         }
-//       }
-//     )    
-//     .then((response) => {
-//         eletrolink_activities.value = response.data.activities
-//         console.log(eletrolink_activities.value)
-//     });
-// }
 
 const activeEletrolinkId = ref(null)
 
@@ -124,7 +109,6 @@ function fetchData() {
         }  
     ).then(response => {
         eletrolink_activities.value = response.data.activities
-        console.log(eletrolink_activities.value)
     }
     );
 }
@@ -141,7 +125,6 @@ function reg_eletrolink(activity) {
         }  
     ).then(response => {
         eletrolink_activities.value = response.data.activities
-        console.log(eletrolink_activities.value)
     }
     );
 }
@@ -158,7 +141,6 @@ function unreg_eletrolink(activity) {
         }  
     ).then(response => {
         eletrolink_activities.value = response.data.activities
-        console.log(eletrolink_activities.value)
     }
     );
 }

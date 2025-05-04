@@ -172,7 +172,6 @@ const fetchPrizes = async () => {
     );
     
     prizesArray.value = response.data;
-    console.log(response)
     // Segment the prizes by type
     segmentedPrizes.value = {
       CV: response.data.CV || [],
@@ -181,9 +180,6 @@ const fetchPrizes = async () => {
       Shop: response.data.Shop || [],
       Squad: response.data.Squad || []
     };
-    
-    console.log("Prizes Data:", prizesArray.value);
-    console.log("Segmented Prizes:", segmentedPrizes.value);
   } catch (error) {
     console.error("Error fetching prizes:", error);
     hasError.value = true;

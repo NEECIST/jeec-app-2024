@@ -22,7 +22,6 @@ export const usePrizeStore = defineStore("PrizeStore", {
         })
         .then((response) => {
           this.prizes = response.data;
-          console.log(this.prizes)
         });
     },
   },

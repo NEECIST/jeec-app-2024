@@ -320,11 +320,9 @@ const creationReturn = () => {
 
 const handleAcceptInvite = (inviteId) => {
   // Handle the acceptance of the invite
-  console.log(`Accepted invite with ID: ${inviteId}`);
 
   UserService.acceptInvitation(inviteId).then(
     (response) => {
-      console.log("Accepted invite response", response);
       showNotification("Squad invite accepted", "success");
       fetchProfile();
     },
@@ -337,11 +335,9 @@ const handleAcceptInvite = (inviteId) => {
 
 const handleRejectInvite = (inviteId) => {
   // Handle the rejection of the invite
-  console.log(`Rejected invite with ID: ${inviteId}`);
 
   UserService.rejectInvitation(inviteId).then(
     (response) => {
-      console.log("Rejected invite response", response);
       showNotification("Squad invite rejected", "success");
       fetchProfile();
     },
@@ -358,8 +354,6 @@ const add_linkedin = (e) => {
   modalVisible.value = false;
   loading_linkedin.value = true;
   dialog.value = false;
-
-  console.log("LinkedIn URL:", linkedin_url.value);
 
   const linke_url = linkedin_url.value;
 
@@ -394,7 +388,6 @@ const add_cv_novo = () => {
   if (cv.value && cv.value.files && cv.value.files.length > 0) {
     formData.value = new FormData();
     formData.value.append("cv", cv.value.files[0]);
-    console.log("Arquivo enviado com sucesso!");
   } else {
     console.log("Nenhum arquivo selecionado.");
   }
@@ -430,12 +423,9 @@ const fetchProfile = () => {
   const userStore = useUserStore();
   user.value = userStore.user; // Atribuindo o valor corretamente
 
-  console.log("Profile monted user", user.value);
-
   UserService.getUserStudent().then(
     (response) => {
       student.value = response.data.data;
-      console.log("Profile monted student", student.value);
     },
     (error) => {
       console.log(error);
@@ -445,7 +435,6 @@ const fetchProfile = () => {
   UserService.getDailyTicket().then(
     (response) => {
       hasTicket.value = response.data;
-      console.log("hasTicket", response);
     },
     (error) => {
       console.log(error);
@@ -457,20 +446,16 @@ const fetchProfile = () => {
   UserService.getUserSquad().then(
     (response) => {
       squad.value = response.data.data;
-      console.log("Profile monted squad", squad.value);
     },
     (error) => {
-      console.log("Não tem squad");
       console.log(error);
     }
   );
-  console.log("Is in Squad", isInSquad());
 
   if (!isInSquad()) {
     UserService.getSquadInvitationsReceived().then(
       (response) => {
         invites.value = response.data.data;
-        console.log("Profile monted invites", invites.value);
       },
       (error) => {
         console.log(error);
