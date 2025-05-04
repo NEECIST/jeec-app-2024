@@ -40,7 +40,7 @@ export const useUserStore = defineStore("UserStore", {
     logOut(){
       localStorage.clear()
       this.loggedInState = false;
-      // window.location.reload()
+      window.location.reload()
     },
 
     async authUser(jwt) {
