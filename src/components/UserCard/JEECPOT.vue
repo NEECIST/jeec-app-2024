@@ -2,15 +2,19 @@
   <div class="wrapper" :class="variant">
     <p class="chances">Your JEECPOT chances</p>
     <div class="points radient-border-passthrough">
-      <div class="progress radient-border-passthrough_child" :style="'--progress:' + progress + '%;'"></div>
-      <div 
-        class="progress-fill" 
+      <div
+        class="progress radient-border-passthrough_child"
+        :style="'--progress:' + progress + '%;'"
+      ></div>
+      <div
+        class="progress-fill"
         :style="{
           '--progress': progress + '%',
-          ...(progress < 100 && { 'clip-path': 'polygon(10% 0%, 100% 0%, 100% 100%, 5% 100%)' })
+          ...(progress < 100 && {
+            'clip-path': 'polygon(10% 0%, 100% 0%, 100% 100%, 5% 100%)',
+          }),
         }"
-        >
-      </div>
+      ></div>
       <p v-if="progress >= 100" class="points-total">Eligible!</p>
       <p v-else class="points-total">{{progress}}%</p>
     </div>
@@ -129,12 +133,11 @@ onMounted(() => {
     transition: width 0.3s ease-in-out;
   }
 
-  .points-total {
-    position: absolute;
-    top: 50%;
-    translate: 0 -50%;
-    padding-right: 1ch;
-    z-index: 2;
-  }
- 
+.points-total {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  padding-right: 1ch;
+  z-index: 2;
+}
 </style>

@@ -12,5 +12,9 @@ module.exports = defineConfig({
       favicon32: 'img/icons/favicon-32x32.png',
       msTileImage: 'img/icons/mstile-150x150.png'
     }
+  },
+  devServer: {
+    host: '0.0.0.0',
+    port: 8080,
   }
 })

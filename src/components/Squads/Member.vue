@@ -1,15 +1,17 @@
 <template>
   <div class="member" v-if="not_kick">
-    <div class="member-image radient-border-passthrough">
+    <div class="member-image">
       <img :src="member.photo" alt="profile photo" class="profile-photo" />
     </div>
     <div class="member-info">
-      <p v-if="member.is_captain" class="captain">Captain</p>
       <p class="name">{{ member.name }}</p>
-      <p class="username">{{ member.username }}</p>
+      <p v-if="member.is_captain" class="captain">Captain</p>
     </div>
-    <button class="kick-member" v-if="can_kick && !loading_kick && !member.is_captain"
-      @click.stop="kick">
+    <button
+      class="kick-member"
+      v-if="can_kick && !loading_kick && !member.is_captain"
+      @click.stop="kick"
+    >
       <div></div>
       <div></div>
     </button>
@@ -18,24 +20,23 @@
 
 <script>
 import UserService from "../../services/user.service";
-import { useUserStore } from '@/stores/UserStore';
-import { mapState } from 'pinia';
+import { useUserStore } from "@/stores/UserStore";
+import { mapState } from "pinia";
 
 export default {
   name: "Member",
   props: {
     member: Object,
-    captain_ist_id: String,
   },
   data: function () {
     return {
       loading_kick: false,
       kick_img: require("@/assets/icons/recycle-icon.svg"),
-      not_kick: true
+      not_kick: true,
     };
   },
   computed: {
-    ...mapState(useUserStore, ['user']),
+    ...mapState(useUserStore, ["user"]),
     nameArray() {
       var names = this.member.username;
 
@@ -43,11 +44,8 @@ export default {
       else return [this.member.username, ""];
     },
 
-    can_kick () {
-      return (
-        this.user.username === this.captain_ist_id &&
-        this.member.external_id !== this.user.student_external_id
-      );
+    can_kick() {
+      return false;
     },
   },
   methods: {
@@ -77,23 +75,21 @@ export default {
 
 <style scoped>
 .member {
-  display: grid;
-  grid-template-columns: 60px 1fr;
-  grid-template-rows: 1fr;
+  display: flex;
   align-items: center;
-  margin-top: 0.6rem;
-  padding-left: 10%;
-  gap: 1rem;
-  position: relative;
+  justify-content: flex-start; /* Alinha os itens à esquerda */
+  gap: 0.7rem;
+  margin-top: 0rem;
+  margin-left: 0.1rem;
 }
 
 .member-image {
-  width: 100%;
-  aspect-ratio: 1;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   overflow: hidden;
-
-  --border-width: 1.5px;
+  border: 2px solid #199cff;
+  flex-shrink: 0;
 }
 
 .member-image::before {
@@ -115,22 +111,23 @@ export default {
 }
 
 .member-info .captain {
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
 }
 
 .member-info .name {
-  font-size: 1.4rem;
-  /* display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;  
-  overflow: hidden; */
+  font-size: 1.05rem;
+  font-family: "Lexend Exa", sans-serif;
+  color: white;
+  margin: 0;
 }
 
 .member-info .username {
-  font-size: 0.9rem;
-  color: #1A9CD8;
+  font-size: 0.75rem;
+  font-family: "Lexend Exa", sans-serif;
+  color: #1a9cd8;
+  margin: 0;
 }
 
 .kick-member {
@@ -160,8 +157,8 @@ export default {
   border-radius: 10px;
   rotate: 45deg;
   transform-origin: 50% 50%;
-  background-color: #F72585;
-  box-shadow: 0 0 3px #F72585;
+  background-color: #f72585;
+  box-shadow: 0 0 3px #f72585;
 }
 
 .kick-member div:last-child {
