@@ -109,7 +109,7 @@ const backgroundColorWithTransparency = computed(() => {
 function getNextActivity() {
   axios
     .get(
-      process.env.VUE_APP_JEEC_BRAIN_URL + "student/next_activity",
+      process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
       {
         headers: {
           ...authHeader(), 

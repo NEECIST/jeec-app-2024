@@ -60,7 +60,7 @@
     function getEletrolink() {
       axios
         .get(
-          process.env.VUE_APP_JEEC_BRAIN_URL + "student/eletrolink_home",
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/eletrolink_home",
           {
             headers: {
               ...authHeader(), 
