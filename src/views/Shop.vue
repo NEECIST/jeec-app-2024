@@ -349,7 +349,6 @@ onMounted(() => {
   padding-top: var(--header-height);
   --acc-color: var(--c-acc-violet);
   min-height: 100vh;
-  background-color: #1a1a1a;
   position: relative;
   font-family: Arial, sans-serif;
 }
