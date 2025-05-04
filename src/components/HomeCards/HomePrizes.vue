@@ -6,17 +6,18 @@
           <div class="prizes-flex">
             <div v-if="prizes.individual_prize != null" class="prize">
               <router-link to="prizes" class="prize-img radient-border-passthrough">
-                <img :src="jeec_brain_url + prizes.individual_prize" class="activity-img">
+                <img :src="prizes.individual_prize" class="activity-img">
               </router-link>
             </div>
-            <button 
+            <router-link 
+              to="/shop" 
               class="buy-ticket" 
               :class="{ pressed: isPressed }"
               @touchstart="onTouchStart"
               @touchend="onTouchEnd"
             >
               Buy Ticket
-            </button>
+            </router-link>
           </div>
         </div>
       </template>
@@ -32,10 +33,11 @@ import { ref } from 'vue';
 import axios from 'axios';
 import authHeader from '@/services/auth-header';
 import { useUserStore } from '@/stores/UserStore';
+import { onMounted } from 'vue';
 const userStore = useUserStore();
 const student = userStore.user;
 
-const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL;
+const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL.slice(0, -1);
 
 const prizes = ref({
   individual_prize: null // Added fictional prize
@@ -57,6 +59,7 @@ function getDailyPrizes() {
       prizes.value = {
         individual_prize: response.data.img_daily_prize || null
       };
+      console.log("Daily prize response:", response.data)
     })
     .catch((error) => {
       console.error("Error fetching daily prizes:", error);
@@ -64,8 +67,10 @@ function getDailyPrizes() {
     });
 }
 
-// Uncomment this line to fetch real prizes during testing
-getDailyPrizes();
+onMounted(() => {
+  getDailyPrizes();
+});
+
 
 const isPressed = ref(false);
 
@@ -83,7 +88,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   --border-background: var(--color-strong-pink);
 }
 .today-prizes h2 {
-  font-size: clamp(1.4rem, 3.1vw, 1.8rem);
+  font-size: clamp(1.3rem, 3.1vw, 1.8rem);
   font-family: "Lexend Exa";
   text-transform: uppercase;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
@@ -140,7 +145,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   padding: 8px 17.5px;
   letter-spacing: 1px;
   font-size: 90%; /* Adjusted to approximate 16px */
-  font-weight: 700;
+  font-weight: light;
   font-family: "Lexend Exa";
   border: none;
   border-radius: 15px;
@@ -151,6 +156,7 @@ const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   max-width: 50%;
   align-content: center;
   max-height: 10%;
+  text-decoration: none;
 }
 
 .pressed {

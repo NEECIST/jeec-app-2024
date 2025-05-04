@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" :class="variant">
-    <p>Your JEECPOT chances</p>
+    <p class="chances">Your JEECPOT chances</p>
     <div class="points radient-border-passthrough">
       <div class="progress radient-border-passthrough_child" :style="'--progress:' + progress + '%;'"></div>
       <div 
@@ -12,12 +12,12 @@
         >
       </div>
       <p v-if="progress >= 100" class="points-total">Eligible!</p>
-      <p v-else class="points-total">{{ progress}}%</p>
+      <p v-else class="points-total">{{progress}}%</p>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch, defineProps, onMounted } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 const userStore = useUserStore();
 
@@ -28,19 +28,24 @@ const progress = ref(0);
 function getProgress() {
   const userTotalPoints = userStore.userPoints.total_points;
 
-  const milestone = userStore.milestones.final;
+  const milestone = userStore.milestones.total;
   
   const progressPercentage = (userTotalPoints / milestone) * 100;
-  
-  if (progressPercentage > 100) {
-    progress.value = 100
+  console.log("Progress Percentage: ", progressPercentage);
+
+  if (isNaN(progressPercentage)) {
+    progress.value = 0;
+  } else if (progressPercentage > 100) {
+    progress.value = 100;
   } else {
-    progress.value = progressPercentage.toFixed(2);
+    progress.value = Math.round(progressPercentage);
   }
+  
+
 };
 
 watch(() => userStore.userPoints, () => {
-  if (userStore.milestones.final != 0) {
+  if (userStore.milestones.total != 0) {
     getProgress();
   } else {
     setTimeout(() => {
@@ -48,6 +53,11 @@ watch(() => userStore.userPoints, () => {
     }, 2000);
   }
 });
+
+onMounted(() => {
+  getProgress();
+});
+
 </script>
 <style scoped>
   .wrapper {
@@ -83,6 +93,16 @@ watch(() => userStore.userPoints, () => {
     text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
     margin-right: 2px;
 
+  }
+  .chances {
+    font-family: 'Lexend Exa';
+    font-size: 0.8rem;
+    /* Your JEECPOT chances */
+    font-style: normal;
+    font-weight: lighter;
+    text-align: right;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
+    margin-right: 2px;
   }
   .wrapper.profile > .points {
     height: 23px;

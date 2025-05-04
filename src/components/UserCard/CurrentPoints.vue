@@ -20,7 +20,12 @@ const userDailyPoints = ref(0);
 
 
 async function getProgress() {
-  userDailyPoints.value = userStore.userPoints.daily_points;
+  if (userStore.userPoints.current_points == undefined) {
+    userDailyPoints.value = 0;
+  }
+  else {
+    userDailyPoints.value = userStore.userPoints.current_points;
+  }
 
   // const milestones = userStore.milestones.daily.sort(function(a, b) { return a - b; });
   // const milestonesMod = [0].concat(milestones); //[0, 50, 550, 1100]
@@ -64,7 +69,7 @@ watch(() => userStore.userPoints, () => {
   .wrapper {
     width: 100%;
     height: 100%;
-    margin-top: 10px;
+    margin-top: 7px;
     display: flex;
     justify-content: flex-end;
   }
@@ -114,7 +119,7 @@ watch(() => userStore.userPoints, () => {
     display: flex;
   }
   .tickets {
-    padding: 3px 3px 0px 8px;
+    padding: 3px 8px 0px 12px;
     width: 100%;
     height: 100%;
     display: flex;

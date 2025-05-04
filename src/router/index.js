@@ -29,6 +29,11 @@ const routes = [
     component: () => import("@/views/Schedule.vue"),
   },
   {
+    path: "/eletrolink",
+    name: "Eletrolink",
+    component: () => import("@/views/Eletrolink.vue"),
+  },
+  {
     path: "/profile",
     name: "Profile",
     component: () => import("@/views/Profile.vue"),
@@ -47,7 +52,7 @@ const routes = [
     component: () => import("@/views/Rules.vue"),
   },  
   {
-    path: "/",
+    path: "/draw",
     name: "Draw",
     component: () => import("@/views/Draw.vue"),
   },
@@ -85,7 +90,7 @@ router.beforeEach((to, from) => {
   }
   
   if (to.name == "login" && userStore.loggedIn == true) {
-    router.push("/")
+    router.push("/home")
   }
 })
 

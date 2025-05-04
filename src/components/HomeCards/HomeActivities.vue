@@ -48,12 +48,13 @@
 </template>
 
 <script setup>
-import FadeLoop from '../FadeLoop.vue';
+
 
 import { ref, computed } from 'vue';
 import axios from 'axios';
 import authHeader from '@/services/auth-header';
 import { useUserStore } from '@/stores/UserStore';
+import { onMounted } from 'vue';
 const userStore = useUserStore();
 const student = userStore.user;
 
@@ -119,26 +120,23 @@ function getNextActivity() {
     .then((response) => {
       if (response.data.activity != null) {
         nextActivity.value = response.data.activity
-        response.data.activity.images.forEach((image, index) => {
-          const bufferArray = [];
-          bufferArray.push(process.env.VUE_APP_JEEC_BRAIN_URL + image);
-          
-          nextActivity.value.images = bufferArray;
-          
-        });
-        // Add a default image if the array is empty
-        if (nextActivity.value.images.length === 0) {
-          nextActivity.value.images.push(require('@/assets/JEEC.png'));
-          nextActivity.value.images.push(require('@/assets/JEEC.png'));
-        }
+        // console.log("Next Activity:", nextActivity.value);
+        // console.log(nextActivity.value.images);
+
         nextActivity.value.day = new Date(response.data.activity.day).toLocaleDateString('en-US', { month: 'long',  day: '2-digit' });
         nextActivity.value.start_time = new Date(response.data.activity.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
         nextActivity.value.end_time = new Date(response.data.activity.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
       }
+      // console.log("Next Activity:", response.data);
     })
+    .catch((error) => {
+          console.error("Error fetching Activity data:", error);
+        });
 }
 
-getNextActivity();
+onMounted(() => {
+  getNextActivity();
+});
 </script>
 
 <style scoped>
@@ -171,7 +169,7 @@ getNextActivity();
 
 .activity-info h3 {
   font-family: "Lexend Exa";
-  font-size: clamp(1.1rem, 3.2vw, 1.1rem);
+  font-size: clamp(1.0rem, 3.2vw, 1.1rem);
   font-weight: 700;
   overflow: hidden;
   letter-spacing: 0.05em;
@@ -194,14 +192,14 @@ getNextActivity();
 
 .activity-info h4 {
   font-family: "Lexend Exa";
-  font-size: clamp(1.2rem, 3.7vw, 1.3rem);
+  font-size: clamp(1.1rem, 3.7vw, 1.3rem);
   font-weight: 400;
   letter-spacing: 0.05em;
 }
 
 .activity-info h5 {
   font-family: "Lexend Exa";
-  font-size: clamp(1rem, 3.1vw, 1.2rem);
+  font-size: clamp(0.8rem, 3.1vw, 1.2rem);
   font-weight: 400;
   letter-spacing: 0.05em;
   text-transform: uppercase;

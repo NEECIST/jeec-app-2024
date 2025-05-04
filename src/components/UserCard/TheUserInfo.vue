@@ -1,5 +1,10 @@
 <template>
   <div :class="[variant, { 'radient-border-passthrough': variant != 'nav' }]" class="user-card">
+    <div class="help-info" v-if="variant == 'home'">
+        <router-link to="/help">
+          <img src="@/assets/help-info.svg" aria-hidden="true">
+        </router-link>
+    </div>
     <div class="name-wrapper" v-if="variant != 'home'">
       <p>{{ userStore.user.name }}</p>
       <p v-if="variant == 'profile'" class="username">{{ userStore.user.username }}</p>
@@ -8,24 +13,24 @@
       <QrCodeButton></QrCodeButton>
     </div>
     <div class="tickets-wrapper">
-      <DailyTickets :variant="variant"></DailyTickets>
+      <CurrentPoints :variant="variant"></CurrentPoints>
     </div>
     <div class="points-wrapper">
-      <TotalPoints :variant="variant"></TotalPoints>
+      <JEECPOT :variant="variant"></JEECPOT>
     </div>
     <div class="user-wrapper">
       <UserImage :image="userStore.user.picture" :variant="variant"></UserImage>
     </div>
     <div class="text-points-wrapper" v-if="variant == 'profile'">
       <p>Total Points: {{ userStore.userPoints.total_points }}</p>
-      <p>Total Tickets: {{ userStore.userPoints.tickets }}</p>
+      <p>JEECPOT Chances: {{ userStore.userPoints.jeecpot }}</p>
     </div>
   </div>
 </template>
 <script setup>
 import QrCodeButton from './QrCodeButton.vue';
-import DailyTickets from './CurrentPoints.vue';
-import TotalPoints from './JEECPOT.vue';
+import CurrentPoints from './CurrentPoints.vue';
+import JEECPOT from './JEECPOT.vue';
 import UserImage from './UserImage.vue';
 
 import { useUserStore } from '@/stores/UserStore';
@@ -40,6 +45,26 @@ const props = defineProps({
 });
 </script>
 <style scoped>
+.help-info {
+  position: absolute;
+  bottom: calc(var(--height));
+  padding: 5px;  
+  z-index: 50;
+}
+.help-info a {
+  display: block; /* Ensure the link takes up the full area */
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px); /* Apply blur effect directly to the image */
+  -webkit-backdrop-filter: blur(10px); /* Add webkit prefix for Safari support */
+  background: rgba(25, 156, 255, 0.1);
+  border-radius: 50%; /* Ensure the background has 50% border radius */
+}
+
+.help-info img {
+  display: block; /* Ensure the image doesn't interfere with the layout */
+}
+
 .user-card.home {
   --background: #199CFF1A;
   --border-background: #199CFF;
@@ -60,10 +85,12 @@ const props = defineProps({
   height: var(--height);
   max-width: 450px;
   z-index: 50;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(10px);
   /* Note: backdrop-filter has minimal browser support */
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 43px;
   justify-content: center;
+  box-sizing: border-box; /* Include padding in the element's dimensions */
 
 }
 

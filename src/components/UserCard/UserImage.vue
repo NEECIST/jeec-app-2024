@@ -1,21 +1,33 @@
 <template>
   <router-link to="/profile" class="radient-border-passthrough" :class="variant">
-    <!-- <img :src="'data:image/png;base64,' + computedImage" alt="user image"> -->
-    <img :src="image" alt="user image">
+    <img :src="image ? 'data:image/png;base64,' + image : require('@/assets/JEEC.png')" alt="user image">
+    <!-- <img :src="image" alt="user image"> -->
   </router-link>
 </template>
 <script setup>
 import { defineProps } from 'vue';
 import { ref } from 'vue';
-const props = defineProps(['image', 'variant']);
-// const image = ref(require('@/assets/JEEC.png'));
-
+const props = defineProps({
+  image: {
+    type: String,
+    default: ''
+  },
+  variant: {
+    type: String,
+    default: ''
+  }
+});
+// const image = ref();
+// console.log(props.image);
 </script>
 <style scoped>
   a.profile {
     width: auto;
     height: 100%;
     flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   a {
     --border-background: #199CFF;

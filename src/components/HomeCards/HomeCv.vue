@@ -7,7 +7,14 @@
                 {{text}}
             </p>
             <div class="Cv-icon">
-                <img class="image"  :src="icon">
+              <router-link 
+                to="/profile" 
+                :class="{ pressed: isPressed }"
+                @touchstart="onTouchStart"
+                @touchend="onTouchEnd"
+              >
+                <img class="image" :src="icon">
+              </router-link>
             </div>
           </div>
         </div>
@@ -15,11 +22,15 @@
 </template>
   
 <script setup>
-    import { ref, computed } from 'vue';
+  import { ref, computed } from 'vue';
 
-    const text = ref("Still didn’t add your CV? Pass by our check in to win a surprise reward.");
-    const icon = ref(require('@/assets/cv_button_img.svg'));
+  const text = ref("Still didn’t add your CV? Pass by our check in to win a surprise reward.");
+  const icon = ref(require('@/assets/cv_button_img.svg'));
 
+  const isPressed = ref(false);
+
+  const onTouchStart = () => (isPressed.value = true);
+  const onTouchEnd = () => setTimeout(() => (isPressed.value = false), 100);
   
 </script>
   
@@ -29,7 +40,7 @@
   }
   
   .CV-container h2 {
-    font-size: clamp(1.2rem, 3.1vw, 1.8rem);
+    font-size: clamp(1.4rem, 3.1vw, 1.8rem);
     /* CV DRAW */
 
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -83,5 +94,11 @@
     height: 70%;
     object-position: center;
   }
+
+  .pressed {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+
 
 </style>
