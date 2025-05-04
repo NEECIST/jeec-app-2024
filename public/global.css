@@ -15,6 +15,18 @@
   --color-yellow: #FFBE0B;
   --color-yellow-rgb: 255, 190, 11;
   --color-jeec-blue: #199CFF;
+  
+  --c-acc-blue: #199cff;
+  --c-acc-lighter-dark-blue: #2e55ff;
+  --c-acc-dark-blue: #1500b1;
+  --c-acc-purple-blue: #605ed0;
+  --c-acc-lilac: #a300ff;
+  --c-acc-strong-pink: #ff006e;
+  --c-acc-violet: #7209b7;
+  --c-acc-yellow: #ffbe0b;
+  --c-acc-orange: #fb5607;
+
+  --font-schedule: "Russo One", sans-serif;
 }
 
 body {
