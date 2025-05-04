@@ -23,7 +23,7 @@ const showTicketPopup = ref(false)
 
 
 const prizeTicket = {
-  name: 'Ticket',
+  name: 'Ticket Diário',
   description: 'A ticket for the daily prize draw. Enter for a chance to win the daily prize shown!',
   price: 50
 }
@@ -35,7 +35,7 @@ const fetchPrizes = async () => {
   try {
     const username = userStore.user.username;
     const response = await axios.get(
-      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/get-prizes-shop', 
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/get-prizes-shop', 
       { 
         params: { username: username },
         headers: authHeader()
@@ -43,7 +43,7 @@ const fetchPrizes = async () => {
     );
     // Transform the data and filter out any prize named "Ticket"
     items.value = response.data
-      .filter(prize => prize.name !== "Ticket")
+      .filter(prize => prize.name !== prizeTicket.name)
       .map(prize => ({
         id: prize.id,
         name: prize.name || 'No prize',
@@ -69,7 +69,7 @@ const fetchDailyPrize = async () => {
 
   try {
     const response = await axios.get(
-      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/get-daily-prize',
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/get-daily-prize',
       {
         headers: authHeader()
       } 
@@ -133,7 +133,7 @@ const buyPrize = async (prize) => {
   try {
     const username = userStore.user.username;
     const response = await axios.post(
-      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/buy-prize',
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/buy-prize',
       { 
         prize_id: prize.id,
         username: username,
@@ -364,7 +364,7 @@ onMounted(() => {
 .daily-prize-circle {
   width: 80px;
   height: 80px;
-  border: 2px solid #9c27b0;
+  border: 2px solid var(--color-purple);
   border-radius: 50%;
   background: white;
   display: flex;
@@ -443,7 +443,7 @@ onMounted(() => {
 }
 
 .ticket-link {
-  background: #9c27b0; /* purple background */
+  background: var(--color-purple);
   padding: 10px 16px;
   border-radius: 12px;
   text-decoration: none;
@@ -481,7 +481,7 @@ onMounted(() => {
 .circle {
   width: 70px;
   height: 70px;
-  border: 2px solid #9c27b0;
+  border: 2px solid var(--color-purple);
   border-radius: 50%;
   background: white;
   transition: all 0.2s ease;

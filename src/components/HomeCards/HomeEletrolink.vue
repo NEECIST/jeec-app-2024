@@ -69,14 +69,11 @@
           }
         )
         .then((response) => {
-          console.log("Eletrolink response:", response.data);
+          // console.log("Eletrolink response:", response.data);
           if (response.data.companies && response.data.companies.length > 0) {
             no_eletrolink.value = true;
-            const bufferArray = response.data.companies.map((image) => 
-            jeec_brain_url + image
-            );
-            companies.value.images = bufferArray;
-            console.log("Eletrolink data:", companies.value.images);
+            companies.value.images = response.data.companies;
+            // console.log("Eletrolink data:", companies.value.images);
            
           } else {
             no_eletrolink.value = false;
