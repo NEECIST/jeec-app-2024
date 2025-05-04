@@ -1285,8 +1285,8 @@ h1 {
 }
 
 .eletrocomp img {
-  height: auto;
-  object-fit: contain;
+  height: 100%;
+  max-width: 100%;
 }
 
 .no-companies {
@@ -1653,6 +1653,13 @@ h1 {
   font-size: 10px;
   text-decoration: underline;
   font-weight: 300;
+}
+
+.mobile .eletrocomp.more-indicator {
+  color: var(--color-background);
+  background-color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
 }
 
 .mobile .activity-inside-talks-info {

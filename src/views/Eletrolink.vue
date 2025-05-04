@@ -206,7 +206,7 @@ onMounted(fetchData)
 
 .info {
     background: none;
-    color: var(--c-acc-blue);
+    color: var(--c-acc-yellow);
     border: none;
     border-radius: 5px;
     align-self: flex-start;

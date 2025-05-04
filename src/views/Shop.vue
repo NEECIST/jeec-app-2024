@@ -363,7 +363,7 @@ onMounted(() => {
 .daily-prize-circle {
   width: 80px;
   height: 80px;
-  border: 2px solid var(--color-purple);
+  border: 2px solid var(--c-acc-violet);
   border-radius: 50%;
   background: white;
   display: flex;
@@ -442,7 +442,7 @@ onMounted(() => {
 }
 
 .ticket-link {
-  background: var(--color-purple);
+  background: var(--c-acc-violet);
   padding: 10px 16px;
   border-radius: 12px;
   text-decoration: none;
@@ -480,7 +480,7 @@ onMounted(() => {
 .circle {
   width: 70px;
   height: 70px;
-  border: 2px solid var(--color-purple);
+  border: 2px solid var(--c-acc-violet);
   border-radius: 50%;
   background: white;
   transition: all 0.2s ease;
@@ -579,7 +579,7 @@ onMounted(() => {
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border: solid purple;
+  border: solid var(--c-acc-violet);
   backdrop-filter: blur(5px);
 }
 

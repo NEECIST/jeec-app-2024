@@ -1,6 +1,6 @@
 <template>
   <router-link to="/profile" class="radient-border-passthrough" :class="variant">
-    <img :src="image ? 'data:image/png;base64,' + image : require('@/assets/JEEC.png')" alt="user image">
+    <img :src="image ? image : require('@/assets/jeec25.png')" alt="user image">
     <!-- <img :src="image" alt="user image"> -->
   </router-link>
 </template>
