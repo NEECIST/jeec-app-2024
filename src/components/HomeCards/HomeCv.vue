@@ -73,8 +73,8 @@
   }
   
   .Cv-icon {
-    min-width: 16vw;
-    height: 14vw;
+    width: 15ch;
+    max-width: 70px;
     position: relative;
     align-self: center;
     aspect-ratio: 1;
