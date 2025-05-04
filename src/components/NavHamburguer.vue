@@ -31,14 +31,14 @@ function toggleNav() {
 }
 
 .nav__toggle span {
-  background-color: #F72585;
+  background-color: var(--color-jeec-blue);
   width: 100%;
   height: 3px;
   display: block;
   position: absolute;
   border-radius: 3px;
   rotate: 0;
-  box-shadow: 0px 0px 3px #F72585;
+  box-shadow: 0px 0px 3px var(--color-jeec-blue);
   transition: all 0.5s, box-shadow 0s;
 }
 
@@ -57,7 +57,7 @@ function toggleNav() {
 
 .nav__toggle span:nth-child(3) {
   top: 10px;
-  box-shadow: 0px 0px 0px #F72585;
+  box-shadow: 0px 0px 0px var(--color-jeec-blue);
 }
 
 .nav__toggle span:nth-child(4) {
@@ -78,7 +78,7 @@ function toggleNav() {
 
 .nav__toggle.active span:nth-child(3) {
   rotate: -45deg;
-  box-shadow: 0px 0px 3px #F72585;
+  box-shadow: 0px 0px 3px var(--color-jeec-blue);
   height: 4px;
 }
 

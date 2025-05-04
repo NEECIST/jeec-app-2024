@@ -22,7 +22,7 @@
                         <div v-if="activeEletrolinkId === activity.id" class="eletrolink-content-grid">
                             <div class="eletrolink-grid-row">
                                 <div class="eletrocomp">
-                                    <!-- <img :src="eletrocomp.logos_companies" alt="Eletrocomp Logo" /> -->
+                                    <img :src="activity.image_base64" alt="Eletrocomp Logo" />
                                 </div>
                                 <div>
                                     <div class="eletrocomp-title">
@@ -62,7 +62,7 @@
                         </div>
                         <div v-else class="eletrolink-grid-row">
                             <div class="eletrocomp">
-                                <!-- <img :src="eletrocomp.logos_companies" alt="Eletrocomp Logo" /> -->
+                                <img :src="activity.image_base64" alt="Eletrocomp Logo" />
                             </div>
                             <div>
                                 <div class="eletrocomp-title">
@@ -109,6 +109,7 @@ function fetchData() {
         }  
     ).then(response => {
         eletrolink_activities.value = response.data.activities
+        console.log(eletrolink_activities.value)
     }
     );
 }
@@ -182,6 +183,12 @@ onMounted(fetchData)
     height: 50px;
     background-color: #eee;
     border-radius: 8px;
+}
+
+.eletrocomp > img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
 }
 
 .required-text {
