@@ -10,7 +10,7 @@
               <img v-if="hasTicket" src="@/assets/icons/daily_ticket.svg" alt="Ticket" class="ticket-icon"/>
             </span>
             <span class="points">
-              {{ student.total_points || 0 }}
+              {{ student.current_points || 0 }}
               <img src="@/assets/icons/flash_home.svg" alt="Energy" />
             </span>
           </div>
