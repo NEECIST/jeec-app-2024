@@ -20,6 +20,10 @@
             <div class="link-underline"></div>
           </li>
           <li>
+            <router-link to="/eletrolink">eletrolink</router-link>
+            <div class="link-underline"></div>
+          </li>
+          <li>
             <router-link to="/draw">draw</router-link>
             <div class="link-underline"></div>
           </li>

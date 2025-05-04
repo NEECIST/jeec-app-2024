@@ -29,6 +29,11 @@ const routes = [
     component: () => import("@/views/Schedule.vue"),
   },
   {
+    path: "/eletrolink",
+    name: "Eletrolink",
+    component: () => import("@/views/Eletrolink.vue"),
+  },
+  {
     path: "/profile",
     name: "Profile",
     component: () => import("@/views/Profile.vue"),
