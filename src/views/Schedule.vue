@@ -463,7 +463,7 @@ async function fetchData() {
   try {
 
     const [response] = await Promise.all([
-      axios.get(process.env.VUE_APP_JEEC_BRAIN_URL + 'student/get_activity_by_day', {
+      axios.get(process.env.VUE_APP_JEEC_BRAIN_URL + '/student/get_activity_by_day', {
         headers: authHeader(),
       }),
       new Promise(resolve => setTimeout(resolve, 200))
