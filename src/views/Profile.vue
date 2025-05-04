@@ -393,32 +393,6 @@ const add_cv_novo = () => {
   }
 };
 
-const see_cv = () => {
-  /* if (student.value.uploaded_cv) {
-    UserService.getCV().then(
-      (response) => {
-        const raw = atob(response.data.data);
-        const uint8Array = new Uint8Array(raw.length);
-        for (let i = 0; i < raw.length; i++) {
-          uint8Array[i] = raw.charCodeAt(i);
-        }
-        const fileBlob = new Blob([uint8Array], {
-          type: response.data["content-type"],
-        });
-        const objetURL = window.URL.createObjectURL(fileBlob);
-
-        cv_url.value = objetURL;
-
-        $refs.see_cv.href = objetURL;
-        $refs.see_cv.click();
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  } */
-};
-
 const fetchProfile = () => {
   const userStore = useUserStore();
   user.value = userStore.user; // Atribuindo o valor corretamente
