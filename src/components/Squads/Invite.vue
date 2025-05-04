@@ -9,7 +9,6 @@
         </div>
         <div class="squad-info">
           <p>Squad {{ invite.squad_name }}</p>
-          <p>Motto {{ invite.squad_cry }}</p>
         </div>
       </div>
     </div>
@@ -27,6 +26,7 @@ export default {
   props: {
     invite: Object,
   },
+  emits: ['accept', 'reject'],
   data: function () {
     return {
       jeec_brain_url: process.env.VUE_APP_JEEC_BRAIN_URL,

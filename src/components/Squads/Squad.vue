@@ -13,8 +13,10 @@
         </div>
       </div>
 
-      <div class="jeecpot-wrapper">
-        <JEECPOT :squadId="squad.id" />
+      <div class="jeecpot-wrapper" v-if="event && squad">
+        <JEECPOTSquad
+          :progress="progress()"
+        />
       </div>
 
       <div class="squad-members">
@@ -22,14 +24,16 @@
         <!-- <Member v-for="member in orderedMembers" :key="member.username" :member="member"
           :captain_ist_id="squad.captain_ist_id" @kick="kick_member" /> -->
 
-        <Member
-          v-for="member in squad.members"
-          :key="member.id"
-          :member="member"
-        />
+          <div v-if="squad && squad.members && squad.members.data" class="squad-members">
+            <Member
+              v-for="member in squad.members.data"
+              :key="member.ist_id"
+              :member="member"
+            />
+          </div>
 
         <!-- <button v-if="squad.members.data.length < 4 && !loading_add" @click.stop="add_members_dialog = true" -->
-        <div class="squad-add-members member">
+        <div class="squad-add-members member" v-if="squad && squad.members && squad.members.data && squad.members.data.length < 4 && !loading_add">
           <div class="add-members-row" @click.stop="change_add_member_dialog">
             <div class="member-image plus-circle">
               <img
@@ -54,10 +58,9 @@
               type="text"
               placeholder="Search username..."
               class="search-input"
-              @input="filterStudents"
             />
             <div class="join-decline">
-              <button class="join" @click="invite">Invite</button>
+              <button class="join" @click.stop="invite">Invite</button>
               <button class="decline" @click.stop="change_add_member_dialog">
                 Cancel
               </button>
@@ -72,64 +75,13 @@
     </div>
   </div>
 
-  <div class="dialog-overlay" v-if="false" @keydown.esc="closeDialog">
-    <div class="squad-dialog-backdrop" @click="closeDialog"></div>
-    <div class="squad-dialog" ref="dialog">
-      <p class="dialog-title">Add Members</p>
-      <input
-        v-model="search"
-        type="text"
-        placeholder="Search username..."
-        class="search-input"
-        @input="filterStudents"
-      />
-      <div class="chips-container">
-        <button
-          v-for="(squadmate, index) in squadmates"
-          :key="index"
-          class="chip"
-          @click="remove(squadmate, $event)"
-        >
-          <p v-if="squadmate">
-            {{ squadmate }} <span class="close-icon">×</span>
-          </p>
-        </button>
-      </div>
-      <div class="autocomplete">
-        <div v-if="Array.isArray(this.students2) && this.students2.length > 0">
-          <ul>
-            <li
-              v-for="student in this.students3"
-              :key="student.username"
-              @click="addSquadmate(student)"
-            >
-              <!-- <img :src="student.photo" alt="Student Photo" class="avatar" /> -->
-              {{ student.username }}
-            </li>
-          </ul>
-        </div>
-      </div>
-      <button @click.stop="invite" class="invite">Invite</button>
-    </div>
-  </div>
-
-  <div>
-    <ToastNotification
-      :message="toastMessage"
-      :type="toastType"
-      :visible="showToast"
-      @close="showToast = false"
-    >
-    </ToastNotification>
-  </div>
 </template>
 
 <script>
 import Invite from "@/components/Squads/Invite.vue";
 import SquadCreation from "@/components/Squads/SquadCreation.vue";
 import Member from "@/components/Squads/Member.vue";
-import JEECPOT from "@/components/UserCard/JEECPOT.vue";
-import ToastNotification from "@/components/Squads/ToastNotification.vue";
+import JEECPOTSquad from "@/components/UserCard/JEECPOTSquad.vue";
 
 import UserService from "../../services/user.service";
 import { useUserStore } from "@/stores/UserStore";
@@ -141,12 +93,12 @@ export default {
     Invite,
     SquadCreation,
     Member,
-    JEECPOT,
-    ToastNotification,
+    JEECPOTSquad,
   },
   props: {
     squad: Object,
   },
+  emits: ['delete', 'notification'],
   data: function () {
     return {
       button: "my squad",
@@ -162,6 +114,7 @@ export default {
       students: [],
       search: "",
       today_reward: {},
+      event: {},
       default_image: require("../../assets/jeec_colour_no_edition_transparent.svg"),
       width: window.innerWidth,
       loading_delete: false,
@@ -180,272 +133,52 @@ export default {
       toastType: "success",
       students2: [],
       photos: [],
+      message: "",
+      type: "",
     };
   },
   methods: {
-    showNotification(message, type) {
-      this.toastMessage = message;
-      this.toastType = type;
-      this.showToast = true;
-    },
-
-    filterStudents() {
-      if (this.search.trim() === "") {
-        this.students3 = [];
-      } else {
-        this.students3 = this.students2.filter((student) =>
-          student.username.toLowerCase().includes(this.search.toLowerCase())
-        );
-      }
-    },
-    closeDialog(event) {
-      if (event.key === "Escape") {
-        this.add_members_dialog = false;
-      }
-    },
     handleClickOutside(event) {
       if (this.$refs.dialog && !this.$refs.dialog.contains(event.target)) {
         this.add_members_dialog = false;
       }
     },
-    addSquadmate(student) {
-      if (student && student.username) {
-        const username = student.username;
-        console.log(this.squadmates.length + this.squad.members.data.length);
-        if (
-          this.squadmates.length + this.squad.members.data.length < 4 &&
-          !this.squadmates.includes(username)
-        ) {
-          this.squadmates.push(username);
-          this.search = ""; // Clear the search input after adding a squadmate
-        }
-      } else {
-        console.error("Invalid student object:", student);
-      }
+    showNotification(message, type) {
+
+      this.message = message;
+      this.type = type;
+
+      this.$emit("notification", this.message, this.type);
     },
-    click(username) {
-      if (username !== this.button) {
-        this.button = username;
-      }
-    },
-    notification(message, type) {
-      this.showNotification(message, type);
-    },
-    create_squad(squad) {
-      this.squad = squad;
-    },
-    async accept_invite(invite_id) {
-      await UserService.acceptInvitation(invite_id).then(
+
+    invite() {
+
+      console.log("invite", this.search);
+
+      UserService.inviteSquad(this.search).then(
         (response) => {
-          UserService.getSquadInvitationsReceived().then(
-            (response) => {
-              this.invites = response.data.data;
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
-
-          UserService.getUserSquad().then(
-            (response) => {
-              this.squad = response.data.data;
-              this.button = "my squad";
-              this.notification("Joined squad " + this.squad.name, "success");
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
+          this.loading_add = false;
+          this.showNotification("Invitation sent!", "success");
+          this.change_add_member_dialog();
         },
         (error) => {
           console.log(error);
-          UserService.getSquadInvitationsReceived().then(
-            (response) => {
-              this.invites = response.data.data;
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
-          this.notification("Failed to join squad", "error");
-        },
-        (error) => {
-          this.showNotification("Squad is full", "success");
-          console.log(error);
+          this.loading_add = false;
+          this.showNotification("Error sending invitation", "error");
         }
       );
-      this.$router.go();
-    },
-    limitStudents() {
-      if (this.squad.members.data.length >= 4) {
-        this.squadmates.pop();
-      }
 
-      this.search = "";
-    },
-    remove(item, event) {
-      console.log("remover");
-      event.stopPropagation();
-      const index = this.squadmates.findIndex(
-        (squadmate) => squadmate.username === item.username
-      );
-      if (index >= 0) this.squadmates.splice(index, 1);
+      this.$emit("delete");
     },
 
-    async invite() {
-      if (this.squadmates.length > 0) {
-        this.loading_add = true;
-        this.add_members_dialog = false;
-
-        await UserService.inviteSquad(this.squadmates).then(
-          (response) => {
-            this.squadmates = [];
-            const data = response.data;
-            this.members_with_squad = data.members_with_squad;
-            this.invited_members = data.invited_members;
-
-            UserService.getSquadInvitationsSent().then(
-              (response) => {
-                this.invites_sent = response.data.data;
-                this.loading_add = false;
-              },
-              (error) => {
-                console.log(error);
-                this.loading_add = false;
-              }
-            );
-          },
-          (error) => {
-            console.log(error);
-            this.showNotification("Failed to send invitation", "error");
-
-            UserService.getSquadInvitationsSent().then(
-              (response) => {
-                this.invites_sent = response.data.data;
-                this.loading_add = false;
-              },
-              (error) => {
-                console.log(error);
-                this.loading_add = false;
-              }
-            );
-
-            this.loading_add = false;
-          }
-        );
-
-        let string_notification_invites = "";
-        let string_notification_squads = "";
-
-        if (this.invited_members.length >= 1) {
-          string_notification_invites = "Invitation sent successfully to ";
-          for (let j = 0; j < this.invited_members.length; j++) {
-            if (j == this.invited_members.length - 1) {
-              string_notification_invites =
-                string_notification_invites + " " + this.invited_members[j];
-              string_notification_invites = string_notification_invites + " \n";
-            } else if (
-              this.invited_members.length >= 2 &&
-              j == this.invited_members.length - 2
-            ) {
-              string_notification_invites =
-                string_notification_invites +
-                " " +
-                this.invited_members[j] +
-                " and";
-            } else {
-              string_notification_invites =
-                string_notification_invites +
-                " " +
-                this.invited_members[j] +
-                ",";
-            }
-          }
-        }
-        if (this.members_with_squad.length == 1) {
-          if (this.invited_members.length >= 1) {
-            string_notification_squads =
-              string_notification_squads + " but member ";
-          } else {
-            string_notification_squads = string_notification_squads + "Member ";
-          }
-        } else if (this.members_with_squad.length > 1) {
-          if (this.invited_members.length >= 1) {
-            string_notification_squads =
-              string_notification_squads + "but members ";
-          } else {
-            string_notification_squads =
-              string_notification_squads + "Members ";
-          }
-        }
-        for (let i = 0; i < this.members_with_squad.length; i++) {
-          if (i == this.members_with_squad.length - 1) {
-            string_notification_squads =
-              string_notification_squads + " " + this.members_with_squad[i];
-            if (this.members_with_squad.length == 1) {
-              string_notification_squads =
-                string_notification_squads + " already has a squad";
-            } else {
-              string_notification_squads =
-                string_notification_squads + " already have a squad";
-            }
-          } else if (
-            this.members_with_squad.length >= 2 &&
-            i == this.members_with_squad.length - 2
-          ) {
-            string_notification_squads =
-              string_notification_squads +
-              " " +
-              this.members_with_squad[i] +
-              " and";
-          } else {
-            string_notification_squads =
-              string_notification_squads +
-              " " +
-              this.members_with_squad[i] +
-              ",";
-          }
-        }
-        this.showNotification(
-          string_notification_invites + "\n" + string_notification_squads,
-          "points"
-        );
-      }
-    },
-    async reject_invite(invite_id) {
-      await UserService.rejectInvitation(invite_id).then(
-        () => {
-          UserService.getSquadInvitationsReceived().then(
-            (response) => {
-              this.invites = response.data.data;
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
-        },
-        (error) => {
-          console.log(error);
-          UserService.getSquadInvitationsReceived().then(
-            (response) => {
-              this.invites = response.data.data;
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
-        }
-      );
-      this.$router.go();
-    },
     leave_squad() {
-      if (!confirm("Are you sure you want to proceed?")) {
+      if (!confirm("Are you sure you want to leave the squad?")) {
         return;
       }
       this.loading_squad = true;
       UserService.leaveSquad().then(
         (response) => {
-          this.$emit("delete", response.data.data);
+          this.$emit("delete");
           this.loading_squad = false;
           this.$router.go();
         },
@@ -455,25 +188,18 @@ export default {
         }
       );
     },
-    kick_member(squad) {
-      this.squad = squad;
-    },
     change_add_member_dialog() {
       this.add_members_dialog = !this.add_members_dialog;
-      console.log("add_member_dialog ", this.add_members_dialog);
+      console.log("add_member_dialog ", this.squad.members);
+      this.search = "";
     },
-    cancel_invite() {
-      UserService.getSquadInvitationsSent().then(
-        (response) => {
-          this.invites_sent = response.data.data;
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
-    resize() {
-      this.width = window.innerWidth;
+    progress() {
+      if (this.event && this.squad) {
+        return Math.round(
+          (this.squad.total_points / this.event.squad_points) * 100
+        );
+      }
+      return 0;
     },
   },
   computed: {
@@ -492,57 +218,21 @@ export default {
 
   mounted() {
     document.addEventListener("click", this.handleClickOutside);
+
+    console.log("SQUADSQUASDQUAD");
+
+    UserService.getEventInfo().then(
+      (response) => {
+        this.event = response.data;
+        console.log("event total poits", this.squad.total_points, this.event.squad_points);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
   },
 
-  async beforeMount() {
-    if (!this.user) {
-      this.$router.push("/");
-    }
-
-    UserService.getUserSquad().then(
-      (response) => {
-        if (response.data.error) {
-          this.squad = null;
-          this.loading_squad = false;
-        } else {
-          this.squad = response.data.data;
-          var squad = this.squad;
-          console.log(this.squad);
-
-          squad.members.data.forEach(function (item, i) {
-            if (item.name === squad.captain_ist_id) {
-              squad.members.data.splice(i, 1);
-              squad.members.data.unshift(item);
-            }
-          });
-
-          this.loading_squad = false;
-        }
-      },
-      (error) => {
-        console.log(error);
-        this.loading_squad = false;
-      }
-    );
-
-    UserService.getSquadInvitationsReceived().then(
-      (response) => {
-        this.invites = response.data.data;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-
-    await UserService.getStudentsAll().then(
-      (response) => {
-        this.students2 = response.data.students;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  },
 };
 </script>
 
@@ -575,7 +265,7 @@ export default {
 }
 
 .squad-texts {
-  flex-grow: 1;
+  flex: 1;
 }
 
 .squad-name {
@@ -689,6 +379,8 @@ export default {
   flex-direction: column;
   gap: 0.7rem;
   margin-top: 0.6rem;
+  margin-left: 0.1rem;
+  padding-bottom: 5rem;
 }
 
 .squad-add-members-dialog .search-input {
@@ -837,8 +529,8 @@ export default {
 
 .squad-leave {
   position: absolute;
-  top: 280px;
-  right: 20px;
+  bottom: 20px;
+  right: 7px;
   width: 60px;
   height: 60px;
   background: none;

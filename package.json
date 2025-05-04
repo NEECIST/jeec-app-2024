@@ -9,7 +9,7 @@
   "dependencies": {
     "add-to-calendar-button": "^2.5.10",
     "axios": "^1.6.2",
-    "core-js": "^3.8.3",
+    "core-js": "^3.42.0",
     "crypto-js": "^4.2.0",
     "epic-spinners": "^2.0.0",
     "pinia": "^2.1.7",

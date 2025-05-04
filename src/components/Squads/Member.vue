@@ -4,9 +4,8 @@
       <img :src="member.photo" alt="profile photo" class="profile-photo" />
     </div>
     <div class="member-info">
-      <p v-if="member.is_captain" class="captain">Captain</p>
       <p class="name">{{ member.name }}</p>
-      <p class="username">{{ member.username }}</p>
+      <p v-if="member.is_captain" class="captain">Captain</p>
     </div>
     <button
       class="kick-member"
@@ -28,7 +27,6 @@ export default {
   name: "Member",
   props: {
     member: Object,
-    captain_ist_id: String,
   },
   data: function () {
     return {
@@ -47,10 +45,7 @@ export default {
     },
 
     can_kick() {
-      return (
-        this.user.username === this.captain_ist_id &&
-        this.member.external_id !== this.user.student_external_id
-      );
+      return false;
     },
   },
   methods: {
@@ -82,6 +77,7 @@ export default {
 .member {
   display: flex;
   align-items: center;
+  justify-content: flex-start; /* Alinha os itens à esquerda */
   gap: 0.7rem;
   margin-top: 0rem;
   margin-left: 0.1rem;
@@ -115,7 +111,7 @@ export default {
 }
 
 .member-info .captain {
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
 }

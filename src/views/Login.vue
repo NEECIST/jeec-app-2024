@@ -47,8 +47,8 @@ const callback = (response) => {
 function loginDev(){
 
   const userData = {
-    email: "duarte.d.santos@tecnico.ulisboa.pt",
-    name: "Duarte Malta Teixeira Jesus dos Santos",
+    email: "jose.paradela@tecnico.ulisboa.pt",
+    name: "Paradela",
     picture: "https://lh3.googleusercontent.com/a/ACg8ocKjA1Qo1DFfQJiC7jvDb4u59lYIIXfx2JszEa-SsfQRCijyiQ=s96-c",
   }
 

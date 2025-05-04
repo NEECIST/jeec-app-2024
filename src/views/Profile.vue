@@ -5,7 +5,10 @@
         <div class="left-section">
           <h2 class="user-name">{{ student.name || "John Doe" }}</h2>
           <div class="user-stats">
-            <span class="ticket">No Ticket</span>
+            <span class="ticket">
+              <span class="ticket-text" :style="{ opacity: hasTicket ? '0' : '1' }">No Ticket</span>
+              <img v-if="hasTicket" src="@/assets/icons/daily_ticket.svg" alt="Ticket" class="ticket-icon"/>
+            </span>
             <span class="points">
               {{ student.total_points || 0 }}
               <img src="@/assets/icons/flash_home.svg" alt="Energy" />
@@ -14,7 +17,7 @@
         </div>
 
         <div class="user-wrapper">
-          <UserImage :image="user.picture" variant="profile" />
+          <UserImage :image="student.photo" variant="profile" />
         </div>
       </div>
 
@@ -50,7 +53,7 @@
     <div class="squad-section">
       <h2 class="squad-title">SQUAD</h2>
       <!-- <div v-if="!isInSquad"> -->
-      <div v-if="false">
+      <div v-if="!isInSquad()">
         <div v-if="!isCreatingSquad">
           <div class="profile-buttons-jeec">
             <button @click="change_Create" class="create-squad-button">
@@ -70,18 +73,20 @@
         </div>
         <div v-else>
           <SquadCreation
-            @return="creationReturn"
+            @back="creationReturn"
             @notification="showNotification"
           />
         </div>
       </div>
-      <div v-else>
-        <Squad :squad="hard_squad" />
+      <div v-else >
+        <Squad :squad="squad" 
+          @delete="fetchProfile"
+          @notification="showNotification"
+        />
       </div>
     </div>
 
     <div style="position: absolute">
-      <a style="display: none" ref="see_cv" :href="cv_url">CV</a>
 
       <!-- LinkedIn Modal -->
       <div class="modal" v-if="modalVisible == true">
@@ -95,7 +100,7 @@
             <div class="modal-body">
               <input
                 type="url"
-                ref="linkedin_url"
+                v-model="linkedin_url"
                 class="modal-input"
                 placeholder="https://www.linkedin.com/in/XXXXX/"
                 pattern="^https?://((www|\\w\\w)\\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\\w|\\d)+/?){3}))$"
@@ -197,6 +202,7 @@ import Squad from "@/components/Squads/Squad.vue";
 import ToastNotification from "@/components/Squads/ToastNotification.vue";
 import Invite from "@/components/Squads/Invite.vue";
 import SquadCreation from "@/components/Squads/SquadCreation.vue";
+import User from "@/models/user";
 
 // Variáveis de estado
 const loading_linkedin = ref(false);
@@ -209,6 +215,7 @@ const points = ref(0);
 const squad = ref({});
 const error = ref("");
 const create_squad = ref(false);
+const hasTicket = ref(true);
 const loading_redeem = ref(false);
 const loading_squad = ref(true);
 const student = ref({});
@@ -220,54 +227,17 @@ const educationLevel = ref("Other");
 const get_cv_files = ref("");
 const formData = ref(null);
 const cv_url = ref("");
+const cv = ref(null);
+const linkedin_url = ref("");
 const percentage = ref(50);
 const user = ref({}); // Tornar user reativo
-
-const invites = ref([
-  {
-    id: 1,
-    squad_name: "Exploradores",
-    squad_cry: "Para além do limite!",
-    sender_name: "João Silva",
-  },
-  {
-    id: 2,
-    squad_name: "Tech Masters",
-    squad_cry: "Código é vida!",
-    sender_name: "Maria Oliveira",
-  },
-  {
-    id: 3,
-    squad_name: "Engenheiros do Futuro",
-    squad_cry: "Construindo o amanhã.",
-    sender_name: "Carlos Ferreira",
-  },
-  {
-    id: 4,
-    squad_name: "Visionários",
-    squad_cry: "Ver além do óbvio.",
-    sender_name: "Ana Costa",
-  },
-  {
-    id: 5,
-    squad_name: "Inovadores",
-    squad_cry: "Sempre um passo à frente.",
-    sender_name: "Rui Martins",
-  },
-]);
-
-const hard_squad = ref({
-  name: "Teste",
-  id: 1,
-  cry: "For Victory!",
-  members: [
-    { id: 101, name: "John Doe" },
-    { id: 102, name: "Jane Smith" },
-  ],
-});
+const invites = ref([]);
 
 // Computed properties
-const isInSquad = computed(() => student.value && student.value.squad);
+const isInSquad = () => {
+  return squad.value !== null && squad.value !== undefined;
+};
+
 const isCreatingSquad = computed(() => create_squad.value);
 
 // Métodos
@@ -300,7 +270,6 @@ const validateAndUploadCV = () => {
         UserService.addCVNOVO(formData.value).then(
           () => {
             student.value.approved_cv = false;
-            formData.value = null;
             if (!student.value.uploaded_cv) {
               showNotification("CV Submitted", "points");
               student.value.uploaded_cv = true;
@@ -321,6 +290,11 @@ const validateAndUploadCV = () => {
         console.error("Error updating ", error);
         showNotification("Something bad occurred", "error");
       });
+
+      formData.value = null;
+      isFromTecnico.value = false;
+      educationLevel.value = "Other";
+
   } else {
     showNotification("Please fill all the fields and upload your CV.", "error");
   }
@@ -328,6 +302,7 @@ const validateAndUploadCV = () => {
 
 const toggleModal = () => {
   modalVisible.value = !modalVisible.value;
+  linkedin_url.value = "";
 };
 
 const toggleModal2 = () => {
@@ -340,16 +315,41 @@ const change_Create = () => {
 
 const creationReturn = () => {
   create_squad.value = false;
+  fetchProfile();
 };
 
 const handleAcceptInvite = (inviteId) => {
   // Handle the acceptance of the invite
   console.log(`Accepted invite with ID: ${inviteId}`);
+
+  UserService.acceptInvitation(inviteId).then(
+    (response) => {
+      console.log("Accepted invite response", response);
+      showNotification("Squad invite accepted", "success");
+      fetchProfile();
+    },
+    (error) => {
+      console.log(error);
+      showNotification("Failed to accept invite", "error");
+    }
+  );
 };
 
 const handleRejectInvite = (inviteId) => {
   // Handle the rejection of the invite
   console.log(`Rejected invite with ID: ${inviteId}`);
+
+  UserService.rejectInvitation(inviteId).then(
+    (response) => {
+      console.log("Rejected invite response", response);
+      showNotification("Squad invite rejected", "success");
+      fetchProfile();
+    },
+    (error) => {
+      console.log(error);
+      showNotification("Failed to reject invite", "error");
+    }
+  );
 };
 
 const add_linkedin = (e) => {
@@ -357,17 +357,21 @@ const add_linkedin = (e) => {
 
   modalVisible.value = false;
   loading_linkedin.value = true;
-  const url = $refs.linkedin_url.value;
   dialog.value = false;
 
-  UserService.addLinkedin(url).then(
+  console.log("LinkedIn URL:", linkedin_url.value);
+
+  const linke_url = linkedin_url.value;
+
+  linkedin_url.value = "";
+
+  UserService.addLinkedin(linke_url).then(
     (response) => {
       if (!student.value.linkedin_url) {
         showNotification("Added LinkedIn points", "points");
-        student.value.linkedin_url = url;
-        setTimeout(() => {
-          getPoints();
-        }, 1000);
+
+        setTimeout(fetchProfile, 100);
+
       } else {
         showNotification("LinkedIn updated successfully", "success");
       }
@@ -381,19 +385,23 @@ const add_linkedin = (e) => {
   );
 };
 
-const cv_click = () => {
+/* const cv_click = () => {
   $refs.cv.click();
-};
+}; */
 
 const add_cv_novo = () => {
-  if (!$refs.cv.files.length) return;
-
-  formData.value = new FormData();
-  formData.value.append("cv", $refs.cv.files[0]);
+  // Verificar se o arquivo foi selecionado corretamente
+  if (cv.value && cv.value.files && cv.value.files.length > 0) {
+    formData.value = new FormData();
+    formData.value.append("cv", cv.value.files[0]);
+    console.log("Arquivo enviado com sucesso!");
+  } else {
+    console.log("Nenhum arquivo selecionado.");
+  }
 };
 
 const see_cv = () => {
-  if (student.value.uploaded_cv) {
+  /* if (student.value.uploaded_cv) {
     UserService.getCV().then(
       (response) => {
         const raw = atob(response.data.data);
@@ -415,25 +423,67 @@ const see_cv = () => {
         console.log(error);
       }
     );
-  }
+  } */
 };
 
-// Substituir onCreated() por onMounted()
-onMounted(() => {
+const fetchProfile = () => {
   const userStore = useUserStore();
   user.value = userStore.user; // Atribuindo o valor corretamente
+
+  console.log("Profile monted user", user.value);
 
   UserService.getUserStudent().then(
     (response) => {
       student.value = response.data.data;
-      student.value.squad = null;
-      create_squad.value = false;
+      console.log("Profile monted student", student.value);
     },
     (error) => {
       console.log(error);
     }
   );
-});
+
+  UserService.getDailyTicket().then(
+    (response) => {
+      hasTicket.value = response.data;
+      console.log("hasTicket", response);
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+
+  squad.value = null;
+
+  UserService.getUserSquad().then(
+    (response) => {
+      squad.value = response.data.data;
+      console.log("Profile monted squad", squad.value);
+    },
+    (error) => {
+      console.log("Não tem squad");
+      console.log(error);
+    }
+  );
+  console.log("Is in Squad", isInSquad());
+
+  if (!isInSquad()) {
+    UserService.getSquadInvitationsReceived().then(
+      (response) => {
+        invites.value = response.data.data;
+        console.log("Profile monted invites", invites.value);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  } else {
+    console.log("Already in a squad");
+  }
+
+};
+
+onMounted(fetchProfile);
+
 </script>
 
 
@@ -462,6 +512,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding-right: 20px;
 }
 
 .text-points-wrapper {
@@ -470,7 +521,7 @@ onMounted(() => {
 }
 
 .user-name {
-  font-size: 2rem;
+  font-size: 1.7rem;
   color: white;
   font-weight: 700;
   font-family: "Lexend Exa", sans-serif;
@@ -494,6 +545,23 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 0.3rem;
+  position: relative;
+  overflow: visible; /* permite que o conteúdo ultrapasse os limites */
+}
+
+.ticket-text {
+  font-size: 0.8rem;
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 100;
+  display: flex;
+  align-items: center;
+}
+
+.ticket-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .points img {

@@ -57,25 +57,14 @@
     </div>
   </div>
 
-  <div>
-    <ToastNotification
-      :message="toastMessage"
-      :type="toastType"
-      :visible="showToast"
-      @close="showToast = false"
-    />
-  </div>
 </template>
 
 <script>
 import UserService from "../../services/user.service";
-import ToastNotification from "@/components/Squads/ToastNotification.vue";
 
 export default {
   name: "SquadCreation",
-  components: {
-    ToastNotification,
-  },
+  emits: ['back', 'notification'],
   data: function () {
     return {
       files: [],
@@ -95,10 +84,9 @@ export default {
   // other computed properties...
   methods: {
     showNotification(message, type) {
-      this.toastMessage = message;
-      this.toastType = type;
-      this.showToast = true;
+      this.$emit("notification", message, type);
     },
+
     input_click() {
       this.$refs.image_input.click();
     },
@@ -152,7 +140,13 @@ export default {
       await UserService.createSquad(formData)
         .then((response) => {
           // handle success
-          this.$emit("return");
+
+          this.showNotification(
+            "Squad created successfully",
+            "success"
+          );
+
+          this.$emit("back");
         })
         .catch((error) => {
           // handle error
@@ -164,7 +158,7 @@ export default {
         });
     },
     async cancel() {
-      this.$emit("return");
+      this.$emit("back");
     },
   },
   computed: {
@@ -227,7 +221,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
   background-color: transparent;
   position: relative;
   z-index: 0;
