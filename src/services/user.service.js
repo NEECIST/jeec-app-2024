@@ -93,10 +93,16 @@ class UserService {
     );
   }
 
+  getDailyTicket() {
+    return axios.get(jeec_brain_url + "/student/dailyTicket", 
+    { headers: authHeader()}
+    );
+  }
+
   inviteSquad(members) {
     return axios.post(
       jeec_brain_url + "/student/invite-squad",
-      { members: members },
+      { members: [members] },
       { headers: authHeader() }
     );
   }

@@ -19,7 +19,6 @@ export const useScheduleStore = defineStore("ScheduleStore", {
         )
         .then((response) => {
           this.activites = response.data.data
-          console.log(response.data)
         })
     },
   },

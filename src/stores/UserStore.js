@@ -15,14 +15,14 @@ export const useUserStore = defineStore("UserStore", {
         student_external_id: "",
       },
       milestones: {
-        daily: [],
-        final: 0,
+        total: 0,
+        daily: 0,
+        squad: 0,
       },
       userPoints: {
         total_points: 0,
         daily_points: 0,
-        jeecpot: 0,
-        tickets: 0
+        current_points: 0
       }
     };
   },
@@ -52,7 +52,6 @@ export const useUserStore = defineStore("UserStore", {
           }
         )
         .then((response) => {
-          console.log(response)
           const data = response.data
           this.user = data.current_student
           localStorage.setItem("user", JSON.stringify(this.user))
@@ -65,20 +64,19 @@ export const useUserStore = defineStore("UserStore", {
       } else {
         window.location.reload();
       }
-
-      console.log(this.user)
     },
     async getMilestones() {
       await axios
         .get(
-          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/get_milestones",
+          process.env.VUE_APP_JEEC_BRAIN_URL + "/student/get_event_points",
           {
             headers: authHeader()
           }
         )
         .then((response) => {
-          this.milestones.final = response.data.final_milestone;
-          this.milestones.daily = response.data.daily_milestones;
+          this.milestones.total = response.data.total_event_points;
+          this.milestones.daily = response.data.daily_event_points;
+          this.milestones.squad = response.data.squad_event_points;
         })
     },
     async getPoints() {

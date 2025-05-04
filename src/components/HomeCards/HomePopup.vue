@@ -16,7 +16,7 @@ const isOpen = ref(false);
 onMounted(() => {
   UserService.getUserStudent().then(
     (response) => {
-      if (!response.data.data.uploaded_cv) {
+      if (!response.data.uploaded_cv) {
         isOpen.value = true;
       };
     },

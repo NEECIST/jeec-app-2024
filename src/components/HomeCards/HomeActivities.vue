@@ -1,26 +1,41 @@
 <template>
-  <div class="next-activity">
+  <div class="next-activity" :style="{ '--background': backgroundColorWithTransparency, '--border-background': currentActivityStyle.color }">
     <template v-if="nextActivity.name != ''">
       <div class="activity-container">
-        <h2 style="text-shadow: 0px 0px 3px white">Up Next</h2>
+        <h2>Up Next</h2>
         <div class="activity">
           <div class="activity-info">
-            <h3>
-              {{ nextActivity.activity_type }}
-            </h3>
+            <div class="activity-type">
+              <h3 :style="{ color: currentActivityStyle.color }">
+                {{ nextActivity.activity_type }}
+              </h3>
+              <div class="activity-type-icon">
+                <img :src="currentActivityStyle.icon" alt="Activity Type Icon">
+              </div>
+            </div>
             <h4>
               {{ nextActivity.name }}
             </h4>
+            <h5>
+              {{ nextActivity.location }}
+            </h5>
+            <p>
+              {{nextActivity.day}} | {{ nextActivity.start_time }} - {{ nextActivity.end_time }}
+            </p>
           </div>
-          <div class="activity-image radient-border-passthrough">
-            <FadeLoop v-if="nextActivity.images.length >= 2" class="image" :image_list="nextActivity.images"></FadeLoop>
-            <img class="image" v-else :src="nextActivity.images[0]">
+          <div class="activity-image radient-border-passthrough" :class="{ 'single-image': nextActivity.images.length < 2 }" :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }">
+            <div class="circle circle-1 radient-border-passthrough" :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }">
+              <img class="image"  :src="nextActivity.images[0]">
+            </div>
+            <div 
+              v-if="nextActivity.images.length > 1" 
+              class="circle circle-2 radient-border-passthrough" 
+              :style="{ '--background': 'transparent', '--border-background': currentActivityStyle.color }"
+            >
+              <img class="image" :src="nextActivity.images[1]">
+            </div>
+           
           </div>
-        </div>
-        <div class="activity-time">
-          <p>
-            {{ nextActivity.start_time }} - {{ nextActivity.end_time }}
-          </p>
         </div>
       </div>
     </template>
@@ -33,58 +48,103 @@
 </template>
 
 <script setup>
-import FadeLoop from '../FadeLoop.vue';
 
-import { ref } from 'vue';
+
+import { ref, computed } from 'vue';
 import axios from 'axios';
 import authHeader from '@/services/auth-header';
+import { useUserStore } from '@/stores/UserStore';
+import { onMounted } from 'vue';
+const userStore = useUserStore();
+const student = userStore.user;
 
 const nextActivity = ref({
   name: "",
+  location: "",
   start_time: "",
   end_time: "",
+  day: "",
   activity_type: "",
   images: [],
+});
+
+const activityTypeMapping = {
+  Panel: {
+    color: "#2E55FF",
+    icon: require('@/assets/icons/panel_icon.svg'),
+  },
+  Workshop: {
+    color: "#FB5607",
+    icon: require('@/assets/icons/workshop_icon.svg'),
+  },
+  'Keynote Speakers': {
+    color: "#2E55FF",
+    icon: require('@/assets/icons/keynote_icon.svg'),
+  },
+  '15/15': {
+    color: "#A300FF",
+    icon: require('@/assets/icons/15_15_icon.svg'),
+  },
+  'Inside Talks': {
+    color: "#FF006E",
+    icon: require('@/assets/icons/inside_talk_icon.svg'),
+  },
+  // Add more activity types as needed
+};
+
+// Computed property to get the current activity's color and icon
+const currentActivityStyle = computed(() => {
+  const mapping = activityTypeMapping[nextActivity.value.activity_type] || {};
+  return {
+    color: mapping.color || "#199CFF", // Default color
+    icon: mapping.icon || require('@/assets/icons/panel_icon.svg'), // Default icon
+  };
+});
+
+// Computed property to add "1A" transparency to the color
+const backgroundColorWithTransparency = computed(() => {
+  return (currentActivityStyle.value.color || "#199CFF") + '1A';
 });
 
 function getNextActivity() {
   axios
     .get(
-      process.env.VUE_APP_JEEC_BRAIN_URL + "/student/next_activity",
+      process.env.VUE_APP_JEEC_BRAIN_URL + "student/next_activity",
       {
-        headers: authHeader()
+        headers: {
+          ...authHeader(), 
+          student: student
+        }
       }
     )
     .then((response) => {
       if (response.data.activity != null) {
         nextActivity.value = response.data.activity
-        response.data.activity.images.forEach((image, index) => {
-          const bufferArray = [];
-          bufferArray.push(process.env.VUE_APP_JEEC_BRAIN_URL + image);
 
-          nextActivity.value.images = bufferArray;
-        });
+        nextActivity.value.day = new Date(response.data.activity.day).toLocaleDateString('en-US', { month: 'long',  day: '2-digit' });
+        nextActivity.value.start_time = new Date(response.data.activity.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        nextActivity.value.end_time = new Date(response.data.activity.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
       }
     })
+    .catch((error) => {
+          console.error("Error fetching Activity data:", error);
+        });
 }
 
-getNextActivity();
+onMounted(() => {
+  getNextActivity();
+});
 </script>
 
 <style scoped>
-.next-activity {
-  --background: radial-gradient(ellipse 150% 150% at 15% 0%, rgba(76, 202, 240, 0.33) 0%, rgba(76, 202, 240, 0.2) 70%, rgba(76, 202, 240, 0) 100%);
-}
-
 .activity-container {
-  padding: 1rem 0 2rem 0;
+  padding: 0.5rem 0 0.9rem 0
 }
 
 .activity-container h2 {
-  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-
+  font-size: clamp(1.4rem, 3.1vw, 1.8rem);
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "Lexend Exa";
-  letter-spacing: 4px;
   text-transform: uppercase;
 }
 
@@ -92,7 +152,7 @@ getNextActivity();
   display: flex;
   justify-content: space-around;
   gap: 1rem;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
 }
 
 .activity-info {
@@ -100,33 +160,60 @@ getNextActivity();
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding: 0.5rem 0 0.5rem 0.5rem;
+  padding: 0 0 0.5rem 0.5rem;
   gap: 0.3rem;
 }
 
 .activity-info h3 {
   font-family: "Lexend Exa";
-  font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+  font-size: clamp(1.0rem, 3.2vw, 1.1rem);
+  font-weight: 700;
+  overflow: hidden;
+  letter-spacing: 0.05em;
+
+}
+
+.activity-type{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+.activity-type-icon {
+  width:clamp(0.8rem, 3.2vw, 1.1rem);
+  height: clamp(0.8rem, 3.2vw, 1.1rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .activity-info h4 {
-  font-size: clamp(1.2rem, 4vw, 1.6rem);
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  letter-spacing: 0.1ch;
+  font-family: "Lexend Exa";
+  font-size: clamp(1.1rem, 3.7vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: 0.05em;
 }
 
-.activity-time p {
+.activity-info h5 {
   font-family: "Lexend Exa";
-  padding-top: 1rem;
+  font-size: clamp(0.8rem, 3.1vw, 1.2rem);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.activity-info p {
+  display: flex;
+  justify-content: flex-start;
+  font-family: "Lexend Exa";
+  font-size: clamp(0.9rem, 3.1vw, 0.8em);
+  
 }
 
 .activity-image {
   width: 100%;
-  min-width: 70px;
-  max-width: 130px;
+  min-width: 60px;
+  max-width: 80px;
+  position: relative;
   align-self: center;
   aspect-ratio: 1;
   display: flex;
@@ -135,7 +222,6 @@ getNextActivity();
   overflow: hidden;
 
   --border-radius: 50%;
-  --background: white;
 }
 
 .activity-image::before {
@@ -143,12 +229,65 @@ getNextActivity();
 }
 
 .activity-image .image {
-  height: 90%;
-  width: 90%;
+  height: 100%;
+  width: 100%;
   object-fit: contain;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); /* Add shadow */
+}
+
+.single-image {
+  width: 100%;
+  max-width: 100px; /* Adjust as needed */
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.single-image .circle-1 {
+  transform: translate(0, 0); /* Center the image */
+  width: 100%;
+  height: 100%;
+}
+
+.single-image .circle-2 {
+  display: none; /* Hide the second circle */
+}
+
+.circle {
+  width: 55%;
+  height: 55%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  --border-width: 2.0px;
+  --border-radius: 50%;
+}
+
+.circle::before {
+  content: "";
+}
+
+.circle-1 {
+  transform: translate(-30%, -30%);
+  overflow: hidden;
+}
+.circle-2 {
+  transform: translate(30%, 30%);
+  overflow: hidden;
 }
 
 .no-activity {
-  padding: 3rem 0;
+  padding: 3rem 0.3rem;
+}
+
+.no-activity h2 {
+  font-family: "Lexend Exa";
+  font-size: clamp(1.2rem, 3.1vw, 1.8rem);
+  text-transform: uppercase;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  text-align: center;
 }
 </style>

@@ -29,6 +29,11 @@ const routes = [
     component: () => import("@/views/Schedule.vue"),
   },
   {
+    path: "/eletrolink",
+    name: "Eletrolink",
+    component: () => import("@/views/Eletrolink.vue"),
+  },
+  {
     path: "/profile",
     name: "Profile",
     component: () => import("@/views/Profile.vue"),
@@ -47,9 +52,14 @@ const routes = [
     component: () => import("@/views/Rules.vue"),
   },  
   {
-    path: "/prizes",
-    name: "Prizes",
-    component: () => import("@/views/Prizes.vue"),
+    path: "/draw",
+    name: "Draw",
+    component: () => import("@/views/Draw.vue"),
+  },
+  {
+    path: "/shop",
+    name: "Shop",
+    component: () => import("@/views/Shop.vue"),
   },
   {
     path: "/:pathMatch(.*)*",

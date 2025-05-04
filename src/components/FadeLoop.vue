@@ -99,7 +99,6 @@ export default {
       }, 1000);
     },
     openLink() {
-      console.log(this.link_list[this.i]);
       if (this.link_list[this.i]) {
         window.open(this.link_list[this.i], "_blank");
       }

@@ -1,370 +1,684 @@
 <template>
   <div class="profile">
-    <TheUserInfo variant="profile"></TheUserInfo>
-
-    <div class="profile-buttons">
-      <button v-if="this.student.uploaded_cv == false" @click.stop="toggleModal2">
-        <img :src="cv_img" alt="">
-        <p>Upload your CV</p>
-      </button>
-      <!-- <button v-else-if="this.student.approved_cv == false && this.student.rejected_cv == false"></button> -->
-      <button v-else-if="this.student.approved_cv == false" @click.stop="toggleModal2">
-        <img :src="cv_img" alt="">
-        <p>Waiting for approval</p>
-      </button>
-      <button v-else-if="this.student.approved_cv == true" @click.stop="toggleModal2">
-        <img :src="cv_img" alt="">
-        <p>CV Approved</p>
-      </button>
-      <button v-else>
-        <img :src="cv_img" alt="">
-        <p>Loading</p>
-      </button>
-
-      <!-- <button v-if="this.student.uploaded_cv == true" @click="see_cv">
-        <img :src="cv_img" alt="">
-        <p>See CV</p>
-      </button> -->
-
-      <button @click="toggleModal">
-        <img :src="link_img" alt="">
-        <p>{{ student.linkedin_url === null ? 'Submit your LinkedIn' : 'LinkedIn Submitted' }}</p>
-      </button>
-
-      <a href="https://www.ordemengenheiros.pt/pt/admissao-a-ordem/membro-estudante/" target="_blank">
-        <p> Ordem dos engenheiros form</p>
-      </a>
-
-      <div style="position: absolute;">
-        <a style="display: none" ref="see_cv" :href="cv_url" :download="this.student.username + '_cv.pdf'">CV</a>
-
-        <div class="modal" v-if="modalVisible == true">
-          <div class="modal-backdrop" @click="toggleModal"></div>
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2>Add LinkedIn</h2>
-              <button class="modal-close" @click="toggleModal">&times;</button>
-            </div>
-            <form @submit="add_linkedin">
-              <div class="modal-body">
-                <input type="url" ref="linkedin_url" class="input-field" placeholder="https://www.linkedin.com/in/XXXXX/"
-                  pattern="^https?://((www|\w\w)\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\w|\d)+/?){3}))$" autofocus
-                  :value="this.student.linkedin_url" required />
-              </div>
-              <div class="modal-submit">
-                <button type="submit">Confirm</button>
-              </div>
-            </form>
+    <div class="user-card">
+      <div class="top-section">
+        <div class="left-section">
+          <h2 class="user-name">{{ student.name || "John Doe" }}</h2>
+          <div class="user-stats">
+            <span class="ticket">
+              <span class="ticket-text" :style="{ opacity: hasTicket ? '0' : '1' }">No Ticket</span>
+              <img v-if="hasTicket" src="@/assets/icons/daily_ticket.svg" alt="Ticket" class="ticket-icon"/>
+            </span>
+            <span class="points">
+              {{ student.total_points || 0 }}
+              <img src="@/assets/icons/flash_home.svg" alt="Energy" />
+            </span>
           </div>
         </div>
 
-        <div class="modal" v-if="modalVisible2 == true">
-          <div class="modal-backdrop" @click="toggleModal2"></div>
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2>Add CV</h2>
-              <button class="modal-close" @click="toggleModal2">&times;</button>
-            </div>
-            <form @submit.prevent="validateAndUploadCV">
-              <div class="modal-body">
-                <p> Are you from Técnico?</p>
-                <label>
-                  <input type="radio" v-model="isFromTecnico" :value="true">
-                  <p>Yes</p>
-                </label>
-                <label>
-                  <input type="radio" v-model="isFromTecnico" :value="false">
-                  <p>No</p>
-                </label>
-                <div class="modal-spacer"></div>
-                <p> Your level of education:</p>
-                <select class="input-field" v-model="educationLevel" placeholder="Your level of education" required>
-                  <option value="BSc">
-                    <p>BSc</p>
-                  </option>
-                  <option value="MSc">
-                    <p>MSc</p>
-                  </option>
-                  <option value="Other">
-                    <p>Other</p>
-                  </option>
-                </select>
-                <div class="modal-spacer"></div>
-                <p> Your CV:</p>
-                <button class="cv-button" @click.stop="cv_click" type="button">
-                  <p>Upload your CV</p>
-                </button>
-                <input hidden type="file" accept="application/pdf" ref="cv" @change="add_cv_novo" />
-              </div>
-              <div class="modal-submit">
-                <button type="submit">Confirm</button>
-              </div>
-            </form>
+        <div class="user-wrapper">
+          <UserImage :image="student.photo" variant="profile" />
+        </div>
+      </div>
+
+      <div class="text-points-wrapper">
+        <JEECPOT variant="profile" />
+      </div>
+    </div>
+
+    <div class="profile-buttons-jeec">
+      <button class="linkedin-button" @click="toggleModal">
+        <img
+          class="icon"
+          src="@/assets/linkedin_button_img.svg"
+          alt="LinkedIn"
+        />
+        <div class="button-text">
+          <div class="button-text">
+            <p v-if="student.linkedin_url === null">Submit<br />LinkedIn</p>
+            <p v-else>LinkedIn<br />Submitted</p>
           </div>
+        </div>
+      </button>
+
+      <button class="cv-button" @click.stop="toggleModal2">
+        <img class="icon" src="@/assets/cv_button_img.svg" alt="CV" />
+        <div class="button-text">
+          <p>Upload</p>
+          <p>your CV</p>
+        </div>
+      </button>
+    </div>
+
+    <div class="squad-section">
+      <h2 class="squad-title">SQUAD</h2>
+      <!-- <div v-if="!isInSquad"> -->
+      <div v-if="!isInSquad()">
+        <div v-if="!isCreatingSquad">
+          <div class="profile-buttons-jeec">
+            <button @click="change_Create" class="create-squad-button">
+              <p>CREATE SQUAD</p>
+            </button>
+          </div>
+
+          <div class="invites">
+            <Invite
+              v-for="invite in invites"
+              :key="invite.id"
+              :invite="invite"
+              @accept="handleAcceptInvite"
+              @reject="handleRejectInvite"
+            />
+          </div>
+        </div>
+        <div v-else>
+          <SquadCreation
+            @back="creationReturn"
+            @notification="showNotification"
+          />
+        </div>
+      </div>
+      <div v-else >
+        <Squad :squad="squad" 
+          @delete="fetchProfile"
+          @notification="showNotification"
+        />
+      </div>
+    </div>
+
+    <div style="position: absolute">
+
+      <!-- LinkedIn Modal -->
+      <div class="modal" v-if="modalVisible == true">
+        <div class="modal-backdrop" @click="toggleModal"></div>
+        <div class="modal-content custom-modal">
+          <div class="modal-header">
+            <h2 class="modal-title">Add LinkedIn</h2>
+            <button class="modal-close" @click="toggleModal">&times;</button>
+          </div>
+          <form @submit="add_linkedin">
+            <div class="modal-body">
+              <input
+                type="url"
+                v-model="linkedin_url"
+                class="modal-input"
+                placeholder="https://www.linkedin.com/in/XXXXX/"
+                pattern="^https?://((www|\\w\\w)\\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\\w|\\d)+/?){3}))$"
+                autofocus
+              />
+            </div>
+            <div class="modal-submit center-submit">
+              <button class="invite-button" type="submit">Confirm</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- CV Modal -->
+      <div class="modal" v-if="modalVisible2 == true">
+        <div class="modal-backdrop" @click="toggleModal2"></div>
+        <div class="modal-content custom-modal">
+          <div class="modal-header">
+            <h2 class="modal-title">Add CV</h2>
+            <button class="modal-close" @click="toggleModal2">&times;</button>
+          </div>
+          <form @submit.prevent="validateAndUploadCV">
+            <div class="modal-body">
+              <div class="inline-radio-group">
+                <p>Are you from Técnico?</p>
+                <div class="radio-options">
+                  <label>
+                    <input type="radio" v-model="isFromTecnico" :value="true" />
+                    <span>Yes</span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      v-model="isFromTecnico"
+                      :value="false"
+                    />
+                    <span>No</span>
+                  </label>
+                </div>
+              </div>
+              <div class="modal-spacer"></div>
+              <p>Your level of education:</p>
+              <select
+                class="modal-input"
+                v-model="educationLevel"
+                placeholder="Your level of education"
+                required
+              >
+                <option value="BSc">BSc</option>
+                <option value="MSc">MSc</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="modal-spacer"></div>
+              <p>Your CV:</p>
+              <label class="upload-cv-button" for="cvInput"
+                >Upload your CV</label
+              >
+              <input
+                id="cvInput"
+                hidden
+                type="file"
+                accept="application/pdf"
+                ref="cv"
+                @change="add_cv_novo"
+              />
+            </div>
+            <div class="modal-submit center-submit">
+              <button class="invite-button" type="submit">Confirm</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
 
   <div>
-    <ToastNotification :message="toastMessage" :type="toastType" :visible="showToast" @close="showToast = false">
-    </ToastNotification>
-  </div>
-
-  <Squad></Squad>
-
-  <div class="qrcode-popup radient-border-passthrough">
-    <QrCodeButton class="drop-shadow"></QrCodeButton>
+    <ToastNotification
+      :message="toastMessage"
+      :type="toastType"
+      :visible="showToast"
+      @close="showToast = false"
+    />
   </div>
 </template>
 
-<script>
-import QrCodeButton from "@/components/UserCard/QrCodeButton.vue";
-import TheUserInfo from "@/components/UserCard/TheUserInfo.vue";
-import Squad from "@/components/Squads/Squad.vue";
-import UserService from "../services/user.service";
-import ToastNotification from "@/components/Squads/ToastNotification.vue";
-import { useUserStore } from '@/stores/UserStore';
-import { mapState, mapActions } from 'pinia';
+
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { useUserStore } from "@/stores/UserStore";
 import axios from "axios";
+import UserService from "../services/user.service";
 import authHeader from "../services/auth-header";
 
-export default {
-  name: "Profile",
-  components: {
-    TheUserInfo, Squad, ToastNotification, QrCodeButton
-  },
-  data: function () {
-    return {
-      loading_linkedin: false,
-      modalVisible: false,
-      modalVisible2: false,
-      cv_img: require("../assets/cv_button_img.svg"),
-      link_img: require("../assets/linkedin_button_img.svg"),
-      code: "",
-      dialog: false,
-      dialog_width: "",
-      prev_length: 0,
-      points: 0,
-      squad: null,
-      error: "",
-      create_squad: false,
-      loading_redeem: false,
-      loading_squad: true,
-      squad: null,
-      student: {},
-      showToast: false,
-      toastMessage: '',
-      toastType: 'success',
-      isFromTecnico: false,
-      educationLevel: "Other",
-      get_cv_files: '',
-      formData: null,
-    };
-  },
-  computed: {
-    ...mapState(useUserStore, ['user'])
-  },
-  methods: {
-    ...mapActions(useUserStore, ['getPoints']),
+// Importação de componentes
+import TheUserInfo from "@/components/UserCard/TheUserInfo.vue";
+import JEECPOT from "@/components/UserCard/JEECPOT.vue";
+import UserImage from "@/components/UserCard/UserImage.vue";
+import Squad from "@/components/Squads/Squad.vue";
+import ToastNotification from "@/components/Squads/ToastNotification.vue";
+import Invite from "@/components/Squads/Invite.vue";
+import SquadCreation from "@/components/Squads/SquadCreation.vue";
+import User from "@/models/user";
 
-    showNotification(message, type) {
-      this.toastMessage = message;
-      this.toastType = type;
-      this.showToast = true;
-    },
+// Variáveis de estado
+const loading_linkedin = ref(false);
+const modalVisible = ref(false);
+const modalVisible2 = ref(false);
+const code = ref("");
+const dialog = ref(false);
+const prev_length = ref(0);
+const points = ref(0);
+const squad = ref({});
+const error = ref("");
+const create_squad = ref(false);
+const hasTicket = ref(true);
+const loading_redeem = ref(false);
+const loading_squad = ref(true);
+const student = ref({});
+const showToast = ref(false);
+const toastMessage = ref("");
+const toastType = ref("success");
+const isFromTecnico = ref(false);
+const educationLevel = ref("Other");
+const get_cv_files = ref("");
+const formData = ref(null);
+const cv_url = ref("");
+const cv = ref(null);
+const linkedin_url = ref("");
+const percentage = ref(50);
+const user = ref({}); // Tornar user reativo
+const invites = ref([]);
 
-    validateAndUploadCV() {
-      if (this.educationLevel != "" && (this.isFromTecnico == true || this.isFromTecnico == false) && this.formData != null) {
-        this.modalVisible2 = false;
-        axios.post(process.env.VUE_APP_JEEC_BRAIN_URL + "/student/updateIsfromTecnico", {
-          student_username: this.student.username,
-          tecnico: this.isFromTecnico,
-          educationLevel: this.educationLevel
-        }, {
-          headers: authHeader()
-        },).then(response => {
-          UserService.addCVNOVO(this.formData).then(
-            () => {
-              this.student.approved_cv = false;
-              this.formData = null;
-              if (!this.student.uploaded_cv) {
-                this.showNotification("CV Submitted", "points");
-                this.student.uploaded_cv = true;
-              } else {
-                this.showNotification("CV and other fields updated", "success");
-              }
-            },
-            (error) => {
-              console.log(response.statusCode, error);
-              this.showNotification("Failed to upload, file size may be too large. Try uploading less than 600kb", "error");
-            }
-          );
-        }).catch(error => {
-          console.error("Error updating ", error);
-          this.showNotification("Something bad occurred", "error");
-        });
+// Computed properties
+const isInSquad = () => {
+  return squad.value !== null && squad.value !== undefined;
+};
 
-      } else {
-        this.showNotification("Please fill all the fields and upload your CV.", "error");
-      }
-    },
+const isCreatingSquad = computed(() => create_squad.value);
 
-    toggleModal() {
-      this.modalVisible = !this.modalVisible;
-    },
+// Métodos
+const showNotification = (message, type) => {
+  toastMessage.value = message;
+  toastType.value = type;
+  showToast.value = true;
+};
 
-    toggleModal2() {
-      this.modalVisible2 = !this.modalVisible2;
-    },
-
-    change_Create() {
-      this.create_squad = !this.create_squad;
-    },
-    add_linkedin(e) {
-      e.preventDefault();
-
-      this.modalVisible = false;
-
-      this.loading_linkedin = true;
-      var url = this.$refs.linkedin_url.value;
-      this.dialog = false;
-
-      UserService.addLinkedin(url).then(
-        (response) => {
-          if (!this.student.linkedin_url) {
-            this.showNotification("Added LinkedIn points", "points");
-            this.student.linkedin_url = url;
-            setTimeout(() => {
-              this.getPoints();
-            }, 1000);
-          } else {
-            this.showNotification("LinkedIn updated successfully", "success");
-          }
-
-          this.loading_linkedin = false;
+const validateAndUploadCV = () => {
+  if (
+    educationLevel.value !== "" &&
+    (isFromTecnico.value === true || isFromTecnico.value === false) &&
+    formData.value !== null
+  ) {
+    modalVisible2.value = false;
+    axios
+      .post(
+        `${process.env.VUE_APP_JEEC_BRAIN_URL}/student/updateIsfromTecnico`,
+        {
+          student_username: student.value.username,
+          tecnico: isFromTecnico.value,
+          educationLevel: educationLevel.value,
         },
-        (error) => {
-
-          this.showNotification("Failed to add LinkedIn", "error");
-          this.loading_linkedin = false;
+        {
+          headers: authHeader(),
         }
-      );
-    },
-
-    cv_click() {
-      this.$refs.cv.click();
-    },
-    add_cv_novo() {
-
-      if (!this.$refs.cv.files.length) return;
-
-      this.formData = new FormData(); // Re-initialize to ensure it's fresh
-      this.formData.append('cv', this.$refs.cv.files[0]);
-
-      // UserService.addCVNOVO(formData).then(
-      //   (response) => {
-      //     if (!this.student.uploaded_cv) {
-      //       this.showNotification("Added CV points", "points");
-      //       this.student.uploaded_cv = true;
-      //     } else {
-      //       this.showNotification("CV uploaded successfully. If approved, you will receive a reward", "success");
-      //     }
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //     this.showNotification("Failed to upload CV", "error");
-      //   }
-      // );
-      // this.$refs.cv.value = ""; 
-    },
-
-    see_cv() {
-      if (this.student.uploaded_cv) {
-        UserService.getCV().then(
-          (response) => {
-            var raw = atob(response.data.data);
-            var uint8Array = new Uint8Array(raw.length);
-            for (var i = 0; i < raw.length; i++) {
-              uint8Array[i] = raw.charCodeAt(i);
+      )
+      .then(() => {
+        UserService.addCVNOVO(formData.value).then(
+          () => {
+            student.value.approved_cv = false;
+            if (!student.value.uploaded_cv) {
+              showNotification("CV Submitted", "points");
+              student.value.uploaded_cv = true;
+            } else {
+              showNotification("CV and other fields updated", "success");
             }
-            var fileBlob = new Blob([uint8Array], {
-              type: response.data["content-type"],
-            });
-            var objetURL = window.URL.createObjectURL(fileBlob);
-
-            this.cv_url = objetURL;
-
-            this.$refs.see_cv.href = objetURL;
-            this.$refs.see_cv.click();
           },
           (error) => {
             console.log(error);
+            showNotification(
+              "Failed to upload, file size may be too large. Try uploading less than 600kb",
+              "error"
+            );
           }
         );
-      }
-    },
-  },
-  created() {
-    UserService.getUserStudent().then(
-      (response) => {
+      })
+      .catch((error) => {
+        console.error("Error updating ", error);
+        showNotification("Something bad occurred", "error");
+      });
 
-        this.student = response.data.data;
+      formData.value = null;
+      isFromTecnico.value = false;
+      educationLevel.value = "Other";
+
+  } else {
+    showNotification("Please fill all the fields and upload your CV.", "error");
+  }
+};
+
+const toggleModal = () => {
+  modalVisible.value = !modalVisible.value;
+  linkedin_url.value = "";
+};
+
+const toggleModal2 = () => {
+  modalVisible2.value = !modalVisible2.value;
+};
+
+const change_Create = () => {
+  create_squad.value = !create_squad.value;
+};
+
+const creationReturn = () => {
+  create_squad.value = false;
+  fetchProfile();
+};
+
+const handleAcceptInvite = (inviteId) => {
+  // Handle the acceptance of the invite
+
+  UserService.acceptInvitation(inviteId).then(
+    (response) => {
+      showNotification("Squad invite accepted", "success");
+      fetchProfile();
+    },
+    (error) => {
+      console.log(error);
+      showNotification("Failed to accept invite", "error");
+    }
+  );
+};
+
+const handleRejectInvite = (inviteId) => {
+  // Handle the rejection of the invite
+
+  UserService.rejectInvitation(inviteId).then(
+    (response) => {
+      showNotification("Squad invite rejected", "success");
+      fetchProfile();
+    },
+    (error) => {
+      console.log(error);
+      showNotification("Failed to reject invite", "error");
+    }
+  );
+};
+
+const add_linkedin = (e) => {
+  e.preventDefault();
+
+  modalVisible.value = false;
+  loading_linkedin.value = true;
+  dialog.value = false;
+
+  const linke_url = linkedin_url.value;
+
+  linkedin_url.value = "";
+
+  UserService.addLinkedin(linke_url).then(
+    (response) => {
+      if (!student.value.linkedin_url) {
+        showNotification("Added LinkedIn points", "points");
+
+        setTimeout(fetchProfile, 100);
+
+      } else {
+        showNotification("LinkedIn updated successfully", "success");
+      }
+
+      loading_linkedin.value = false;
+    },
+    (error) => {
+      showNotification("Failed to add LinkedIn", "error");
+      loading_linkedin.value = false;
+    }
+  );
+};
+
+/* const cv_click = () => {
+  $refs.cv.click();
+}; */
+
+const add_cv_novo = () => {
+  // Verificar se o arquivo foi selecionado corretamente
+  if (cv.value && cv.value.files && cv.value.files.length > 0) {
+    formData.value = new FormData();
+    formData.value.append("cv", cv.value.files[0]);
+  } else {
+    console.log("Nenhum arquivo selecionado.");
+  }
+};
+
+const see_cv = () => {
+  /* if (student.value.uploaded_cv) {
+    UserService.getCV().then(
+      (response) => {
+        const raw = atob(response.data.data);
+        const uint8Array = new Uint8Array(raw.length);
+        for (let i = 0; i < raw.length; i++) {
+          uint8Array[i] = raw.charCodeAt(i);
+        }
+        const fileBlob = new Blob([uint8Array], {
+          type: response.data["content-type"],
+        });
+        const objetURL = window.URL.createObjectURL(fileBlob);
+
+        cv_url.value = objetURL;
+
+        $refs.see_cv.href = objetURL;
+        $refs.see_cv.click();
       },
       (error) => {
         console.log(error);
       }
     );
-  }
+  } */
 };
+
+const fetchProfile = () => {
+  const userStore = useUserStore();
+  user.value = userStore.user; // Atribuindo o valor corretamente
+
+  UserService.getUserStudent().then(
+    (response) => {
+      student.value = response.data.data;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+
+  UserService.getDailyTicket().then(
+    (response) => {
+      hasTicket.value = response.data;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+
+  squad.value = null;
+
+  UserService.getUserSquad().then(
+    (response) => {
+      squad.value = response.data.data;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+
+  if (!isInSquad()) {
+    UserService.getSquadInvitationsReceived().then(
+      (response) => {
+        invites.value = response.data.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  } else {
+    console.log("Already in a squad");
+  }
+
+};
+
+onMounted(fetchProfile);
+
 </script>
 
+
 <style scoped>
-.profile-buttons {
+.user-card {
+  background-color: #199cff1a;
+  border: 1.5px solid #199cff;
+  border-radius: 20px 60px 20px 20px;
+  padding: 1rem 1.5rem;
+  width: 90%;
+  max-width: 650px;
+  margin: 1.5rem auto;
   display: flex;
-  width: 100%;
-  justify-content: center;
-  gap: 0.6rem;
+  flex-direction: column;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   flex-wrap: wrap;
-  max-width: 800px;
-  margin: 0 auto;
+}
+
+.left-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-right: 20px;
+}
+
+.text-points-wrapper {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.user-name {
+  font-size: 1.7rem;
+  color: white;
+  font-weight: 700;
+  font-family: "Lexend Exa", sans-serif;
+  margin: 0;
+}
+
+.user-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.ticket,
+.points {
+  border: 2px solid #199cff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 25px;
+  font-size: 0.8rem;
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  position: relative;
+  overflow: visible; /* permite que o conteúdo ultrapasse os limites */
+}
+
+.ticket-text {
+  font-size: 0.8rem;
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 100;
+  display: flex;
+  align-items: center;
+}
+
+.ticket-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.points img {
+  height: 0.9rem;
+  vertical-align: middle;
+}
+
+.user-wrapper {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.profile-buttons-jeec {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 0.7rem;
+  padding: 0 1rem;
+}
+
+.profile-buttons-jeec button.linkedin-button,
+.profile-buttons-jeec button.cv-button {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.profile-buttons-jeec button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  background-color: #199cff;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  padding: 0.6rem 1rem;
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 550;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  text-align: left;
+  flex: none;
+  letter-spacing: 0.1em;
+}
+
+.profile-buttons-jeec button:hover {
+  transform: scale(1.02);
+}
+
+.profile-buttons-jeec .icon {
+  height: 1.8rem;
+  width: auto;
+}
+
+.button-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  line-height: 1.1rem;
+}
+
+.section-title {
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 700;
+  text-shadow: 0 0 10px #199cff;
+  margin-top: 3rem;
+}
+
+.create-squad-button {
+  background-color: #199cff;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  text-transform: uppercase;
+  width: auto;
+}
+
+.create-squad-button:hover {
+  transform: scale(1.02);
+}
+
+.squad-section {
+  text-align: center;
   margin-top: 2rem;
 }
 
-.profile-buttons> :is(button, a) {
-  display: flex;
-  height: 50px;
+.squad-title {
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: white;
+  text-shadow: 0 0 10px #199cff;
+  margin-bottom: 1rem;
+}
+
+.create-squad-button {
+  background-color: #199cff;
   border: none;
-  background: none;
-  background: linear-gradient(165deg, #605ED0 -100%, #4CC9F0 20%, #7209B7 130%);
-  border-radius: 25px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2ch;
-  gap: 2ch;
-  flex-basis: 200px;
-  min-width: 200px;
-  flex-grow: 0.6;
+  border-radius: 15px;
+  color: white;
+  padding: 0.8rem 1rem;
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  font-family: "Lexend Exa";
-  text-decoration: none;
-  flex-shrink: 0;
-}
-
-.profile-buttons> :is(button, a)>img {
-  height: 70%;
-  flex-shrink: 0;
-}
-
-.profile-buttons> :is(button, a)>p {
-  text-align: center;
+  width: 182px;
   margin: 0 auto;
-  font-size: clamp(0.8rem, 4vw, 1rem);
+  transition: transform 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
-.linkedin-input {
-  position: absolute;
-  visibility: hidden;
+.create-squad-button:hover {
+  transform: scale(1.02);
 }
 
 .modal {
@@ -389,102 +703,155 @@ export default {
   left: 0;
   z-index: -1;
 }
-
 .modal-content {
-  background: var(--color-background-sec);
+  background: var(--color-background-sec, #1e1e2f);
   padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: 20px;
   width: 90%;
-  max-width: 800px;
+  max-width: 500px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  font-family: "Lexend Exa", sans-serif;
+  color: white;
 }
 
 .modal-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
   position: relative;
 }
 
-.modal-header h2 {
+.modal-title {
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.1rem;
+  color: white;
   text-align: center;
+  font-family: "Lexend", sans-serif;
 }
 
-.modal-header .modal-close {
+.modal-close {
+  position: absolute;
+  right: 0;
   background: none;
   border: none;
-  font-size: 2rem;
-  line-height: 0.5;
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
-}
-
-.modal-header .modal-close:hover {
-  scale: 1.1;
-}
-
-.modal-body>p {
-  padding-bottom: 0.1rem;
-}
-
-.modal-body .modal-spacer {
-  padding-bottom: 1rem;
-}
-
-.modal-body label {
-  display: flex;
-  gap: 1ch;
-}
-
-.modal-body > button {
-  color: var(--color-background-sec);
-  padding: 0.5rem 2ch;
-}
-
-.input-field {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #7f8c8d;
-}
-
-.modal-submit button {
-  margin-top: 1rem;
-  background-color: #2980b9;
+  font-size: 1.6rem;
   color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-  float: right;
-}
-.modal-submit button:hover {
-  background-color: #3498db;
 }
 
-.qrcode-popup {
-  --border-radius: 50%;
-  --border-width: 2px;
-
-  padding: 17px;
-  height: 90px;
-  width: 90px;
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  translate: -50% 0;
+.modal-close:hover {
+  transform: scale(1.1);
 }
 
-.qrcode-popup::before {
-  content: "";
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.qrcode-popup .drop-shadow {
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-  border-radius: 50%;
+.modal-body > p {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: white;
 }
 
+.modal-input {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border-radius: 12px;
+  border: 2px solid #199cff;
+  background-color: transparent;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.9rem;
+  color: white;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.modal-input::placeholder {
+  color: #aaa;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.75rem;
+}
+
+.modal-input:focus {
+  border-color: #42b5ff;
+}
+
+.modal-submit {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.modal-submit .invite-button {
+  padding: 0.4rem 1.5rem;
+  font-size: 0.95rem;
+  border-radius: 50px;
+  background-color: #199cff;
+  color: white;
+  font-family: "Lexend Exa", sans-serif;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.modal-submit .invite-button:hover {
+  transform: scale(1.03);
+}
+
+.inline-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.95rem;
+}
+
+.inline-radio-group > p {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: white;
+}
+
+.inline-radio-group .radio-options {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.inline-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.upload-cv-button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 2px solid #199cff;
+  background-color: transparent;
+  font-family: "Lexend Exa", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.upload-cv-button:hover {
+  border-color: #42b5ff;
+}
 </style>
