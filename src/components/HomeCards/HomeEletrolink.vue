@@ -15,12 +15,12 @@
           </div>
     
           <!-- Sign-up Button -->
-          <button class="signup-btn"
+          <router-link to="eletrolink" class="signup-btn"
             :class="{ pressed: isPressed }"
             @touchstart="onTouchStart"
             @touchend="onTouchEnd"
           >
-          Sign up</button>
+          Sign up</router-link>
         </div>
         <!-- No Eletrolink Message -->
         <div v-else class="no-eletrolink">
@@ -178,6 +178,7 @@
       border-radius: 50px;
       cursor: pointer;
       transition: 0.3s ease-in-out;
+      text-decoration: none;
     }
   
     .pressed {
