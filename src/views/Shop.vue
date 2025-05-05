@@ -136,7 +136,7 @@ const buyPrize = async (prize) => {
       { 
         prize_id: prize.id,
         username: username,
-        prizeName: null
+        prizeName: prizeTicket.name
       }, 
       {
         headers: authHeader()
