@@ -1,9 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile">
     <div class="view">
-      <section>
-        <h1>Schedule</h1>
-      </section>
       <section class="tabs">
         <div v-for="(day, index) in days" :key="index" class="tab" :class="{ active: activeDay === index }"
           @click="setActiveDay(index)">
@@ -152,9 +149,6 @@
 
   <div class="mobile" v-else>
     <div class="view">
-      <section>
-        <h1>Schedule</h1>
-      </section>
       <section class="tabs-container">
         <div class="tabs-wrapper">
           <div class="tabs" :style="tabsStyle">

@@ -1,6 +1,6 @@
 <template>
     <div class="eletrolink">
-        <h2 style="padding-bottom: 30px;">Eletrolink registrations</h2>
+        <h2 style="padding-bottom: 30px;"></h2>
         <div v-for="activity in eletrolink_activities" :key="activity.id">
             <div class="box">
                 <div class="box-header">
