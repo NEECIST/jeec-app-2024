@@ -3,11 +3,12 @@
     <div class="user-card">
       <div class="top-section">
         <div class="left-section">
-          <h2 class="user-name">{{ student.name || "John Doe" }}</h2>
+          <h2 class="user-name">{{ student.name || "First Last" }}</h2>
+          <p class="user-username">{{ student.username || "username" }}</p>
           <div class="user-stats">
             <span class="ticket">
               <span class="ticket-text" :style="{ opacity: hasTicket ? '0' : '1' }">No Ticket</span>
-              <img v-if="hasTicket" src="@/assets/icons/daily_ticket.svg" alt="Ticket" class="ticket-icon"/>
+              <img v-if="hasTicket" src="@/assets/icons/daily_ticket.svg" alt="Ticket" class="ticket-icon" />
             </span>
             <span class="points">
               {{ student.current_points || 0 }}
@@ -28,11 +29,7 @@
 
     <div class="profile-buttons-jeec">
       <button class="linkedin-button" @click="toggleModal">
-        <img
-          class="icon"
-          src="@/assets/linkedin_button_img.svg"
-          alt="LinkedIn"
-        />
+        <img class="icon" src="@/assets/linkedin_button_img.svg" alt="LinkedIn" />
         <div class="button-text">
           <div class="button-text">
             <p v-if="student.linkedin_url === null">Submit<br />LinkedIn</p>
@@ -62,27 +59,16 @@
           </div>
 
           <div class="invites">
-            <Invite
-              v-for="invite in invites"
-              :key="invite.id"
-              :invite="invite"
-              @accept="handleAcceptInvite"
-              @reject="handleRejectInvite"
-            />
+            <Invite v-for="invite in invites" :key="invite.id" :invite="invite" @accept="handleAcceptInvite"
+              @reject="handleRejectInvite" />
           </div>
         </div>
         <div v-else>
-          <SquadCreation
-            @back="creationReturn"
-            @notification="showNotification"
-          />
+          <SquadCreation @back="creationReturn" @notification="showNotification" />
         </div>
       </div>
-      <div v-else >
-        <Squad :squad="squad" 
-          @delete="fetchProfile"
-          @notification="showNotification"
-        />
+      <div v-else>
+        <Squad :squad="squad" @delete="fetchProfile" @notification="showNotification" />
       </div>
     </div>
 
@@ -98,14 +84,10 @@
           </div>
           <form @submit="add_linkedin">
             <div class="modal-body">
-              <input
-                type="url"
-                v-model="linkedin_url"
-                class="modal-input"
+              <input type="url" v-model="linkedin_url" class="modal-input"
                 placeholder="https://www.linkedin.com/in/XXXXX/"
                 pattern="^https?://((www|\\w\\w)\\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\\w|\\d)+/?){3}))$"
-                autofocus
-              />
+                autofocus />
             </div>
             <div class="modal-submit center-submit">
               <button class="invite-button" type="submit">Confirm</button>
@@ -132,40 +114,22 @@
                     <span>Yes</span>
                   </label>
                   <label>
-                    <input
-                      type="radio"
-                      v-model="isFromTecnico"
-                      :value="false"
-                    />
+                    <input type="radio" v-model="isFromTecnico" :value="false" />
                     <span>No</span>
                   </label>
                 </div>
               </div>
               <div class="modal-spacer"></div>
               <p>Your level of education:</p>
-              <select
-                class="modal-input"
-                v-model="educationLevel"
-                placeholder="Your level of education"
-                required
-              >
+              <select class="modal-input" v-model="educationLevel" placeholder="Your level of education" required>
                 <option value="BSc">BSc</option>
                 <option value="MSc">MSc</option>
                 <option value="Other">Other</option>
               </select>
               <div class="modal-spacer"></div>
               <p>Your CV:</p>
-              <label class="upload-cv-button" for="cvInput"
-                >Upload your CV</label
-              >
-              <input
-                id="cvInput"
-                hidden
-                type="file"
-                accept="application/pdf"
-                ref="cvInput"
-                @change="add_cv_novo"
-              />
+              <label class="upload-cv-button" for="cvInput">Upload your CV</label>
+              <input id="cvInput" hidden type="file" accept="application/pdf" ref="cvInput" @change="add_cv_novo" />
             </div>
             <div class="modal-submit center-submit">
               <button class="invite-button" type="submit">Confirm</button>
@@ -177,12 +141,7 @@
   </div>
 
   <div>
-    <ToastNotification
-      :message="toastMessage"
-      :type="toastType"
-      :visible="showToast"
-      @close="showToast = false"
-    />
+    <ToastNotification :message="toastMessage" :type="toastType" :visible="showToast" @close="showToast = false" />
   </div>
 </template>
 
@@ -291,9 +250,9 @@ const validateAndUploadCV = () => {
         showNotification("Something bad occurred", "error");
       });
 
-      // formData.value = null;
-      isFromTecnico.value = false;
-      educationLevel.value = "Other";
+    // formData.value = null;
+    isFromTecnico.value = false;
+    educationLevel.value = "Other";
 
   } else {
     showNotification("Please fill all the fields and upload your CV.", "error");
@@ -495,7 +454,6 @@ onMounted(fetchProfile);
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
   padding-right: 20px;
 }
 
@@ -510,6 +468,10 @@ onMounted(fetchProfile);
   font-weight: 700;
   font-family: "Lexend Exa", sans-serif;
   margin: 0;
+}
+
+.user-username {
+  padding-bottom: 0.5rem;
 }
 
 .user-stats {
@@ -530,7 +492,8 @@ onMounted(fetchProfile);
   align-items: center;
   gap: 0.3rem;
   position: relative;
-  overflow: visible; /* permite que o conteúdo ultrapasse os limites */
+  overflow: visible;
+  /* permite que o conteúdo ultrapasse os limites */
 }
 
 .ticket-text {
@@ -702,6 +665,7 @@ onMounted(fetchProfile);
   left: 0;
   z-index: -1;
 }
+
 .modal-content {
   background: var(--color-background-sec, #1e1e2f);
   padding: 1.5rem;
@@ -751,7 +715,7 @@ onMounted(fetchProfile);
   margin-bottom: 1.5rem;
 }
 
-.modal-body > p {
+.modal-body>p {
   font-size: 1.05rem;
   font-weight: 500;
   color: white;
@@ -813,7 +777,7 @@ onMounted(fetchProfile);
   font-size: 0.95rem;
 }
 
-.inline-radio-group > p {
+.inline-radio-group>p {
   font-size: 1.05rem;
   font-weight: 500;
   color: white;
