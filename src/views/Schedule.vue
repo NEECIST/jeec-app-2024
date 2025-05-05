@@ -10,6 +10,10 @@
           {{ day }}
         </div>
       </section>
+      <div class="loading-screen" v-if="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading Schedule...</p>
+      </div>
       <transition name="fade" mode="out-in">
         <section class="eletrolink" :key="activeDay" v-if="!loading">
           <div class="box">
@@ -167,6 +171,10 @@
           &gt;
         </button>
       </section>
+      <div class="loading-screen" v-if="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading Schedule...</p>
+      </div>
       <transition name="fade" mode="out-in">
         <section class="eletrolink" :key="activeDay" v-if="!loading">
           <div class="box">
@@ -1735,5 +1743,28 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+}
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+  margin-top: 5%; 
+}
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #9c27b0;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
