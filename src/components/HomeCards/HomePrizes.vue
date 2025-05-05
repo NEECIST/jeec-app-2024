@@ -37,7 +37,7 @@ import { onMounted } from 'vue';
 const userStore = useUserStore();
 const student = userStore.user;
 
-const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL.slice(0, -1);
+// const jeec_brain_url = process.env.VUE_APP_JEEC_BRAIN_URL.slice(0, -1);
 
 const prizes = ref({
   individual_prize: null // Added fictional prize
@@ -47,7 +47,7 @@ const prizes = ref({
 function getDailyPrizes() {
   axios
     .get(
-      `${jeec_brain_url}/student/home_prize`,
+      process.env.VUE_APP_JEEC_BRAIN_URL + "/student/home_prize",
       {
         headers: {
           ...authHeader(), 
@@ -56,6 +56,7 @@ function getDailyPrizes() {
       }
     ) 
     .then((response) => {
+      console.log(response.data)
       prizes.value = {
         individual_prize: response.data.img_daily_prize || null
       };

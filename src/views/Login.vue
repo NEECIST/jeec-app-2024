@@ -7,7 +7,7 @@
 
     <div class="login">
       <p>Login to our Webapp</p>
-      <p>App under development!</p>
+      <!-- <p>App under development!</p> -->
       <div class="button_wrapper">
         <GoogleLogin :callback="callback" />
         <p>v3.0</p>
