@@ -136,7 +136,7 @@ const buyPrize = async (prize) => {
       { 
         prize_id: prize.id,
         username: username,
-        prizeName: prizeTicket.name
+        prizeName: null
       }, 
       {
         headers: authHeader()
@@ -167,7 +167,7 @@ const buyDailyTicket = async () => {
   try {
     const username = userStore.user.username;
     const response = await axios.post(
-      process.env.VUE_APP_JEEC_BRAIN_URL + '/website/buy-daily-ticket',
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/buy-prize',
       { 
         username: username,
         prize_id: null,
