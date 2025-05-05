@@ -230,7 +230,10 @@ onMounted(() => {
           <div id="btn-ticket">
             <p>Daily Draw</p>
             <p>Ticket</p>
-            <p class="coin">500 <img src="@/assets/icons/flash_home.svg" alt="credit"></p>
+            <div class="item-price">
+              <p class="coin">500</p>
+              <img src="@/assets/icons/flash_home.svg" alt="credit">
+            </div>
           </div>
         </div>
       </a>
@@ -267,7 +270,10 @@ onMounted(() => {
           <div v-else class="no-image-placeholder">?</div>
         </div>
         <div class="price">
-          <p v-if="!item.bought" class="coin">{{ item.price }}  <img src="@/assets/icons/flash_home.svg" alt="credits"></p>
+          <div class="item-price" v-if="!item.bought">
+            <p class="coin">{{ item.price }}</p> 
+            <img src="@/assets/icons/flash_home.svg" alt="credits" />
+          </div>
           <span v-else class="bought-text">Bought</span>
         </div>
       </div>
@@ -287,12 +293,14 @@ onMounted(() => {
           <div v-else class="no-image-placeholder">?</div>
         </div>
         <p class="prize-description">{{ selectedPrize.description }}</p>
-        <button 
-          class="buy-button" 
-          @click="buyPrize(selectedPrize)"
+        <button class="buy-button" 
+          @click="buyPrize(selectedPrize)" 
           :disabled="selectedPrize.bought"
-        >
-          BUY PRIZE <p class="price-tag coin">{{ selectedPrize.price }} <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"></p>
+        > 
+          <div class="item-price">
+            BUY PRIZE <p class="price-tag coin">{{ selectedPrize.price }}</p> 
+            <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"/>
+          </div>
         </button>
       </div>
     </div>
@@ -313,8 +321,10 @@ onMounted(() => {
         <button 
           class="buy-button" 
           @click="buyDailyTicket"
-        >
-          BUY TICKET <p class="price-tag coin">500 <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"></p>
+        > <div class="item-price">
+            BUY TICKET <p class="price-tag coin">500</p>
+            <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"/>
+          </div>
         </button>
       </div>
     </div>
@@ -516,6 +526,10 @@ onMounted(() => {
   color: white;
   font-size: 14px;
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
 }
 
 .bought-text {
@@ -746,6 +760,19 @@ onMounted(() => {
   cursor: pointer;
   width: 100%;
   margin-top: 8px;
+}
+.item-price {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+
+.item-price img {
+  height: auto;
+  color: white;
+  max-height: 20px;
+  justify-content: center;
 }
 
 /* Responsive adjustments */
