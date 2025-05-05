@@ -1454,7 +1454,7 @@ h1 {
   gap: 25px;
   min-height: 100%;
   margin-top: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 150px;
   padding: 0 6vw;
   /* Padding relativo à largura da tela */
 
@@ -1743,6 +1743,9 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+}
+.end-of-page {
+  height: 20%;
 }
 .loading-screen {
   display: flex;
