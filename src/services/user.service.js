@@ -33,13 +33,10 @@ class UserService {
   }
 
   addCVNOVO(formData) {
-
     return axios.post(jeec_brain_url + "/student/add-cv-novo", formData, {
       headers: {
-        ...{
-          "Content-Type": "multipart/form-data"
-        },
-        ...authHeader()
+        ...authHeader() // Keep auth headers
+        // DO NOT manually set Content-Type!
       }
     });
   }

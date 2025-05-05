@@ -163,7 +163,7 @@
                 hidden
                 type="file"
                 accept="application/pdf"
-                ref="cv"
+                ref="cvInput"
                 @change="add_cv_novo"
               />
             </div>
@@ -291,7 +291,7 @@ const validateAndUploadCV = () => {
         showNotification("Something bad occurred", "error");
       });
 
-      formData.value = null;
+      // formData.value = null;
       isFromTecnico.value = false;
       educationLevel.value = "Other";
 
@@ -383,15 +383,40 @@ const add_linkedin = (e) => {
   $refs.cv.click();
 }; */
 
+// const add_cv_novo = () => {
+//   // Verificar se o arquivo foi selecionado corretamente
+//   if (cv.value && cv.value.files && cv.value.files.length > 0) {
+//     formData.value = new FormData();
+//     formData.value.append("cv", cv.value.files[0]);
+//   } else {
+//     console.log("Nenhum arquivo selecionado.");
+//   }
+// };
+
+const cvInput = ref(null);
+
+
+// const add_cv_novo = () => {
+//   const fileInput = document.getElementById("cvInput");
+//   if (fileInput && fileInput.files.length > 0) {
+//     formData.value = new FormData();
+//     formData.value.append("cv", fileInput.files[0]);  // <- append directly from file input
+//   } else {
+//     console.log("Nenhum arquivo selecionado.");
+//   }
+// };
+
 const add_cv_novo = () => {
-  // Verificar se o arquivo foi selecionado corretamente
-  if (cv.value && cv.value.files && cv.value.files.length > 0) {
+  const file = cvInput.value?.files[0];
+  if (file) {
     formData.value = new FormData();
-    formData.value.append("cv", cv.value.files[0]);
+    formData.value.append("cv", file);
   } else {
     console.log("Nenhum arquivo selecionado.");
   }
 };
+
+
 
 const fetchProfile = () => {
   const userStore = useUserStore();
