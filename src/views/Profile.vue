@@ -107,7 +107,7 @@
         <div class="modal-content custom-modal">
           <div class="modal-header">
             <h2 class="modal-title">
-              {{ student.linkedin_url == "" ? "Add LinkedIn" : "Edit LinkedIn" }}
+              {{ student.linkedin_url == "" || student.linkedin_url == null ? "Add LinkedIn" : "Edit LinkedIn" }}
             </h2>
             <button class="modal-close" @click="toggleModal">&times;</button>
           </div>
@@ -124,7 +124,7 @@
             </div>
             <div class="modal-submit center-submit">
               <button class="invite-button" type="submit">
-                {{ student.linkedin_url == "" ? "Confirm" : "Edit" }}
+                {{ student.linkedin_url == "" || student.linkedin_url == null ? "Confirm" : "Edit" }}
               </button>
             </div>
           </form>
