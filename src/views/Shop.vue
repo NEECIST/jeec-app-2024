@@ -151,7 +151,7 @@ const buyPrize = async (prize) => {
     closePopup()
   } catch (err) {
     console.error('Purchase failed:', err)
-    alert('Failed to purchase the prize. Please try again.')
+    alert('Failed to purchase the prize. You can only buy one of these per day.')
   }
 }
 
