@@ -1,9 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile">
     <div class="view">
-      <section>
-        <h1>Schedule</h1>
-      </section>
       <section class="tabs">
         <div v-for="(day, index) in days" :key="index" class="tab" :class="{ active: activeDay === index }"
           @click="setActiveDay(index)">
@@ -152,9 +149,6 @@
 
   <div class="mobile" v-else>
     <div class="view">
-      <section>
-        <h1>Schedule</h1>
-      </section>
       <section class="tabs-container">
         <div class="tabs-wrapper">
           <div class="tabs" :style="tabsStyle">
@@ -1454,7 +1448,7 @@ h1 {
   gap: 25px;
   min-height: 100%;
   margin-top: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 150px;
   padding: 0 6vw;
   /* Padding relativo à largura da tela */
 
@@ -1743,6 +1737,9 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+}
+.end-of-page {
+  height: 20%;
 }
 .loading-screen {
   display: flex;
