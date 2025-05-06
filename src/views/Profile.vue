@@ -45,7 +45,7 @@
         />
         <div class="button-text">
           <div class="button-text">
-            <p v-if="student.linkedin_url === null">Submit<br />LinkedIn</p>
+            <p v-if="student.linkedin_url == '' ">Submit<br />LinkedIn</p>
             <p v-else>LinkedIn<br />Submitted</p>
           </div>
         </div>
@@ -56,6 +56,7 @@
         <div class="button-text">
           <div class="button-text">
             <p v-if="!student.uploaded_cv">Upload<br />your CV</p>
+            <p v-else-if="student.approved_cv">CV<br />Approved</p>
             <p v-else>CV<br />Uploaded</p>
           </div>
         </div>
@@ -105,7 +106,9 @@
         <div class="modal-backdrop" @click="toggleModal"></div>
         <div class="modal-content custom-modal">
           <div class="modal-header">
-            <h2 class="modal-title">Add LinkedIn</h2>
+            <h2 class="modal-title">
+              {{ student.linkedin_url == "" ? "Add LinkedIn" : "Edit LinkedIn" }}
+            </h2>
             <button class="modal-close" @click="toggleModal">&times;</button>
           </div>
           <form @submit="add_linkedin">
@@ -120,7 +123,9 @@
               />
             </div>
             <div class="modal-submit center-submit">
-              <button class="invite-button" type="submit">Confirm</button>
+              <button class="invite-button" type="submit">
+                {{ student.linkedin_url == "" ? "Confirm" : "Edit" }}
+              </button>
             </div>
           </form>
         </div>
@@ -315,7 +320,7 @@ const validateAndUploadCV = () => {
 
 const toggleModal = () => {
   modalVisible.value = !modalVisible.value;
-  linkedin_url.value = "";
+  linkedin_url.value = student.value.linkedin_url || "";
 };
 
 const toggleModal2 = () => {
