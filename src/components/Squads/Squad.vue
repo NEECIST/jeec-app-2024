@@ -191,8 +191,6 @@ export default {
       this.search = "";
     },
     progress() {
-      console.log("event", this.event)
-      console.log("squad", this.squad)
       if (this.event && this.squad) {
         return Math.round(
           (this.squad.total_points / this.event.squad_points) * 100

@@ -56,7 +56,6 @@ function getDailyPrizes() {
       }
     ) 
     .then((response) => {
-      console.log(response.data)
       prizes.value = {
         individual_prize: response.data.img_daily_prize || null
       };

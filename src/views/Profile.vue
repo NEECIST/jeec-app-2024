@@ -7,8 +7,17 @@
           <p class="user-username">{{ student.username || "username" }}</p>
           <div class="user-stats">
             <span class="ticket">
-              <span class="ticket-text" :style="{ opacity: hasTicket ? '0' : '1' }">No Ticket</span>
-              <img v-if="hasTicket" src="@/assets/icons/daily_ticket.svg" alt="Ticket" class="ticket-icon" />
+              <span
+                class="ticket-text"
+                :style="{ opacity: hasTicket ? '0' : '1' }"
+                >No Ticket</span
+              >
+              <img
+                v-if="hasTicket"
+                src="@/assets/icons/daily_ticket.svg"
+                alt="Ticket"
+                class="ticket-icon"
+              />
             </span>
             <span class="points">
               {{ student.current_points || 0 }}
@@ -29,10 +38,14 @@
 
     <div class="profile-buttons-jeec">
       <button class="linkedin-button" @click="toggleModal">
-        <img class="icon" src="@/assets/linkedin_button_img.svg" alt="LinkedIn" />
+        <img
+          class="icon"
+          src="@/assets/linkedin_button_img.svg"
+          alt="LinkedIn"
+        />
         <div class="button-text">
           <div class="button-text">
-            <p v-if="student.linkedin_url === null">Submit<br />LinkedIn</p>
+            <p v-if="student.linkedin_url == '' ||  student.linkedin_url == null">Submit<br />LinkedIn</p>
             <p v-else>LinkedIn<br />Submitted</p>
           </div>
         </div>
@@ -41,8 +54,11 @@
       <button class="cv-button" @click.stop="toggleModal2">
         <img class="icon" src="@/assets/cv_button_img.svg" alt="CV" />
         <div class="button-text">
-          <p>Upload</p>
-          <p>your CV</p>
+          <div class="button-text">
+            <p v-if="!student.uploaded_cv">Upload<br />your CV</p>
+            <p v-else-if="student.approved_cv">CV<br />Approved</p>
+            <p v-else>CV<br />Uploaded</p>
+          </div>
         </div>
       </button>
     </div>
@@ -59,38 +75,57 @@
           </div>
 
           <div class="invites">
-            <Invite v-for="invite in invites" :key="invite.id" :invite="invite" @accept="handleAcceptInvite"
-              @reject="handleRejectInvite" />
+            <Invite
+              v-for="invite in invites"
+              :key="invite.id"
+              :invite="invite"
+              @accept="handleAcceptInvite"
+              @reject="handleRejectInvite"
+            />
           </div>
         </div>
         <div v-else>
-          <SquadCreation @back="creationReturn" @notification="showNotification" />
+          <SquadCreation
+            @back="creationReturn"
+            @notification="showNotification"
+          />
         </div>
       </div>
       <div v-else>
-        <Squad :squad="squad" @delete="fetchProfile" @notification="showNotification" />
+        <Squad
+          :squad="squad"
+          @delete="fetchProfile"
+          @notification="showNotification"
+        />
       </div>
     </div>
 
     <div style="position: absolute">
-
       <!-- LinkedIn Modal -->
       <div class="modal" v-if="modalVisible == true">
         <div class="modal-backdrop" @click="toggleModal"></div>
         <div class="modal-content custom-modal">
           <div class="modal-header">
-            <h2 class="modal-title">Add LinkedIn</h2>
+            <h2 class="modal-title">
+              {{ student.linkedin_url == "" || student.linkedin_url == null ? "Add LinkedIn" : "Edit LinkedIn" }}
+            </h2>
             <button class="modal-close" @click="toggleModal">&times;</button>
           </div>
           <form @submit="add_linkedin">
             <div class="modal-body">
-              <input type="url" v-model="linkedin_url" class="modal-input"
+              <input
+                type="url"
+                v-model="linkedin_url"
+                class="modal-input"
                 placeholder="https://www.linkedin.com/in/XXXXX/"
                 pattern="^https?://((www|\\w\\w)\\.)?linkedin.com/((in/[^/]+/?)|(pub/[^/]+/((\\w|\\d)+/?){3}))$"
-                autofocus />
+                autofocus
+              />
             </div>
             <div class="modal-submit center-submit">
-              <button class="invite-button" type="submit">Confirm</button>
+              <button class="invite-button" type="submit">
+                {{ student.linkedin_url == "" || student.linkedin_url == null ? "Confirm" : "Edit" }}
+              </button>
             </div>
           </form>
         </div>
@@ -101,7 +136,9 @@
         <div class="modal-backdrop" @click="toggleModal2"></div>
         <div class="modal-content custom-modal">
           <div class="modal-header">
-            <h2 class="modal-title">Add CV</h2>
+            <h2 class="modal-title">
+              {{ student.uploaded_cv ? "Update Uploaded CV" : "Add CV" }}
+            </h2>
             <button class="modal-close" @click="toggleModal2">&times;</button>
           </div>
           <form @submit.prevent="validateAndUploadCV">
@@ -114,22 +151,40 @@
                     <span>Yes</span>
                   </label>
                   <label>
-                    <input type="radio" v-model="isFromTecnico" :value="false" />
+                    <input
+                      type="radio"
+                      v-model="isFromTecnico"
+                      :value="false"
+                    />
                     <span>No</span>
                   </label>
                 </div>
               </div>
               <div class="modal-spacer"></div>
               <p>Your level of education:</p>
-              <select class="modal-input" v-model="educationLevel" placeholder="Your level of education" required>
+              <select
+                class="modal-input"
+                v-model="educationLevel"
+                placeholder="Your level of education"
+                required
+              >
                 <option value="BSc">BSc</option>
                 <option value="MSc">MSc</option>
                 <option value="Other">Other</option>
               </select>
               <div class="modal-spacer"></div>
               <p>Your CV:</p>
-              <label class="upload-cv-button" for="cvInput">Upload your CV</label>
-              <input id="cvInput" hidden type="file" accept="application/pdf" ref="cvInput" @change="add_cv_novo" />
+              <label class="upload-cv-button" for="cvInput"
+                >Upload your CV</label
+              >
+              <input
+                id="cvInput"
+                hidden
+                type="file"
+                accept="application/pdf"
+                ref="cvInput"
+                @change="add_cv_novo"
+              />
             </div>
             <div class="modal-submit center-submit">
               <button class="invite-button" type="submit">Confirm</button>
@@ -141,7 +196,12 @@
   </div>
 
   <div>
-    <ToastNotification :message="toastMessage" :type="toastType" :visible="showToast" @close="showToast = false" />
+    <ToastNotification
+      :message="toastMessage"
+      :type="toastType"
+      :visible="showToast"
+      @close="showToast = false"
+    />
   </div>
 </template>
 
@@ -253,7 +313,6 @@ const validateAndUploadCV = () => {
     // formData.value = null;
     isFromTecnico.value = false;
     educationLevel.value = "Other";
-
   } else {
     showNotification("Please fill all the fields and upload your CV.", "error");
   }
@@ -261,7 +320,7 @@ const validateAndUploadCV = () => {
 
 const toggleModal = () => {
   modalVisible.value = !modalVisible.value;
-  linkedin_url.value = "";
+  linkedin_url.value = student.value.linkedin_url || "";
 };
 
 const toggleModal2 = () => {
@@ -324,7 +383,6 @@ const add_linkedin = (e) => {
         showNotification("Added LinkedIn points", "points");
 
         setTimeout(fetchProfile, 100);
-
       } else {
         showNotification("LinkedIn updated successfully", "success");
       }
@@ -354,7 +412,6 @@ const add_linkedin = (e) => {
 
 const cvInput = ref(null);
 
-
 // const add_cv_novo = () => {
 //   const fileInput = document.getElementById("cvInput");
 //   if (fileInput && fileInput.files.length > 0) {
@@ -375,8 +432,6 @@ const add_cv_novo = () => {
   }
 };
 
-
-
 const fetchProfile = () => {
   const userStore = useUserStore();
   user.value = userStore.user; // Atribuindo o valor corretamente
@@ -384,6 +439,7 @@ const fetchProfile = () => {
   UserService.getUserStudent().then(
     (response) => {
       student.value = response.data.data;
+      console.log("Student data:", student.value.linkedin_url);
     },
     (error) => {
       console.log(error);
@@ -422,11 +478,9 @@ const fetchProfile = () => {
   } else {
     console.log("Already in a squad");
   }
-
 };
 
 onMounted(fetchProfile);
-
 </script>
 
 
@@ -715,7 +769,7 @@ onMounted(fetchProfile);
   margin-bottom: 1.5rem;
 }
 
-.modal-body>p {
+.modal-body > p {
   font-size: 1.05rem;
   font-weight: 500;
   color: white;
@@ -777,7 +831,7 @@ onMounted(fetchProfile);
   font-size: 0.95rem;
 }
 
-.inline-radio-group>p {
+.inline-radio-group > p {
   font-size: 1.05rem;
   font-weight: 500;
   color: white;
