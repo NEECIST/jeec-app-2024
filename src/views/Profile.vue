@@ -45,7 +45,7 @@
         />
         <div class="button-text">
           <div class="button-text">
-            <p v-if="student.linkedin_url == '' ">Submit<br />LinkedIn</p>
+            <p v-if="student.linkedin_url == '' ||  student.linkedin_url == null">Submit<br />LinkedIn</p>
             <p v-else>LinkedIn<br />Submitted</p>
           </div>
         </div>
@@ -439,6 +439,7 @@ const fetchProfile = () => {
   UserService.getUserStudent().then(
     (response) => {
       student.value = response.data.data;
+      console.log("Student data:", student.value.linkedin_url);
     },
     (error) => {
       console.log(error);
