@@ -109,7 +109,6 @@ function fetchData() {
         }  
     ).then(response => {
         eletrolink_activities.value = response.data.activities
-        console.log(eletrolink_activities.value)
     }
     );
 }

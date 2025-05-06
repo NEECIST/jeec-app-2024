@@ -120,12 +120,6 @@ function getNextActivity() {
     .then((response) => {
       if (response.data.activity != null) {
         nextActivity.value = response.data.activity
-
-        // nextActivity.value.day = new Date(response.data.activity.day).toLocaleDateString('en-US', { month: 'long',  day: '2-digit' });
-        // nextActivity.value.start_time = new Date(response.data.activity.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-        // console.log("Start time", nextActivity.value.start_time)
-        // console.log("Response", response.data.activity.start_time)
-        // nextActivity.value.end_time = new Date(response.data.activity.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
       }
     })
     .catch((error) => {
