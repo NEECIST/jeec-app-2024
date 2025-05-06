@@ -15,9 +15,6 @@
   
     <div class="mobile" v-else>
       <div class="view">
-        <section>
-          <h1>JEEC Fair Map</h1>
-        </section>
         <section class="tabs-container">
           <div class="tabs-wrapper">
             <div class="tabs" :style="tabsStyle">
