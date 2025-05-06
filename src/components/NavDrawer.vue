@@ -35,6 +35,10 @@
             <router-link to="/rankings">rankings</router-link>
             <div class="link-underline"></div>
           </li>
+          <li>
+            <router-link to="/map">map</router-link>
+            <div class="link-underline"></div>
+          </li>
         </ul>
         <div class="help-info">
           <router-link to="/help">
