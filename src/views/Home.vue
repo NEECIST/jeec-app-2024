@@ -2,6 +2,7 @@
   <div>
     <HomePopup></HomePopup>
     <HomeActivities class="card radient-border-passthrough"></HomeActivities>
+    <HomeSales class="card radient-border-passthrough"></HomeSales>
     <HomePrizes class="card radient-border-passthrough"></HomePrizes>
     <HomeEletrolink class="card radient-border-passthrough"></HomeEletrolink>
     <HomeCv class="card radient-border-passthrough"></HomeCv>
@@ -14,6 +15,7 @@ import HomeActivities from '@/components/HomeCards/HomeActivities.vue';
 import HomePrizes from '@/components/HomeCards/HomePrizes.vue';
 import HomeEletrolink from '@/components/HomeCards/HomeEletrolink.vue';
 import HomeCv from '@/components/HomeCards/HomeCv.vue';
+import HomeSales from '@/components/HomeCards/HomeSales.vue'
 </script>
 
 <style scoped>

@@ -18,6 +18,7 @@
   
   --c-acc-blue: #199cff;
   --c-acc-lighter-dark-blue: #2e55ff;
+  --c-acc-lighter-dark-blue-rgb: 46, 85, 255;
   --c-acc-dark-blue: #1500b1;
   --c-acc-purple-blue: #605ed0;
   --c-acc-lilac: #a300ff;
@@ -25,6 +26,7 @@
   --c-acc-violet: #7209b7;
   --c-acc-yellow: #ffbe0b;
   --c-acc-orange: #fb5607;
+  --c-acc-orange-rgb: 251, 86, 7;
 
   --font-schedule: "Russo One", sans-serif;
 }

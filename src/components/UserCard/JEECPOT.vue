@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" :class="variant">
-    <p class="chances">Your JEECPOT chances</p>
+    <p class="chances">JEECPOT chances</p>
     <div class="points radient-border-passthrough">
       <div
         class="progress radient-border-passthrough_child"

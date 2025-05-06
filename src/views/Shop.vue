@@ -123,7 +123,7 @@ const closeInsufficientPointsPopup = () => {
 
 const buyPrize = async (prize) => {
   // Check if user has enough points
-  if(userStore.userPoints.current_points < prize.price){
+  if(userStore.userPoints.current_points < prize.price / 2){
     showInsufficientPointsPopup.value = true
     showPopup.value = false
     return
@@ -158,7 +158,7 @@ const buyPrize = async (prize) => {
 // New function to buy a ticket
 const buyDailyTicket = async () => {
   // Check if user has enough points
-  if(userStore.userPoints.current_points < prizeTicket.price){
+  if(userStore.userPoints.current_points < prizeTicket.price / 2){
     showInsufficientPointsPopup.value = true
     showTicketPopup.value = false
     return
@@ -234,6 +234,10 @@ onMounted(() => {
               <p class="coin">500</p>
               <img src="@/assets/icons/flash_home.svg" alt="credit">
             </div>
+            <div class="item-price">
+              <p class="coin-new">250</p>
+              <img src="@/assets/icons/flash_home.svg" alt="credit">
+            </div>
           </div>
         </div>
       </a>
@@ -274,6 +278,10 @@ onMounted(() => {
             <p class="coin">{{ item.price }}</p> 
             <img src="@/assets/icons/flash_home.svg" alt="credits" />
           </div>
+          <div class="item-price" v-if="!item.bought">
+            <p class="coin-new">{{ item.price / 2 }}</p> 
+            <img src="@/assets/icons/flash_home.svg" alt="credits" />
+          </div>
           <span v-else class="bought-text">Bought</span>
         </div>
       </div>
@@ -298,7 +306,8 @@ onMounted(() => {
           :disabled="selectedPrize.bought"
         > 
           <div class="item-price">
-            BUY PRIZE <p class="price-tag coin">{{ selectedPrize.price }}</p> 
+            BUY PRIZE 
+            <p class="price-tag coin-new">{{ selectedPrize.price / 2 }}</p> 
             <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"/>
           </div>
         </button>
@@ -322,7 +331,7 @@ onMounted(() => {
           class="buy-button" 
           @click="buyDailyTicket"
         > <div class="item-price">
-            BUY TICKET <p class="price-tag coin">500</p>
+            BUY TICKET <p class="price-tag coin-new">250</p>
             <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"/>
           </div>
         </button>
@@ -367,6 +376,14 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 0.2ch;
+  text-decoration: line-through;
+}
+
+.coin-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2ch;
+  color: var(--c-acc-yellow);
 }
 
 .daily-prize-circle {
@@ -527,7 +544,7 @@ onMounted(() => {
   font-size: 14px;
   text-align: center;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   justify-content: center;
 }
