@@ -439,7 +439,6 @@ const fetchProfile = () => {
   UserService.getUserStudent().then(
     (response) => {
       student.value = response.data.data;
-      console.log("Student data:", student.value.linkedin_url);
     },
     (error) => {
       console.log(error);

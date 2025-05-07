@@ -3,9 +3,11 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import authHeader from "../services/auth-header";
 import { useUserStore } from '@/stores/UserStore'
+import UserService from "../services/user.service";
 // PONTOS CARALHO atualizar 
 
 const userStore = useUserStore();
+const hasTicket = ref(true);
 const items = ref([])
 const loading = ref(true)
 const error = ref(null)
@@ -31,12 +33,12 @@ const prizeTicket = {
 const fetchPrizes = async () => {
   loading.value = true
   error.value = null
-  
+
   try {
     const username = userStore.user.username;
     const response = await axios.get(
-      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/get-prizes-shop', 
-      { 
+      process.env.VUE_APP_JEEC_BRAIN_URL + '/student/get-prizes-shop',
+      {
         params: { username: username },
         headers: authHeader()
       }
@@ -71,7 +73,7 @@ const fetchDailyPrize = async () => {
       process.env.VUE_APP_JEEC_BRAIN_URL + '/student/get-daily-prize',
       {
         headers: authHeader()
-      } 
+      }
     );
 
     if (response.data && response.data.length > 0) {
@@ -85,12 +87,21 @@ const fetchDailyPrize = async () => {
       dailyPrize.value = null;
     }
   } catch (err) {
-    console.error('Failed to fetch daily prize:', err); 
+    console.error('Failed to fetch daily prize:', err);
     dailyPrizeError.value = 'Failed to load daily prize. Please try again later.';
     dailyPrize.value = null;
   } finally {
     dailyPrizeLoading.value = false;
   }
+
+  UserService.getDailyTicket().then(
+    (response) => {
+      hasTicket.value = response.data;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
 };
 
 const retryFetchDailyPrize = () => {
@@ -123,7 +134,7 @@ const closeInsufficientPointsPopup = () => {
 
 const buyPrize = async (prize) => {
   // Check if user has enough points
-  if(userStore.userPoints.current_points < prize.price / 2){
+  if (userStore.userPoints.current_points < prize.price / 2) {
     showInsufficientPointsPopup.value = true
     showPopup.value = false
     return
@@ -133,14 +144,14 @@ const buyPrize = async (prize) => {
     const username = userStore.user.username;
     const response = await axios.post(
       process.env.VUE_APP_JEEC_BRAIN_URL + '/student/buy-prize',
-      { 
+      {
         prize_id: prize.id,
         username: username,
         prizeName: null
-      }, 
+      },
       {
         headers: authHeader()
-      } 
+      }
     )
 
     const item = items.value.find(item => item.id === prize.id)
@@ -158,7 +169,7 @@ const buyPrize = async (prize) => {
 // New function to buy a ticket
 const buyDailyTicket = async () => {
   // Check if user has enough points
-  if(userStore.userPoints.current_points < prizeTicket.price / 2){
+  if (userStore.userPoints.current_points < prizeTicket.price / 2) {
     showInsufficientPointsPopup.value = true
     showTicketPopup.value = false
     return
@@ -168,18 +179,19 @@ const buyDailyTicket = async () => {
     const username = userStore.user.username;
     const response = await axios.post(
       process.env.VUE_APP_JEEC_BRAIN_URL + '/student/buy-prize',
-      { 
+      {
         username: username,
         prize_id: null,
         prizeName: prizeTicket.name
-      }, 
+      },
       {
         headers: authHeader()
-      } 
+      }
     )
 
     // Update user points
     userStore.userPoints.current_points = response.data[0].current_points;
+    hasTicket.value = true
     closeTicketPopup()
     // You might want to show a success message or take other actions
     alert('You have successfully purchased a ticket for the daily draw!')
@@ -196,171 +208,177 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="view">
-<!-- FALTA VER A LOGICA DO BOUGHT :TODO -->
-  <!-- SECTION DOS PARAGRAFOS -->
-  <section class="info-section">
-    <p>Earn points by participating in JEEC!</p>
-    <p>Visit companies at the job fair or take part in Eletrolink to collect points. Use your points to redeem prizes below!</p>
-    <p class="small">(maximum of one of each type per day)</p>
-  </section>
+  <div class="view">
+    <!-- FALTA VER A LOGICA DO BOUGHT :TODO -->
+    <!-- SECTION DOS PARAGRAFOS -->
+    <section class="info-section">
+      <p>Earn points by participating in JEEC!</p>
+      <p>Visit companies at the job fair or take part in Eletrolink to collect points. Use your points to redeem prizes
+        below!</p>
+      <p class="small">(maximum of one of each type per day)</p>
+    </section>
 
-  <!-- SECTION DO BUY DOS TICKETS PARA O DAILY DRAW -->
-  <section class="ticket-section">
-    <div class="daily-ticket-container">
-      <!-- Loading state for daily prize -->
-      <div v-if="dailyPrizeLoading" class="daily-prize-circle loading-circle">
-        <div class="loading-spinner-small"></div>
-      </div>
-      
-      <!-- Error state for daily prize -->
-      <div v-else-if="dailyPrizeError" class="daily-prize-circle error-circle" @click="retryFetchDailyPrize">
-        <span class="error-icon">!</span>
-      </div>
-      
-      <!-- Daily prize display when loaded -->
-      <div v-else class="daily-prize-circle">
-        <img v-if="dailyPrize?.imageData" :src="dailyPrize.imageData" alt="Daily Prize" class="daily-prize-image" />
-        <div v-else class="no-image-placeholder">?</div>
-      </div>
-        
-      <a href="#" class="ticket-link" @click.prevent="openTicketPopup">
-        <div class="ticket-content">
-          <img src="@/assets/Ticket-Vector.svg" alt="Ticket image" style="height: 40px;width: 40px;">
-          <div id="btn-ticket">
-            <p>Daily Draw</p>
-            <p>Ticket</p>
-            <div class="item-price">
-              <p class="coin">500</p>
-              <img src="@/assets/icons/flash_home.svg" alt="credit">
-            </div>
-            <div class="item-price">
-              <p class="coin-new">250</p>
-              <img src="@/assets/icons/flash_home.svg" alt="credit">
-            </div>
-          </div>
+    <!-- SECTION DO BUY DOS TICKETS PARA O DAILY DRAW -->
+    <section class="ticket-section">
+      <div class="daily-ticket-container">
+        <!-- Loading state for daily prize -->
+        <div v-if="dailyPrizeLoading" class="daily-prize-circle loading-circle">
+          <div class="loading-spinner-small"></div>
         </div>
-      </a>
-    </div>
-  </section>
 
-  <!-- SECTION PARA COMPRAREM OS PRIZES DA SHOP  -->
-  <section class="shop-section">
-    <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p>Loading prizes...</p>
-    </div>
+        <!-- Error state for daily prize -->
+        <div v-else-if="dailyPrizeError" class="daily-prize-circle error-circle" @click="retryFetchDailyPrize">
+          <span class="error-icon">!</span>
+        </div>
 
-    <div v-else-if="error" class="error-container">
-      <p>{{ error }}</p>
-      <button class="retry-button" @click="fetchPrizes">Retry</button>
-    </div>
-    
-    <div v-else-if="items.length === 0" class="empty-container">
-      <p>No prizes available at the moment.</p>
-    </div>
-    
-    <div v-else class="shop-container">
-      <div 
-        v-for="item in items" 
-        :key="item.id" 
-        class="circle-container"
-        @click="!item.bought && openPrizePopup(item)"
-      >
-        <div 
-          :class="['circle', { bought: item.bought }]"
-        >
-          <img v-if="item.imageData" :src="item.imageData" :alt="item.name" class="prize-image" />
+        <!-- Daily prize display when loaded -->
+        <div v-else class="daily-prize-circle">
+          <img v-if="dailyPrize?.imageData" :src="dailyPrize.imageData" alt="Daily Prize" class="daily-prize-image" />
           <div v-else class="no-image-placeholder">?</div>
         </div>
-        <div class="price">
-          <div class="item-price" v-if="!item.bought">
-            <p class="coin">{{ item.price }}</p> 
-            <img src="@/assets/icons/flash_home.svg" alt="credits" />
-          </div>
-          <div class="item-price" v-if="!item.bought">
-            <p class="coin-new">{{ item.price / 2 }}</p> 
-            <img src="@/assets/icons/flash_home.svg" alt="credits" />
-          </div>
-          <span v-else class="bought-text">Bought</span>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Prize Popup -->
-  <div v-if="showPopup && selectedPrize" class="popup-overlay">
-    <div class="prize-popup">
-      <div class="popup-header">
-        <h2>{{ selectedPrize.name }}</h2>
-        <button class="close-button" @click="closePopup">✕</button>
-      </div>
-      <div class="popup-body">
-        <div class="prize-circle">
-          <img v-if="selectedPrize.imageData" :src="selectedPrize.imageData" :alt="selectedPrize.name" class="popup-prize-image" />
-          <div v-else class="no-image-placeholder">?</div>
-        </div>
-        <p class="prize-description">{{ selectedPrize.description }}</p>
-        <button class="buy-button" 
-          @click="buyPrize(selectedPrize)" 
-          :disabled="selectedPrize.bought"
-        > 
-          <div class="item-price">
-            BUY PRIZE 
-            <p class="price-tag coin-new">{{ selectedPrize.price / 2 }}</p> 
-            <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"/>
-          </div>
-        </button>
-      </div>
-    </div>
-  </div>
 
-  <!-- Ticket Popup -->
-  <div v-if="showTicketPopup" class="popup-overlay">
-    <div class="prize-popup">
-      <div class="popup-header">
-        <h2>Daily Draw Ticket</h2>
-        <button class="close-button" @click="closeTicketPopup">✕</button>
-      </div>
-      <div class="popup-body">
-        <div class="prize-circle ticket-circle">
-          <img src="@/assets/Ticket-Vector.svg" alt="Ticket" class="popup-prize-image ticket-image-popup" />
-        </div>
-        <p class="prize-description">Purchase a ticket for the daily prize draw. You could win the prize displayed next to the ticket!</p>
-        <button 
-          class="buy-button" 
-          @click="buyDailyTicket"
-        > <div class="item-price">
-            BUY TICKET <p class="price-tag coin-new">250</p>
-            <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white"/>
+        <a v-if="!hasTicket" href="#" class="ticket-link" @click.prevent="openTicketPopup">
+          <div class="ticket-content">
+            <img src="@/assets/Ticket-Vector.svg" alt="Ticket image" style="height: 40px;width: 40px;">
+            <div id="btn-ticket">
+              <p>Daily Draw</p>
+              <p>Ticket</p>
+              <div class="item-price">
+                <p class="coin">500</p>
+                <img src="@/assets/icons/flash_home.svg" alt="credit">
+              </div>
+              <div class="item-price">
+                <p class="coin-new">250</p>
+                <img src="@/assets/icons/flash_home.svg" alt="credit">
+              </div>
+            </div>
           </div>
-        </button>
+        </a>
+        <a v-if="hasTicket" href="#" class="ticket-link disabled">
+          <div class="ticket-content">
+            <img src="@/assets/Ticket-Vector.svg" alt="Ticket image" style="height: 40px;width: 40px;">
+            <div id="btn-ticket">
+              <p>Daily Draw</p>
+              <p>Ticket</p>
+              <div class="item-price">
+                <p class="coin">500</p>
+                <img src="@/assets/icons/flash_home.svg" alt="credit">
+              </div>
+              <div class="item-price">
+                <p class="coin-new">250</p>
+                <img src="@/assets/icons/flash_home.svg" alt="credit">
+              </div>
+            </div>
+          </div>
+        </a>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- Insufficient Points Popup -->
-  <div v-if="showInsufficientPointsPopup" class="popup-overlay">
-    <div class="prize-popup insufficient-points-popup">
-      <div class="popup-header">
-        <h2>Insufficient Points</h2>
-        <button class="close-button" @click="closeInsufficientPointsPopup">✕</button>
+    <!-- SECTION PARA COMPRAREM OS PRIZES DA SHOP  -->
+    <section class="shop-section">
+      <div v-if="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading prizes...</p>
       </div>
-      <div class="popup-body">
-        <div class="insufficient-points-icon">
-          <img src="@/assets/icons/flash_home.svg" alt="flash">
+
+      <div v-else-if="error" class="error-container">
+        <p>{{ error }}</p>
+        <button class="retry-button" @click="fetchPrizes">Retry</button>
+      </div>
+
+      <div v-else-if="items.length === 0" class="empty-container">
+        <p>No prizes available at the moment.</p>
+      </div>
+
+      <div v-else class="shop-container">
+        <div v-for="item in items" :key="item.id" class="circle-container"
+          @click="!item.bought && openPrizePopup(item)">
+          <div :class="['circle', { bought: item.bought }]">
+            <img v-if="item.imageData" :src="item.imageData" :alt="item.name" class="prize-image" />
+            <div v-else class="no-image-placeholder">?</div>
+          </div>
+          <div class="price">
+            <div class="item-price" v-if="!item.bought">
+              <p class="coin">{{ item.price }}</p>
+              <img src="@/assets/icons/flash_home.svg" alt="credits" />
+            </div>
+            <div class="item-price" v-if="!item.bought">
+              <p class="coin-new">{{ item.price / 2 }}</p>
+              <img src="@/assets/icons/flash_home.svg" alt="credits" />
+            </div>
+            <span v-else class="bought-text">Bought</span>
+          </div>
         </div>
-        <p class="insufficient-points-message">You don't have enough points to buy this prize.</p>
-        <button 
-          class="ok-button" 
-          @click="closeInsufficientPointsPopup"
-        >
-          OK, GOT IT!
-        </button>
+      </div>
+    </section>
+
+    <!-- Prize Popup -->
+    <div v-if="showPopup && selectedPrize" class="popup-overlay">
+      <div class="prize-popup">
+        <div class="popup-header">
+          <h2>{{ selectedPrize.name }}</h2>
+          <button class="close-button" @click="closePopup">✕</button>
+        </div>
+        <div class="popup-body">
+          <div class="prize-circle">
+            <img v-if="selectedPrize.imageData" :src="selectedPrize.imageData" :alt="selectedPrize.name"
+              class="popup-prize-image" />
+            <div v-else class="no-image-placeholder">?</div>
+          </div>
+          <p class="prize-description">{{ selectedPrize.description }}</p>
+          <button class="buy-button" @click="buyPrize(selectedPrize)" :disabled="selectedPrize.bought">
+            <div class="item-price">
+              BUY PRIZE
+              <p class="price-tag coin-new">{{ selectedPrize.price / 2 }}</p>
+              <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white" />
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket Popup -->
+    <div v-if="showTicketPopup" class="popup-overlay">
+      <div class="prize-popup">
+        <div class="popup-header">
+          <h2>Daily Draw Ticket</h2>
+          <button class="close-button" @click="closeTicketPopup">✕</button>
+        </div>
+        <div class="popup-body">
+          <div class="prize-circle ticket-circle">
+            <img src="@/assets/Ticket-Vector.svg" alt="Ticket" class="popup-prize-image ticket-image-popup" />
+          </div>
+          <p class="prize-description">Purchase a ticket for the daily prize draw. You could win the prize displayed
+            next to the ticket!</p>
+          <button class="buy-button" @click="buyDailyTicket">
+            <div class="item-price">
+              BUY TICKET <p class="price-tag coin-new">250</p>
+              <img src="@/assets/icons/flash_home_white.svg" alt="credits" class="white" />
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insufficient Points Popup -->
+    <div v-if="showInsufficientPointsPopup" class="popup-overlay">
+      <div class="prize-popup insufficient-points-popup">
+        <div class="popup-header">
+          <h2>Insufficient Points</h2>
+          <button class="close-button" @click="closeInsufficientPointsPopup">✕</button>
+        </div>
+        <div class="popup-body">
+          <div class="insufficient-points-icon">
+            <img src="@/assets/icons/flash_home.svg" alt="flash">
+          </div>
+          <p class="insufficient-points-message">You don't have enough points to buy this prize.</p>
+          <button class="ok-button" @click="closeInsufficientPointsPopup">
+            OK, GOT IT!
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <style scoped>
@@ -411,7 +429,7 @@ onMounted(() => {
   }
 }
 
-#btn-ticket{
+#btn-ticket {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -435,7 +453,7 @@ onMounted(() => {
   background-color: #f0f0f0;
 }
 
-#btn-ticket > p {
+#btn-ticket>p {
   font-size: 0.8rem;
 }
 
@@ -477,12 +495,21 @@ onMounted(() => {
   align-items: center;
 }
 
+.ticket-link.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  background: grey;
+  cursor: not-allowed;
+}
+
+
 .ticket-content {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
 }
+
 .shop-section {
   padding: 10px;
 }
@@ -676,7 +703,9 @@ onMounted(() => {
 }
 
 /* Loading and error states */
-.loading-container, .error-container, .empty-container {
+.loading-container,
+.error-container,
+.empty-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -697,8 +726,13 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .retry-button {
@@ -751,7 +785,7 @@ onMounted(() => {
   border: 3px solid white;
 }
 
-.insufficient-points-icon img{
+.insufficient-points-icon img {
   height: 50px;
   width: 50px;
 }
@@ -778,6 +812,7 @@ onMounted(() => {
   width: 100%;
   margin-top: 8px;
 }
+
 .item-price {
   display: flex;
   flex-direction: row;
@@ -798,11 +833,11 @@ onMounted(() => {
     max-width: 800px;
     margin: 0 auto;
   }
-  
+
   .circle-container {
     width: 100px;
   }
-  
+
   .circle {
     width: 80px;
     height: 80px;
