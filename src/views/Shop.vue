@@ -512,6 +512,7 @@ onMounted(() => {
 
 .shop-section {
   padding: 10px;
+  padding-bottom: 200px;
 }
 
 .shop-container {
