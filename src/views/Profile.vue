@@ -369,12 +369,19 @@ const handleRejectInvite = (inviteId) => {
 const add_linkedin = (e) => {
   e.preventDefault();
 
-  modalVisible.value = false;
   loading_linkedin.value = true;
   dialog.value = false;
 
   const linke_url = linkedin_url.value;
 
+  if (linke_url === "") {
+    showNotification("Please enter a valid LinkedIn URL", "error");
+    loading_linkedin.value = false;
+    return;
+  }
+
+  modalVisible.value = false;
+  
   linkedin_url.value = "";
 
   UserService.addLinkedin(linke_url).then(
