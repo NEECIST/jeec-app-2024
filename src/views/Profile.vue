@@ -374,7 +374,16 @@ const add_linkedin = (e) => {
 
   const linke_url = linkedin_url.value;
 
-  if (linke_url === "") {
+  // if (linke_url === "") {
+  //   showNotification("Please enter a valid LinkedIn URL", "error");
+  //   loading_linkedin.value = false;
+  //   return;
+  // }
+  if (
+    !linke_url.match(
+      /^https?:\/\/((www|\w\w)\.)?linkedin\.com\/((in\/[^\s/]+\/?)|(pub\/[^\s/]+\/((\w|\d)+\/?){3}))$/u
+    )
+  ) {
     showNotification("Please enter a valid LinkedIn URL", "error");
     loading_linkedin.value = false;
     return;
